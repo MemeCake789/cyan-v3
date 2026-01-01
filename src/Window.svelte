@@ -1,7 +1,5 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { elasticOut } from "svelte/easing";
-    import { slide } from "svelte/transition";
 
     export let title: string;
     export let minimized = false;
@@ -10,22 +8,24 @@
 </script>
 
 <div class="window" class:minimized>
-    <div
-        class="title-bar"
-        on:click={() => dispatch("toggleMinimize")}
-    >
+    <div class="title-bar" on:click={() => dispatch("toggleMinimize")}>
         <div class="drag-handle">::</div>
         <div class="title">{title}</div>
         <div class="controls">
-            <span class="material-symbols-outlined" on:click|stopPropagation={() => dispatch("fullscreen")}>fullscreen</span>
-            <span class="material-symbols-outlined" on:click|stopPropagation={() => dispatch("close")}>close</span>
+            <span
+                class="material-symbols-outlined"
+                on:click|stopPropagation={() => dispatch("fullscreen")}
+                >fullscreen</span
+            >
+            <span
+                class="material-symbols-outlined"
+                on:click|stopPropagation={() => dispatch("close")}>close</span
+            >
         </div>
     </div>
-    {#if !minimized}
-        <div class="content" transition:slide|local={{ duration: 500, easing: elasticOut }}>
-            <slot />
-        </div>
-    {/if}
+    <div class="content" class:hidden={minimized}>
+        <slot />
+    </div>
 </div>
 
 <style>
@@ -37,7 +37,7 @@
         flex-direction: column;
         overflow: hidden;
         transition: height 0.5s ease-in-out;
-        height: 200px; /* Default height for expanded window */
+        height: 80vh;
     }
 
     .minimized {
@@ -52,6 +52,7 @@
         padding: 0 10px;
         cursor: pointer;
         height: 50px;
+        flex-shrink: 0;
     }
 
     .title {
@@ -66,7 +67,7 @@
     }
 
     .controls .material-symbols-outlined {
-        font-family: 'Material Symbols Outlined';
+        font-family: "Material Symbols Outlined";
         font-size: 20px;
         cursor: pointer;
         color: #eee;
@@ -77,6 +78,18 @@
         color: #eee;
         flex-grow: 1;
         background: #1a1a1a;
+        overflow-y: auto;
+        transition: padding 0.3s ease-out, opacity 0.2s ease-out;
+        opacity: 1;
+    }
+
+    .content.hidden {
+        flex-grow: 0;
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+        opacity: 0;
     }
 
     .drag-handle {

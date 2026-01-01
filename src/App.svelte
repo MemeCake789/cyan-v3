@@ -2,6 +2,7 @@
     import { onMount, onDestroy, tick } from "svelte";
     import { windows } from "./windows";
     import Window from "./Window.svelte";
+    import Cyanide from "./Cyanide.svelte";
     import { flip } from "svelte/animate";
 
     let currentDate = new Date().toLocaleDateString();
@@ -49,14 +50,14 @@
         );
     }
 
-    let fullscreenContent = null;
+    let fullscreenWindowId = null;
 
-    function showFullscreen(content) {
-        fullscreenContent = content;
-    }
-
-    function hideFullscreen() {
-        fullscreenContent = null;
+    function toggleFullscreen(id) {
+        if (fullscreenWindowId === id) {
+            fullscreenWindowId = null;
+        } else {
+            fullscreenWindowId = id;
+        }
     }
 
     let draggedItem = null;
@@ -129,6 +130,7 @@
         <div class="window-container" bind:this={windowContainer}>
             {#each $windows as window (window.id)}
                 <div
+                    class:fullscreen={window.id === fullscreenWindowId}
                     draggable="true"
                     on:dragstart={() => dragStart(window)}
                     on:dragover|preventDefault={() => dragOver(window)}
@@ -137,12 +139,16 @@
                 >
                     <Window
                         title={window.title}
-                        minimized={window.minimized}
+                        minimized={window.id === fullscreenWindowId ? false : window.minimized}
                         on:close={() => closeWindow(window.id)}
                         on:toggleMinimize={() => toggleMinimize(window.id)}
-                        on:fullscreen={() => showFullscreen(window)}
+                        on:fullscreen={() => toggleFullscreen(window.id)}
                     >
-                        <p>Content for {window.title}</p>
+                        {#if window.title === 'games'}
+                            <Cyanide />
+                        {:else}
+                            <p>Content for {window.title}</p>
+                        {/if}
                     </Window>
                 </div>
             {/each}
@@ -150,20 +156,7 @@
     </section>
 </main>
 
-{#if fullscreenContent}
-    <div class="fullscreen-overlay" on:click={hideFullscreen}>
-        <div class="fullscreen-content" on:click|stopPropagation>
-            <Window
-                title={fullscreenContent.title}
-                minimized={false}
-                on:close={hideFullscreen}
-                on:toggleMinimize={hideFullscreen}
-            >
-                <p>Content for {fullscreenContent.title}</p>
-            </Window>
-        </div>
-    </div>
-{/if}
+
 
 <style>
     @import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap");
@@ -198,6 +191,9 @@
         border: 1px solid #555;
         border-radius: 10px;
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
     }
 
     .header,
@@ -303,21 +299,20 @@
         font-family: "Material Symbols Outlined";
     }
 
-    .fullscreen-overlay {
+    :global(.fullscreen) {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+        padding: 20px;
+        box-sizing: border-box;
         background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
+        transition: all 0.3s ease;
     }
 
-    .fullscreen-content {
-        width: 90%;
-        height: 90%;
+    :global(.fullscreen .window) {
+        height: 100%;
     }
 </style>
