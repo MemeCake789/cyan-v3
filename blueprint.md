@@ -13,7 +13,7 @@ Cyan V3 is a forward-thinking desktop environment designed to streamline your di
 ## Current Features
 
 *   **Window Management:** A flexible windowing system allows you to open, close, and manage multiple applications in a clean, organized workspace.
-*   **Cyanide Game Launcher:** A TUI-inspired game launcher that fetches a list of games from an external source. It provides two views: a grid view with game cards and a list view.
+*   **Cyanide Game Launcher:** A TUI-inspired game launcher that fetches a list of games from an external source. It provides two views: a grid view with game cards and a list view. It also includes a search bar to filter games.
 *   **Responsive Design:** The interface is fully responsive, adapting seamlessly to different screen sizes for a consistent experience on both mobile and desktop.
 *   **Intuitive Navigation:** A clear and simple navigation bar makes it easy to find and launch your favorite applications.
 
@@ -24,7 +24,7 @@ I'm about to give your app a major upgrade with a new windowing system inspired 
 1.  **`Window.svelte` Component:** I'll start by creating a reusable Svelte component for the windows. It will have a sleek title bar, buttons to minimize, maximize, and close, and a flexible content area.
 2.  **`windows.js` Store:** To keep everything organized, I'll set up a Svelte store. This will manage the state of all your windows, making it easy to add, remove, and update them as you work.
 3.  **Drag-and-Drop:** I'll add intuitive drag-and-drop functionality so you can rearrange your windows however you like.
-4.  **Animations:** Get ready for some eye-candy! I'll use Svelte's built-in transitions to create smooth, expressive animations for opening, closing, and moving windows.
+    *   **Animations:** I'll use Svelte's built-in transitions to create smooth, expressive animations for opening, closing, and moving windows, including flip animations for the grid and list views in the Cyanide game launcher.
 5.  **Modern Look:** I'll polish the design with a dark, modern theme, clean lines, and a professional finish that matches your vision.
 6.  **Cyanide Game Launcher:** I will create a new component called `Cyanide.svelte` that will:
     *   Fetch a list of games from a JSON file.

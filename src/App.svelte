@@ -98,27 +98,27 @@
         <nav class="nav">
             <div class="section-title">navigation</div>
             <div class="navbar">
-                <a href="#" on:click={() => openWindow("games")} title="Games">
+                <button class="nav-button" on:click={() => openWindow("games")} title="Games">
                     <span class="material-symbols-outlined">sports_esports</span
                     >
                     cyλnide
-                </a>
-                <a href="#" on:click={() => openWindow("proxy")} title="Proxy">
+                </button>
+                <button class="nav-button" on:click={() => openWindow("proxy")} title="Proxy">
                     <span class="material-symbols-outlined">public</span>
                     chrθmium
-                </a>
-                <a href="#" on:click={() => openWindow("floride")} title="AI">
+                </button>
+                <button class="nav-button" on:click={() => openWindow("floride")} title="AI">
                     <span class="material-symbols-outlined">smart_toy</span>
                     °Fluoride
-                </a>
-                <a
-                    href="#"
+                </button>
+                <button
+                    class="nav-button"
                     on:click={() => openWindow("chromium")}
                     title="Discord"
                 >
                     <span class="material-symbols-outlined">chat</span>
                     sµlfur
-                </a>
+                </button>
             </div>
         </nav>
         <footer class="footer">
@@ -135,6 +135,13 @@
                     on:dragstart={() => dragStart(window)}
                     on:dragover|preventDefault={() => dragOver(window)}
                     on:dragend={dragEnd}
+                    role="button"
+                    tabindex="0"
+                    on:keydown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            dragStart(window);
+                        }
+                    }}
                     animate:flip={{ duration: 300 }}
                 >
                     <Window
@@ -271,7 +278,7 @@
         margin-top: 10px;
     }
 
-    .navbar a {
+    .nav-button {
         display: flex;
         align-items: center;
         padding: 10px;
@@ -281,18 +288,17 @@
         margin-bottom: 10px;
         transition: background-color 0.3s;
         font-size: normal;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        text-align: left;
     }
 
-    .navbar a:hover {
+    .nav-button:hover {
         background-color: #333;
     }
 
-    .navbar a.active {
-        background-color: #555;
-        font-weight: bold;
-    }
-
-    .navbar a .material-symbols-outlined {
+    .nav-button .material-symbols-outlined {
         margin-right: 15px;
         font-size: 1.2em;
         font-weight: normal;

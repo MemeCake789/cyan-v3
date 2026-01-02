@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount, tick, createEventDispatcher } from 'svelte';
+    import { onMount, tick, createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -37,53 +37,78 @@
 
     onMount(() => {
         checkForTicker();
-        window.addEventListener('resize', checkForTicker);
-        return () => window.removeEventListener('resize', checkForTicker);
+        window.addEventListener("resize", checkForTicker);
+        return () => window.removeEventListener("resize", checkForTicker);
     });
 
-    $: if(game.title) {
+    $: if (game.title) {
         isScrolling = false; // reset
         checkForTicker();
     }
 </script>
 
-<tr>
-    <td on:click|stopPropagation={() => dispatch('toggleFavorite')}>
+<div class="game-list-item" on:click={() => dispatch("click")}>
+    <div class="favorite-cell" on:click|stopPropagation={() => dispatch("toggleFavorite")}>
         <span
             class="material-symbols-outlined star-icon"
             class:favorited={game.favorited}
         >
             {game.favorited ? "star" : "star_outline"}
         </span>
-    </td>
-    <td class="title-cell" bind:this={titleContainer}>
+    </div>
+    <div class="image-cell">
+        <img src={game.imageSrc} alt={game.title} class="game-image" />
+    </div>
+    <div class="game-info-cell" bind:this={titleContainer}>
         <span
             bind:this={titleText}
             class:scrolling={isScrolling}
             style:--scroll-distance={`${scrollDistance}px`}
-            style:--total-duration={isScrolling ? `${(scrollDistance / 40) / 0.5}s` : '0s'}
-        >{game.title}</span>
-    </td>
-    <td>{game.genre}</td>
-    <td>{game.status[0]}</td>
-</tr>
+            style:--total-duration={isScrolling
+                ? `${scrollDistance / 40 / 0.5}s`
+                : "0s"}>{game.title}</span
+        >
+        <div class="genre-status">{game.genre} | {game.status[0]}</div>
+    </div>
+</div>
 
 <style>
-    td {
+    .game-list-item {
+        display: flex;
+        align-items: center;
         padding: 8px;
-        text-align: left;
         border-bottom: 1px solid #2a2a2a;
-        vertical-align: middle;
-    }
-    
-    .title-cell {
-        overflow: hidden;
-        white-space: nowrap;
     }
 
-    .title-cell span.scrolling {
-        display: inline-block;
-        animation: ticker-scroll var(--total-duration) linear infinite;
+    .game-list-item:hover {
+        background-color: #252525;
+    }
+
+    .favorite-cell, .image-cell {
+        margin-right: 10px;
+    }
+
+    .game-info-cell {
+        overflow: hidden;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .game-info-cell .genre-status {
+        font-size: 0.8em;
+        color: #aaa;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 2px;
+    }
+
+    .game-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
     }
 
     @keyframes ticker-scroll {
@@ -94,10 +119,14 @@
             transform: translateX(0); /* Pause at start */
         }
         75% {
-            transform: translateX(calc(-1 * var(--scroll-distance))); /* Scroll */
+            transform: translateX(
+                calc(-1 * var(--scroll-distance))
+            ); /* Scroll */
         }
         100% {
-            transform: translateX(calc(-1 * var(--scroll-distance))); /* Pause at end */
+            transform: translateX(
+                calc(-1 * var(--scroll-distance))
+            ); /* Pause at end */
         }
     }
 
@@ -106,7 +135,7 @@
         vertical-align: middle;
         user-select: none;
         font-size: 14px;
-        font-family: 'Material Symbols Outlined';
+        font-family: "Material Symbols Outlined";
         font-weight: normal;
         font-style: normal;
         display: inline-block;
@@ -119,7 +148,7 @@
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
         -moz-osx-font-smoothing: grayscale;
-        font-feature-settings: 'liga';
+        font-feature-settings: "liga";
     }
     .star-icon.favorited {
         color: #ffd700;

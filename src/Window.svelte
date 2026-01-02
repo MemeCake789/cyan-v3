@@ -8,18 +8,43 @@
 </script>
 
 <div class="window" class:minimized>
-    <div class="title-bar" on:click={() => dispatch("toggleMinimize")}>
+    <div
+        class="title-bar"
+        on:click={() => dispatch("toggleMinimize")}
+        role="button"
+        tabindex="0"
+        on:keydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                dispatch("toggleMinimize");
+            }
+        }}
+    >
         <div class="drag-handle">::</div>
         <div class="title">{title}</div>
         <div class="controls">
             <span
                 class="material-symbols-outlined"
                 on:click|stopPropagation={() => dispatch("fullscreen")}
+                role="button"
+                tabindex="0"
+                on:keydown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        dispatch("fullscreen");
+                    }
+                }}
                 >fullscreen</span
             >
             <span
                 class="material-symbols-outlined"
-                on:click|stopPropagation={() => dispatch("close")}>close</span
+                on:click|stopPropagation={() => dispatch("close")}
+                role="button"
+                tabindex="0"
+                on:keydown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        dispatch("close");
+                    }
+                }}
+                >close</span
             >
         </div>
     </div>
