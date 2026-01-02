@@ -2,6 +2,7 @@
     import { quintOut } from "svelte/easing";
     import { fly } from "svelte/transition";
     import { createEventDispatcher } from "svelte";
+    import GamePlayer from "./GamePlayer.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -9,11 +10,26 @@
         title: string;
         imageSrc: string;
         genre: string;
+        link: string;
     };
     export let view: "grid" | "list";
+
+    let isPlaying = false;
+
+    function handlePlay() {
+        isPlaying = true;
+        dispatch("play");
+    }
+
+    function handleClose() {
+        isPlaying = false;
+        dispatch("close");
+    }
 </script>
 
-{#if view === "grid"}
+{#if isPlaying}
+    <GamePlayer link={game.link} on:close={handleClose} />
+{:else if view === "grid"}
     <div class="game-detail-grid">
         <div
             class="image-container"
@@ -27,7 +43,7 @@
         >
             <h2>{game.title}</h2>
             <p>{game.genre}</p>
-            <button class="play-button">> Play</button>
+            <button class="play-button" on:click={handlePlay}>> Play</button>
             <button class="back-button" on:click={() => dispatch("close")}>Back</button>
         </div>
     </div>
@@ -39,7 +55,7 @@
         <div class="info">
             <h2>{game.title}</h2>
             <p>{game.genre}</p>
-            <button class="play-button">> Play</button>
+            <button class="play-button" on:click={handlePlay}>> Play</button>
         </div>
     </div>
 {/if}

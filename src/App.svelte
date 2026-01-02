@@ -37,9 +37,6 @@
 
     function closeWindow(id: number) {
         windows.update((ws) => ws.filter((w) => w.id !== id));
-        if (fullscreenContent && fullscreenContent.id === id) {
-            fullscreenContent = null;
-        }
     }
 
     function toggleMinimize(id: number) {
@@ -83,6 +80,8 @@
     function dragEnd() {
         draggedItem = null;
     }
+
+    let gameTitle = "";
 </script>
 
 <main>
@@ -96,30 +95,27 @@
             <div class="version">CYAN V3.0.1</div>
         </header>
         <nav class="nav">
-            <div class="section-title">navigation</div>
-            <div class="navbar">
-                <button class="nav-button" on:click={() => openWindow("games")} title="Games">
-                    <span class="material-symbols-outlined">sports_esports</span
-                    >
-                    cyλnide
-                </button>
-                <button class="nav-button" on:click={() => openWindow("proxy")} title="Proxy">
-                    <span class="material-symbols-outlined">public</span>
-                    chrθmium
-                </button>
-                <button class="nav-button" on:click={() => openWindow("floride")} title="AI">
-                    <span class="material-symbols-outlined">smart_toy</span>
-                    °Fluoride
-                </button>
-                <button
-                    class="nav-button"
-                    on:click={() => openWindow("chromium")}
-                    title="Discord"
+            <button class="nav-button" on:click={() => openWindow("games")} title="Games">
+                <span class="material-symbols-outlined">sports_esports</span
                 >
-                    <span class="material-symbols-outlined">chat</span>
-                    sµlfur
-                </button>
-            </div>
+                cyλnide
+            </button>
+            <button class="nav-button" on:click={() => openWindow("proxy")} title="Proxy">
+                <span class="material-symbols-outlined">public</span>
+                chrθmium
+            </button>
+            <button class="nav-button" on:click={() => openWindow("floride")} title="AI">
+                <span class="material-symbols-outlined">smart_toy</span>
+                °Fluoride
+            </button>
+            <button
+                class="nav-button"
+                on:click={() => openWindow("chromium")}
+                title="Discord"
+            >
+                <span class="material-symbols-outlined">chat</span>
+                sµlfur
+            </button>
         </nav>
         <footer class="footer">
             <div class="section-title">status</div>
@@ -145,14 +141,21 @@
                     animate:flip={{ duration: 300 }}
                 >
                     <Window
-                        title={window.title}
+                        title={gameTitle || window.title}
                         minimized={window.id === fullscreenWindowId ? false : window.minimized}
+                        fullscreen={window.id === fullscreenWindowId}
                         on:close={() => closeWindow(window.id)}
                         on:toggleMinimize={() => toggleMinimize(window.id)}
                         on:fullscreen={() => toggleFullscreen(window.id)}
                     >
                         {#if window.title === 'games'}
-                            <Cyanide />
+                            <Cyanide on:gamestatechange={(e) => {
+                                if (e.detail.title === 'games') {
+                                    gameTitle = '';
+                                } else {
+                                    gameTitle = e.detail.title;
+                                }
+                            }} />
                         {:else}
                             <p>Content for {window.title}</p>
                         {/if}
@@ -312,7 +315,6 @@
         width: 100vw;
         height: 100vh;
         z-index: 1000;
-        padding: 20px;
         box-sizing: border-box;
         background: rgba(0, 0, 0, 0.8);
         transition: all 0.3s ease;
