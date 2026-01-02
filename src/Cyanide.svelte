@@ -32,31 +32,35 @@
                 return a.title.localeCompare(b.title);
             });
         
-            onMount(async () => {
-                try {
-                    const response = await fetch(
-                        "https://raw.githubusercontent.com/MemeCake789/cyan-v3/main/games.json",
-                    );
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch games list");
-                    }
-                    const data = await response.json();
-                    games = data.games.map((game: Omit<Game, "favorited">) => ({
-                        ...game,
-                        favorited: false,
-                    }));
-                } catch (e) {
-                    if (e instanceof Error) {
-                        error = e.message;
-                    } else {
-                        error = "An unknown error occurred";
-                    }
-                } finally {
-                    loading = false;
-                }
-            });
-        
-            function toggleFavorite(clickedGame: Game) {
+                    onMount(async () => {
+                        window.addEventListener("back", () => {
+                            isGamePlaying = false;
+                            selectedGame = null;
+                            dispatch("gamestatechange", { title: "games", showBackButton: false });
+                        });
+                
+                        try {
+                            const response = await fetch(
+                                "https://raw.githubusercontent.com/MemeCake789/cyan-v3/main/games.json",
+                            );
+                            if (!response.ok) {
+                                throw new Error("Failed to fetch games list");
+                            }
+                            const data = await response.json();
+                            games = data.games.map((game: Omit<Game, "favorited">) => ({
+                                ...game,
+                                favorited: false,
+                            }));
+                        } catch (e) {
+                            if (e instanceof Error) {
+                                error = e.message;
+                            } else {
+                                error = "An unknown error occurred";
+                            }
+                        } finally {
+                            loading = false;
+                        }
+                    });            function toggleFavorite(clickedGame: Game) {
                 games = games.map((game) =>
                     game.title === clickedGame.title
                         ? { ...game, favorited: !game.favorited }
@@ -75,6 +79,7 @@
                 isGamePlaying = true;
                 dispatch("gamestatechange", {
                     title: `[ ${selectedGame.title} ] cyanide`,
+                    showBackButton: true,
                 });
             }    </script>
     
@@ -107,10 +112,11 @@
                                 {#key selectedGame.title}
                                     <GameDetail
                     game={selectedGame}
+                    view="grid"
                         on:close={() => {
                             selectedGame = null;
                             isGamePlaying = false;
-                            dispatch("gamestatechange", { title: "games" });
+                            dispatch("gamestatechange", { title: "games", showBackButton: false });
                         }}
                     on:play={handlePlay}
                 />
@@ -157,7 +163,7 @@
                 on:close={() => {
                     selectedGame = null;
                     isGamePlaying = false;
-                    dispatch("gamestatechange", { title: "games" });
+                    dispatch("gamestatechange", { title: "games", showBackButton: false });
                 }}
                 on:play={handlePlay}
             />
@@ -200,7 +206,7 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
-        padding: 0 10px;
+        padding: 20px;
     }
 
     .search-bar input {
@@ -212,7 +218,7 @@
         font-family: "monospace", monospace;
     }
 
-    .view-switcher button {
+    .view-switcher button, .back-button {
         background-color: #222;
         color: #e0e0e0;
         border: 1px solid #444;
@@ -237,13 +243,13 @@
         gap: 20px;
         flex-grow: 1;
         overflow-y: auto;
-        padding: 0 10px;
+        padding: 20px;
     }
 
     .list-view {
         flex-grow: 1;
         overflow-y: auto;
-        padding: 0 10px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         gap: 10px;

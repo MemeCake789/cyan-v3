@@ -70,10 +70,14 @@
         height: 100%;
     }
     .game-detail-grid .image-container {
-        width: 40%;
+        max-width: 200px; /* Smaller container */
+        width: 100%; /* Allow to shrink */
     }
     .game-detail-grid .image-container img {
-        width: 100%;
+        width: 100%; /* Make image responsive within its container */
+        height: auto; /* Maintain aspect ratio */
+        max-height: 200px; /* Limit image height */
+        object-fit: contain; /* Ensure the image fits within the bounds */
         border-radius: 12px;
     }
     .game-detail-grid .info {

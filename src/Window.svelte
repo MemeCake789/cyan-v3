@@ -4,7 +4,8 @@
 
     export let title: string;
     export let minimized = false;
-    export let fullscreen = false; // New prop to indicate fullscreen state
+    export let fullscreen = false;
+    export let showBackButton = false;
 
     let showExitInfo = false;
 
@@ -12,7 +13,7 @@
 
     function handleKeydown(event: KeyboardEvent) {
         if (event.key === "Escape" && fullscreen) {
-            dispatch("fullscreen"); // Dispatch fullscreen event to toggle off
+            dispatch("fullscreen");
         }
     }
 
@@ -53,6 +54,9 @@
         <div class="drag-handle">::</div>
         <div class="title">{title}</div>
         <div class="controls">
+            {#if showBackButton}
+                <button class="back-button" on:click|stopPropagation={() => dispatch("back")}>&lt; Back</button>
+            {/if}
             <span
                 class="material-symbols-outlined"
                 on:click|stopPropagation={() => dispatch("fullscreen")}
@@ -189,5 +193,16 @@
         border-radius: 20px;
         font-family: "monospace", monospace;
         z-index: 1001; /* Ensure it's above other content */
+    }
+
+    .back-button {
+        background-color: #222;
+        color: #e0e0e0;
+        border: 1px solid #444;
+        border-radius: 20px;
+        padding: 2px 8px;
+        cursor: pointer;
+        font-family: "monospace", monospace;
+        margin-right: 10px;
     }
 </style>

@@ -82,6 +82,14 @@
     }
 
     let gameTitle = "";
+    let showBackButton = false;
+
+    function handleBack() {
+        // This is a bit of a hack, but it's the easiest way to communicate
+        // back down to Cyanide.svelte without a store.
+        const event = new CustomEvent("back");
+        window.dispatchEvent(event);
+    }
 </script>
 
 <main>
@@ -144,16 +152,20 @@
                         title={gameTitle || window.title}
                         minimized={window.id === fullscreenWindowId ? false : window.minimized}
                         fullscreen={window.id === fullscreenWindowId}
+                        showBackButton={showBackButton}
                         on:close={() => closeWindow(window.id)}
                         on:toggleMinimize={() => toggleMinimize(window.id)}
                         on:fullscreen={() => toggleFullscreen(window.id)}
+                        on:back={handleBack}
                     >
                         {#if window.title === 'games'}
                             <Cyanide on:gamestatechange={(e) => {
                                 if (e.detail.title === 'games') {
                                     gameTitle = '';
+                                    showBackButton = false;
                                 } else {
                                     gameTitle = e.detail.title;
+                                    showBackButton = e.detail.showBackButton;
                                 }
                             }} />
                         {:else}
