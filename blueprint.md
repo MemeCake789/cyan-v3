@@ -20,6 +20,7 @@ Cyan V3 is a forward-thinking desktop environment designed to streamline your di
 *   **Responsive Design:** The interface is fully responsive, adapting seamlessly to different screen sizes for a consistent experience on both mobile and desktop.
 *   **Flouride AI Chatbot:** A TUI-themed AI chatbot that uses `puter.js` to communicate with an AI model. It features a custom prompt to give the AI a unique personality and includes special formatting for displaying lenny faces in a separate column next to the chat messages.
 *   **Intuitive Navigation:** A clear and simple navigation bar makes it easy to find and launch your favorite applications.
+*   **Sulfur Chat Component:** A public chat component with a TUI look, featuring optimistic UI updates, username customization, real-time message polling, and integrated into `App.svelte`. Usernames are dynamically colored based on a fun calculation, and default to `anonymous-[randomnumber]` if not set.
 
 ## Plan for a Slick New Window System
 

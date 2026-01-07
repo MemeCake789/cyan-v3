@@ -4,6 +4,7 @@
     import Window from "./Window.svelte";
     import Cyanide from "./Cyanide.svelte";
     import Flouride from "./Flouride.svelte";
+    import Sulfur from "./Sulfur.svelte";
     import { flip } from "svelte/animate";
 
     let currentDate = new Date().toLocaleDateString();
@@ -27,7 +28,7 @@
             id: Date.now(),
             title,
             minimized: false,
-            persona: 'cyan', // Add persona state
+
         };
         windows.update((ws) => {
             const minimizedWindows = ws.map((w) => ({ ...w, minimized: true }));
@@ -87,8 +88,7 @@
     let showBackButton = false;
 
     function handleBack() {
-        // This is a bit of a hack, but it's the easiest way to communicate
-        // back down to Cyanide.svelte without a store.
+
         const event = new CustomEvent("back");
         window.dispatchEvent(event);
     }
@@ -120,7 +120,7 @@
             </button>
             <button
                 class="nav-button"
-                on:click={() => openWindow("chromium")}
+                on:click={() => openWindow("sulfur")}
                 title="Discord"
             >
                 <span class="material-symbols-outlined">chat</span>
@@ -174,6 +174,8 @@
                             }} />
                         {:else if window.title === 'floride'}
                             <Flouride persona={window.persona} />
+                        {:else if window.title === 'sulfur'}
+                            <Sulfur />
                         {:else}
                             <p>Content for {window.title}</p>
                         {/if}
