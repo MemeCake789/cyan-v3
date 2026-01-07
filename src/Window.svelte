@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount, onDestroy, tick } from "svelte";
+    import { createEventDispatcher, onMount, onDestroy } from "svelte";
     import { fly } from "svelte/transition";
 
     export let title: string;
@@ -35,18 +35,22 @@
 
 <div class="window" class:minimized class:fullscreen>
     {#if fullscreen && showExitInfo}
-        <div class="exit-info" in:fly={{ y: -50, duration: 500 }} out:fly={{ y: -50, duration: 500 }}>
+        <div
+            class="exit-info"
+            in:fly={{ y: -50, duration: 500 }}
+            out:fly={{ y: -50, duration: 500 }}
+        >
             [esc] to exit fullscreen
         </div>
     {/if}
     <div
         class="title-bar"
-        class:fullscreen={fullscreen}
+        class:fullscreen
         on:click={() => dispatch("toggleMinimize")}
         role="button"
         tabindex="0"
         on:keydown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
+            if (e.key === "Enter" || e.key === " ") {
                 dispatch("toggleMinimize");
             }
         }}
@@ -55,7 +59,11 @@
         <div class="title">{title}</div>
         <div class="controls">
             {#if showBackButton}
-                <button class="back-button" on:click|stopPropagation={() => dispatch("back")}>&lt; Back</button>
+                <button
+                    class="back-button"
+                    on:click|stopPropagation={() => dispatch("back")}
+                    >&lt; Back</button
+                >
             {/if}
             <span
                 class="material-symbols-outlined"
@@ -63,11 +71,10 @@
                 role="button"
                 tabindex="0"
                 on:keydown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                         dispatch("fullscreen");
                     }
-                }}
-                >fullscreen</span
+                }}>fullscreen</span
             >
             <span
                 class="material-symbols-outlined"
@@ -75,11 +82,10 @@
                 role="button"
                 tabindex="0"
                 on:keydown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                         dispatch("close");
                     }
-                }}
-                >close</span
+                }}>close</span
             >
         </div>
     </div>
@@ -90,7 +96,7 @@
 
 <style>
     .window {
-        background: #222;
+        background: black;
         border: 1px solid #555;
         border-radius: 10px;
         display: flex;
@@ -156,7 +162,9 @@
         flex-grow: 1;
         background: #1a1a1a;
         overflow-y: auto;
-        transition: padding 0.3s ease-out, opacity 0.2s ease-out;
+        transition:
+            padding 0.3s ease-out,
+            opacity 0.2s ease-out;
         opacity: 1;
     }
 

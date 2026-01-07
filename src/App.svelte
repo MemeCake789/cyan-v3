@@ -3,6 +3,7 @@
     import { windows } from "./windows";
     import Window from "./Window.svelte";
     import Cyanide from "./Cyanide.svelte";
+    import Flouride from "./Flouride.svelte";
     import { flip } from "svelte/animate";
 
     let currentDate = new Date().toLocaleDateString();
@@ -26,6 +27,7 @@
             id: Date.now(),
             title,
             minimized: false,
+            persona: 'cyan', // Add persona state
         };
         windows.update((ws) => {
             const minimizedWindows = ws.map((w) => ({ ...w, minimized: true }));
@@ -157,6 +159,8 @@
                         on:toggleMinimize={() => toggleMinimize(window.id)}
                         on:fullscreen={() => toggleFullscreen(window.id)}
                         on:back={handleBack}
+                        showPersonaSelector={window.title === 'floride'}
+                        bind:selectedPersona={window.persona}
                     >
                         {#if window.title === 'games'}
                             <Cyanide on:gamestatechange={(e) => {
@@ -168,6 +172,8 @@
                                     showBackButton = e.detail.showBackButton;
                                 }
                             }} />
+                        {:else if window.title === 'floride'}
+                            <Flouride persona={window.persona} />
                         {:else}
                             <p>Content for {window.title}</p>
                         {/if}

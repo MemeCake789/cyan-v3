@@ -18,6 +18,7 @@ Cyan V3 is a forward-thinking desktop environment designed to streamline your di
 *   **Game Detail View:** Clicking on a game in either view opens a detail view with more information and a "Play" button. The game image in grid view is now properly sized to align with text and buttons. A "Back" button is also present in the grid view.
 *   **Game Player:** When the "Play" button is clicked, the game loads in an iframe. The window title changes to reflect the game being played, and the top bar (search and view switcher) of the Cyanide app is hidden. Pressing `Esc` or clicking the "Back" button in the window title bar exits the game and returns to the game list.
 *   **Responsive Design:** The interface is fully responsive, adapting seamlessly to different screen sizes for a consistent experience on both mobile and desktop.
+*   **Flouride AI Chatbot:** A TUI-themed AI chatbot that uses `puter.js` to communicate with an AI model. It features a custom prompt to give the AI a unique personality and includes special formatting for displaying lenny faces in a separate column next to the chat messages.
 *   **Intuitive Navigation:** A clear and simple navigation bar makes it easy to find and launch your favorite applications.
 
 ## Plan for a Slick New Window System
