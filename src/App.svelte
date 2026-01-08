@@ -28,7 +28,7 @@
             id: Date.now(),
             title,
             minimized: false,
-
+            persona: 'cyan', // Add persona state
         };
         windows.update((ws) => {
             const minimizedWindows = ws.map((w) => ({ ...w, minimized: true }));
@@ -88,7 +88,8 @@
     let showBackButton = false;
 
     function handleBack() {
-
+        // This is a bit of a hack, but it's the easiest way to communicate
+        // back down to Cyanide.svelte without a store.
         const event = new CustomEvent("back");
         window.dispatchEvent(event);
     }

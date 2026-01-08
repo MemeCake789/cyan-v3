@@ -33,7 +33,8 @@
 
     }
     const hue = (hash * 137) % 360; 
-
+    const saturation = 75; 
+    const lightness = 55;  
 
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
