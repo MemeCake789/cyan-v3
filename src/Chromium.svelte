@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { createEventDispatcher, onMount, onDestroy } from 'svelte';
 
     export let currentUrl = "";
     
     let inputUrl = "";
     let history: string[] = [];
     let historyIndex = -1;
-    let iframeElement: HTMLIFrameElement;
+    let iframeElement: HTMLIFrameElement | null;
+    let iframeContainer: HTMLDivElement;
 
     const dispatch = createEventDispatcher();
 
@@ -29,6 +30,10 @@
         const fullProxyUrl = PROXY_BASE + encodeURIComponent(targetUrl);
         currentUrl = fullProxyUrl;
         inputUrl = targetUrl;
+
+        if (iframeElement) {
+            iframeElement.src = fullProxyUrl;
+        }
 
         if (addToHistory) {
             // Remove any forward history if we're in the middle of the stack
@@ -67,9 +72,25 @@
     }
 
     onMount(() => {
+        iframeElement = document.createElement('iframe');
+        iframeElement.title = "Chromium Proxy";
+        iframeElement.style.width = "100%";
+        iframeElement.style.height = "100%";
+        iframeElement.style.border = "none";
+        iframeElement.style.background = "white";
+        iframeContainer.appendChild(iframeElement);
+
         // Initial page or default
         if (!currentUrl) {
             navigate("google.com");
+        } else if (iframeElement) {
+            iframeElement.src = currentUrl;
+        }
+    });
+
+    onDestroy(() => {
+        if (iframeElement && iframeContainer) {
+            iframeContainer.removeChild(iframeElement);
         }
     });
 
@@ -79,15 +100,8 @@
 </script>
 
 <div class="browser-container">
-    <div class="iframe-wrapper">
-        {#if currentUrl}
-            <iframe 
-                bind:this={iframeElement}
-                src={currentUrl} 
-                title="Chromium Proxy"
-                frameborder="0"
-            ></iframe>
-        {:else}
+    <div class="iframe-wrapper" bind:this={iframeContainer}>
+        {#if !currentUrl && !iframeElement}
             <div class="placeholder">
                 <span class="material-symbols-outlined">public</span>
                 <p>Enter a URL or search query to begin</p>
