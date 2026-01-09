@@ -57,6 +57,11 @@
     >
         <div class="drag-handle">::</div>
         <div class="title">{title}</div>
+        
+        <div class="title-center">
+            <slot name="title-center" />
+        </div>
+
         <div class="controls">
             {#if showBackButton}
                 <button
@@ -134,16 +139,27 @@
     .title {
         color: #eee;
         font-weight: bold;
+        flex-shrink: 0;
+        min-width: 100px;
     }
 
     .title-bar.fullscreen .title {
         font-size: 0.8em;
     }
 
+    .title-center {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px;
+    }
+
     .controls {
         display: flex;
         gap: 10px;
         margin-left: auto;
+        flex-shrink: 0;
     }
 
     .controls .material-symbols-outlined {
@@ -183,6 +199,7 @@
         cursor: grab;
         font-family: monospace;
         font-size: 20px;
+        flex-shrink: 0;
     }
 
     .title-bar.fullscreen .drag-handle {

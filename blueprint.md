@@ -7,7 +7,7 @@ Cyan V3 is a forward-thinking desktop environment designed to streamline your di
 *   **Vibrant and Bold:** The interface features a dark, vibrant color palette that's both energetic and easy on the eyes.
 *   **Expressive Typography:** We use a range of font sizes to create a clear visual hierarchy, from prominent hero text to easily scannable lists.
 *   **Premium Feel:** A subtle noise texture on the main background adds a tactile, high-quality feel to the interface.
-*   **Interactive Glow:** Buttons and other interactive elements have a soft shadow and a colored glow, making them feel responsive and engaging.
+*   **Interactive Glow:** Buttons and other interactive elements have a shadow and a colored glow, making them feel responsive and engaging.
 *   **TUI Aesthetic:** The Cyanide game launcher features a clean, modern Text-based User Interface (TUI) with monospace fonts, limited color palettes, and a structured, grid-based layout. The content is now properly aligned with the top bar.
 *   **Compact Fullscreen Title Bar:** When a window is fullscreen, its title bar becomes more compact to maximize content area.
 
@@ -21,20 +21,23 @@ Cyan V3 is a forward-thinking desktop environment designed to streamline your di
 *   **Flouride AI Chatbot:** A TUI-themed AI chatbot that uses `puter.js` to communicate with an AI model. It features a custom prompt to give the AI a unique personality and includes special formatting for displaying lenny faces in a separate column next to the chat messages.
 *   **Intuitive Navigation:** A clear and simple navigation bar makes it easy to find and launch your favorite applications.
 *   **Sulfur Chat Component:** A public chat component with a modern UI, featuring optimistic UI updates, username customization, and real-time message polling.
+*   **Chromium Browser Proxy:** A specialized browser window that uses a proxy service to navigate the web and perform searches. It features a URL bar integrated into the window's title bar, along with backward and forward navigation and history tracking.
 
-## Plan for a Slick New Window System
+## Proposed Changes: Implement Chromium Browser Proxy
 
-I'm about to give your app a major upgrade with a new windowing system inspired by your vision. Here’s the plan:
+Add a new "Chromium" application that provides a proxy-based browsing experience.
 
-1.  **`Window.svelte` Component:** I'll start by creating a reusable Svelte component for the windows. It will have a sleek title bar, buttons to minimize, maximize, and close, and a flexible content area.
-2.  **`windows.js` Store:** To keep everything organized, I'll set up a Svelte store. This will manage the state of all your windows, making it easy to add, remove, and update them as you work.
-3.  **Drag-and-Drop:** I'll add intuitive drag-and-drop functionality so you can rearrange your windows however you like.
-    *   **Animations:** I'll use Svelte's built-in transitions to create smooth, expressive animations for opening, closing, and moving windows, including flip animations for the grid and list views in the Cyanide game launcher.
-5.  **Modern Look:** I'll polish the design with a dark, modern theme, clean lines, and a professional finish that matches your vision.
-6.  **Cyanide Game Launcher:** I will create a new component called `Cyanide.svelte` that will:
-    *   Fetch a list of games from a JSON file.
-    *   Display the games in two different views: a grid view and a list view.
-    *   Be styled with a modern TUI (Text-based User Interface) look, avoiding cheesy hacker themes.
-    *   The grid view will feature game cards with pixelated images and details.
-    *   The list view will be a table with sortable columns.
-    *   The component will be integrated into the main `App.svelte` file.
+### Steps:
+1.  **Modify `Window.svelte`**: 
+    *   Add a named slot `title-center` in the `title-bar` to allow components to inject custom UI (like a URL bar) into the center of the title bar.
+    *   Ensure the layout of the title bar accommodates this new slot.
+2.  **Create `Chromium.svelte`**:
+    *   Implement state for the current URL, history (back/forward stacks), and search query.
+    *   Create a method to handle navigation and search, appending queries to `http://sulfur-flax.vercel.app/rx?q=`.
+    *   Provide the URL bar UI and navigation buttons (back/forward) to be placed in the window title bar.
+    *   Use an `iframe` to display the proxied content.
+3.  **Update `App.svelte`**:
+    *   Import and register the `Chromium` component.
+    *   Update the `openWindow` logic to handle the `proxy` type.
+    *   In the window rendering loop, pass the necessary slots to `Window.svelte` for Chromium instances.
+    *   Implement a way to sync state between the `Window` slot and the `Chromium` component (likely using a shared store or by lifting state to `App.svelte` for the URL bar).

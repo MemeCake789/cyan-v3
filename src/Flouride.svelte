@@ -17,16 +17,20 @@
         color: "#00ffff",
     };
 
-    let messages: {
+    interface ChatMessage {
         sender: string;
         content: string;
         timestamp: string;
         isLoading?: boolean;
-    }[] = [];
+        isError?: boolean; // Added isError to the interface
+    }
+
+    let messages: ChatMessage[] = [];
     let userInput = "";
     let chatContainer: HTMLElement;
     let isFirstAIMessage = true;
     const splashMessages = ["1", "2"];
+    let isAuthenticated = false; // New state for authentication
 
     const systemPrompt = {
         role: "system",
@@ -52,10 +56,66 @@ $$
         if (chatContainer) {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
+         // Check initial authentication status
+         // @ts-ignore
+        if (typeof puter !== 'undefined' && puter.auth.isAuthenticated()) {
+            isAuthenticated = true;
+            addLog("User already authenticated.");
+        }
     });
+
+    function addLog(message: string, isError: boolean = false) {
+        messages = [...messages, {
+            sender: "system",
+            content: `[LOG] ${message}`,
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            isError: isError // Custom property to style error logs
+        }];
+        tick().then(() => {
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        });
+    }
+
+    async function signInWithPuter() {
+        addLog("Initiating Puter sign-in...");
+        // @ts-ignore
+        if (typeof puter === 'undefined') {
+            addLog("Error: Puter.js is not loaded. Cannot sign in.", true);
+            return;
+        }
+
+        try {
+            // @ts-ignore
+            const result = await puter.auth.signIn({ attempt_temp_user_creation: true });
+            if (result && result.user) {
+                isAuthenticated = true;
+                addLog("Successfully signed in to Puter.");
+            } else {
+                addLog("Puter sign-in process cancelled or failed.", true);
+            }
+        } catch (error: any) {
+            addLog(`Puter sign-in error: ${error.message || "Unknown sign-in error"}`, true);
+        }
+    }
 
     async function sendMessage() {
         if (userInput.trim() === "") return;
+
+        if (!isAuthenticated) {
+            addLog("Please sign in to Puter to use the AI chat.", true);
+            return;
+        }
+
+        addLog("Attempting to send message...");
+
+        // Ensure puter is available
+        // @ts-ignore
+        if (typeof puter === 'undefined') {
+            addLog("Error: Puter.js is not loaded. Please refresh the page.", true);
+            return;
+        }
 
         const userMessage = {
             sender: "user",
@@ -66,7 +126,7 @@ $$
             }),
         };
         messages = [...messages, userMessage];
-        const history = messages.map((m) => ({
+        const history = messages.filter(m => m.sender !== 'system').map((m) => ({
             role: m.sender,
             content: m.content.replace(/<p>|<\/p>/g, ""), // Strip <p> tags for history
         }));
@@ -112,13 +172,14 @@ $$
                 messages = [...messages]; // Trigger update
             };
             intervalId = setInterval(cycleSplashMessages, 3000);
-
+            addLog("Calling puter.ai.chat...");
             // Call the AI
             // @ts-ignore
             const response = await puter.ai.chat(
                 [{ ...systemPrompt }, ...history],
                 { stream: true },
             );
+            addLog("Received response stream.");
 
             // Stop cycling and process the stream
             clearInterval(intervalId);
@@ -142,49 +203,63 @@ $$
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                 }
             }
+            addLog("AI response stream completed.");
+        } catch (error: any) {
+            addLog(`Puter AI Error: ${error.message || "Unknown error"}`, true);
+            aiMessage.isLoading = false;
+            aiMessage.content = `Error: ${error.message || "Failed to get response from AI."}`;
+            messages = [...messages];
         } finally {
             // Failsafe to ensure the interval is always cleared
             if (intervalId) {
                 clearInterval(intervalId);
+                addLog("Splash message interval cleared.");
             }
         }
     }
 </script>
 
 <div class="flouride-container">
-    <div class="chat-history" bind:this={chatContainer}>
-        {#each messages as message}
-            <div class="message {message.sender}">
-                {#if message.sender !== "system"}
-                    <div class="message-info">
-                        <span class="timestamp">[{message.timestamp}] </span>
-                        <span
-                            class="sender-name"
-                            style={message.sender === "assistant"
-                                ? `color: ${persona.color}`
-                                : ""}
-                        >
-                            {message.sender === "user" ? "user" : persona.name}:
-                        </span>
+    {#if isAuthenticated}
+        <div class="chat-history" bind:this={chatContainer}>
+            {#each messages as message}
+                <div class="message {message.sender}" class:error-log={message.isError}>
+                    {#if message.sender !== "system" || message.isError}
+                        <div class="message-info">
+                            <span class="timestamp">[{message.timestamp}] </span>
+                            <span
+                                class="sender-name"
+                                style={message.sender === "assistant"
+                                    ? `color: ${persona.color}`
+                                    : ""}
+                            >
+                                {message.sender === "user" ? "user" : (message.sender === "system" ? "SYSTEM" : persona.name)}:
+                            </span>
+                        </div>
+                    {/if}
+                    <div class="content" class:loading-ellipsis={message.isLoading}>
+                        {@html message.content}
                     </div>
-                {/if}
-                <div class="content" class:loading-ellipsis={message.isLoading}>
-                    {@html message.content}
                 </div>
-            </div>
-        {/each}
-    </div>
+            {/each}
+        </div>
 
-    <div class="chat-input">
-        <input
-            type="text"
-            bind:value={userInput}
-            on:keydown={(e) => e.key === "Enter" && sendMessage()}
-            placeholder="Type a message..."
-        />
+        <div class="chat-input">
+            <input
+                type="text"
+                bind:value={userInput}
+                on:keydown={(e) => e.key === "Enter" && sendMessage()}
+                placeholder="Type a message..."
+            />
 
-        <button on:click={sendMessage}>Send</button>
-    </div>
+            <button on:click={sendMessage}>Send</button>
+        </div>
+    {:else}
+        <div class="auth-prompt">
+            <p>Please sign in with your Puter account to use the AI chat.</p>
+            <button on:click={signInWithPuter}>Sign In with Puter</button>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -197,6 +272,31 @@ $$
         font-family: "Courier New", Courier, monospace;
         border-radius: 5px;
         overflow: hidden;
+    }
+
+    .auth-prompt {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .auth-prompt button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        margin-top: 15px;
+    }
+
+    .auth-prompt button:hover {
+        background-color: #0056b3;
     }
 
     .chat-history {
@@ -245,6 +345,11 @@ $$
         font-style: italic;
 
         font-size: 0.9em;
+        color: #888;
+    }
+
+    .message.system.error-log .content {
+        color: #ff5555;
     }
 
     .chat-input {

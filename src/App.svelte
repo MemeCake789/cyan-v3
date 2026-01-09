@@ -5,12 +5,16 @@
     import Cyanide from "./Cyanide.svelte";
     import Flouride from "./Flouride.svelte";
     import Sulfur from "./Sulfur.svelte";
+    import Chromium from "./Chromium.svelte";
     import { flip } from "svelte/animate";
 
     let currentDate = new Date().toLocaleDateString();
     let currentTime = new Date().toLocaleTimeString();
     let interval;
     let windowContainer: HTMLDivElement;
+
+    // Local state for chromium instances to bridge the slot to the component
+    let chromiumStates = {};
 
     onMount(() => {
         interval = setInterval(() => {
@@ -23,13 +27,25 @@
         clearInterval(interval);
     });
 
-    async function openWindow(title: string) {
+    async function openWindow(type: string) {
+        const id = Date.now();
         const newWindow = {
-            id: Date.now(),
-            title,
+            id,
+            type,
+            title: type, // Original title/type
+            displayTitle: type === 'proxy' ? 'chrθmium' : type, // Title currently displayed in the bar
             minimized: false,
+            showBackButton: false,
             persona: 'cyan', // Add persona state
         };
+
+        if (type === 'proxy') {
+            chromiumStates[id] = {
+                inputUrl: 'google.com',
+                component: null
+            };
+        }
+
         windows.update((ws) => {
             const minimizedWindows = ws.map((w) => ({ ...w, minimized: true }));
             return [newWindow, ...minimizedWindows];
@@ -40,6 +56,9 @@
 
     function closeWindow(id: number) {
         windows.update((ws) => ws.filter((w) => w.id !== id));
+        if (chromiumStates[id]) {
+            delete chromiumStates[id];
+        }
     }
 
     function toggleMinimize(id: number) {
@@ -84,14 +103,34 @@
         draggedItem = null;
     }
 
-    let gameTitle = "";
-    let showBackButton = false;
-
-    function handleBack() {
-        // This is a bit of a hack, but it's the easiest way to communicate
-        // back down to Cyanide.svelte without a store.
-        const event = new CustomEvent("back");
+    function handleBack(id: number) {
+        const event = new CustomEvent(`back-${id}`);
         window.dispatchEvent(event);
+    }
+
+    function updateWindowState(id: number, detail: { title: string, showBackButton: boolean }) {
+        windows.update(ws => ws.map(w => {
+            if (w.id === id) {
+                return {
+                    ...w,
+                    displayTitle: detail.title === 'games' ? w.type : detail.title,
+                    showBackButton: detail.showBackButton
+                };
+            }
+            return w;
+        }));
+    }
+
+    function handleChromiumUrlChange(id, url) {
+        if (chromiumStates[id]) {
+            chromiumStates[id].inputUrl = url;
+        }
+    }
+
+    function navigateChromium(id) {
+        if (chromiumStates[id] && chromiumStates[id].component) {
+            chromiumStates[id].component.navigate(chromiumStates[id].inputUrl);
+        }
     }
 </script>
 
@@ -152,33 +191,56 @@
                     animate:flip={{ duration: 300 }}
                 >
                     <Window
-                        title={gameTitle || window.title}
+                        title={window.displayTitle}
                         minimized={window.id === fullscreenWindowId ? false : window.minimized}
                         fullscreen={window.id === fullscreenWindowId}
-                        showBackButton={showBackButton}
+                        showBackButton={window.showBackButton}
                         on:close={() => closeWindow(window.id)}
                         on:toggleMinimize={() => toggleMinimize(window.id)}
                         on:fullscreen={() => toggleFullscreen(window.id)}
-                        on:back={handleBack}
-                        showPersonaSelector={window.title === 'floride'}
+                        on:back={() => handleBack(window.id)}
+                        showPersonaSelector={window.type === 'floride'}
                         bind:selectedPersona={window.persona}
                     >
-                        {#if window.title === 'games'}
-                            <Cyanide on:gamestatechange={(e) => {
-                                if (e.detail.title === 'games') {
-                                    gameTitle = '';
-                                    showBackButton = false;
-                                } else {
-                                    gameTitle = e.detail.title;
-                                    showBackButton = e.detail.showBackButton;
-                                }
-                            }} />
-                        {:else if window.title === 'floride'}
+                        <svelte:fragment slot="title-center">
+                            {#if window.type === 'proxy'}
+                                <div class="url-bar-container">
+                                    <button class="nav-btn" on:click={() => chromiumStates[window.id].component?.goBack()}>
+                                        <span class="material-symbols-outlined">arrow_back</span>
+                                    </button>
+                                    <button class="nav-btn" on:click={() => chromiumStates[window.id].component?.goForward()}>
+                                        <span class="material-symbols-outlined">arrow_forward</span>
+                                    </button>
+                                    <input 
+                                        type="text" 
+                                        class="url-input" 
+                                        bind:value={chromiumStates[window.id].inputUrl}
+                                        on:keydown={(e) => e.key === 'Enter' && navigateChromium(window.id)}
+                                        placeholder="Search or enter URL"
+                                    />
+                                    <button class="nav-btn" on:click={() => navigateChromium(window.id)}>
+                                        <span class="material-symbols-outlined">search</span>
+                                    </button>
+                                </div>
+                            {/if}
+                        </svelte:fragment>
+
+                        {#if window.type === 'games'}
+                            <Cyanide 
+                                windowId={window.id}
+                                on:gamestatechange={(e) => updateWindowState(window.id, e.detail)} 
+                            />
+                        {:else if window.type === 'floride'}
                             <Flouride persona={window.persona} />
-                        {:else if window.title === 'sulfur'}
+                        {:else if window.type === 'sulfur'}
                             <Sulfur />
+                        {:else if window.type === 'proxy'}
+                            <Chromium 
+                                bind:this={chromiumStates[window.id].component}
+                                on:urlchange={(e) => handleChromiumUrlChange(window.id, e.detail.url)}
+                            />
                         {:else}
-                            <p>Content for {window.title}</p>
+                            <p>Content for {window.type}</p>
                         {/if}
                     </Window>
                 </div>
@@ -327,6 +389,49 @@
         font-size: 1.2em;
         font-weight: normal;
         font-family: "Material Symbols Outlined";
+    }
+
+    .url-bar-container {
+        display: flex;
+        align-items: center;
+        background: #111;
+        border: 1px solid #444;
+        border-radius: 25px;
+        padding: 2px 10px;
+        width: 100%;
+        max-width: 600px;
+        gap: 5px;
+    }
+
+    .url-input {
+        background: transparent;
+        border: none;
+        color: #fff;
+        flex-grow: 1;
+        font-family: "DM Mono", monospace;
+        font-size: 14px;
+        outline: none;
+        padding: 4px 8px;
+    }
+
+    .nav-btn {
+        background: transparent;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        transition: color 0.2s;
+    }
+
+    .nav-btn:hover {
+        color: #fff;
+    }
+
+    .nav-btn .material-symbols-outlined {
+        font-size: 18px;
     }
 
     :global(.fullscreen) {
