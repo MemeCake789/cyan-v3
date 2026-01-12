@@ -168,7 +168,7 @@
             <div class="list-view">
                 {#each filteredGames as game (game.title)}
                     <div animate:flip={{ duration: 500 }}>
-                        <div 
+                        <div
                             on:click={() => (selectedGame = game)}
                             role="button"
                             tabindex="0"
@@ -179,7 +179,7 @@
                             }}
                         >
                             <GameListItem
-                                game={game}
+                                {game}
                                 on:toggleFavorite={() => toggleFavorite(game)}
                             />
                         </div>
@@ -220,6 +220,7 @@
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
+        background-color: #0a0a0a;
     }
 
     .cyanide-container.list-view-details-open {

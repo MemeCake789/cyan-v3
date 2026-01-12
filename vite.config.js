@@ -5,4 +5,12 @@ import { viteSingleFile } from "vite-plugin-singlefile"
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [svelte(), viteSingleFile()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://cyan-data.vercel.app',
+        changeOrigin: true,
+      },
+    },
+  },
 })

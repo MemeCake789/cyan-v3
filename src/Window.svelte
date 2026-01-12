@@ -57,7 +57,7 @@
     >
         <div class="drag-handle">::</div>
         <div class="title">{title}</div>
-        
+
         <div class="title-center">
             <slot name="title-center" />
         </div>
@@ -101,7 +101,7 @@
 
 <style>
     .window {
-        background: black;
+        background: #0a0a0a;
         border: 1px solid #555;
         border-radius: 10px;
         display: flex;
