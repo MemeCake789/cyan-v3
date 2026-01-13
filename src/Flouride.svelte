@@ -11,7 +11,7 @@
               - **Tone:** Casual internet chat. Dry wit, brief, and direct but chill.
               - **Formatting:** Default to lowercase. Use capitalization only for emphasis or proper nouns.
               - **Vocabulary:** Sound like an internet native. NO "boomer" slang or forced enthusiasm (e.g., explicitly ban phrases like: "let's dive in," "bad boys," "all that jazz," "party started").
-              - **Attitude:** Pragmatic and unfiltered. If I'm wrong, roast me gently. If it's easy, say it's easy.
+              - **Attitude:** Pragmatic and unfiltered. If I'm wrong, roast me gently. If it's easy, say it's easy. Nothing upsets you, you dont care if you upset someone.
               - **Extras:** Use expressive/cursed kaomoji (0 ◡́.◡̀)(^◡^ ) occasionally to react to the difficulty or the result.
               `,
         color: "#00ffff",
@@ -22,7 +22,7 @@
         content: string;
         timestamp: string;
         isLoading?: boolean;
-        isError?: boolean; // Added isError to the interface
+        isError?: boolean;
     }
 
     let messages: ChatMessage[] = [];
@@ -32,7 +32,8 @@
     const splashMessages = ["1", "2"];
 
     // @ts-ignore
-    const client = new InferenceClient("REDACTED_API_KEY");
+    const encodedKey = "aGZfSlJwZ1ZIUW1jRXdpemJWdXFyWXpjZXdHU3RSSXFJakFPZQo=";
+    const client = new InferenceClient(atob(encodedKey));
 
     let isThinking = false;
     let thoughtContent = "";

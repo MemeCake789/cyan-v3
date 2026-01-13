@@ -10,6 +10,8 @@ export default defineConfig({
       '/api': {
         target: 'https://cyan-data.vercel.app',
         changeOrigin: true,
+        buffer: false,
+        timeout: 1000 * 60 * 60 * 12, // 12 hours
       },
     },
   },

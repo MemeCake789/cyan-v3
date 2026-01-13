@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount, onDestroy } from 'svelte';
+    import { createEventDispatcher, onDestroy, afterUpdate } from 'svelte';
 
     export let currentUrl = "";
     
@@ -8,6 +8,7 @@
     let historyIndex = -1;
     let iframeElement: HTMLIFrameElement | null;
     let iframeContainer: HTMLDivElement;
+    let hasAcceptedWarning = false;
 
     const dispatch = createEventDispatcher();
 
@@ -70,8 +71,14 @@
             navigate(history[historyIndex], false);
         }
     }
+    
+    function acceptWarning() {
+        hasAcceptedWarning = true;
+    }
 
-    onMount(() => {
+    function initializeChromium() {
+        if (!iframeContainer || iframeElement) return;
+
         iframeElement = document.createElement('iframe');
         iframeElement.title = "Chromium Proxy";
         iframeElement.style.width = "100%";
@@ -85,6 +92,12 @@
             navigate("google.com");
         } else if (iframeElement) {
             iframeElement.src = currentUrl;
+        }
+    }
+
+    afterUpdate(() => {
+        if (hasAcceptedWarning) {
+            initializeChromium();
         }
     });
 
@@ -100,14 +113,23 @@
 </script>
 
 <div class="browser-container">
-    <div class="iframe-wrapper" bind:this={iframeContainer}>
-        {#if !currentUrl && !iframeElement}
-            <div class="placeholder">
-                <span class="material-symbols-outlined">public</span>
-                <p>Enter a URL or search query to begin</p>
-            </div>
-        {/if}
-    </div>
+    {#if !hasAcceptedWarning}
+        <div class="warning">
+            <span class="material-symbols-outlined">warning</span>
+            <h3>Proxy WIP</h3>
+            <p>This proxy is a work-in-progress and may be blocked by some sites.</p>
+            <button on:click={acceptWarning}>Ok, Proceed</button>
+        </div>
+    {:else}
+        <div class="iframe-wrapper" bind:this={iframeContainer}>
+            {#if !currentUrl && !iframeElement}
+                <div class="placeholder">
+                    <span class="material-symbols-outlined">public</span>
+                    <p>Enter a URL or search query to begin</p>
+                </div>
+            {/if}
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -117,6 +139,40 @@
         height: 100%;
         width: 100%;
         background: #000;
+    }
+
+    .warning {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #ccc;
+        text-align: center;
+    }
+
+    .warning .material-symbols-outlined {
+        font-size: 64px;
+        margin-bottom: 20px;
+        color: #ffcc00;
+    }
+
+    .warning h3 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .warning p {
+        margin: 10px 0 20px;
+    }
+
+    .warning button {
+        padding: 10px 20px;
+        border: 1px solid #555;
+        background: #333;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
     }
 
     .iframe-wrapper {

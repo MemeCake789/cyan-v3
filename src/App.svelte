@@ -204,7 +204,7 @@
                     >
                         <svelte:fragment slot="title-center">
                             {#if window.type === 'proxy'}
-                                <div class="url-bar-container">
+                                <div class="url-bar-container" on:click|stopPropagation>
                                     <button class="nav-btn" on:click={() => chromiumStates[window.id].component?.goBack()}>
                                         <span class="material-symbols-outlined">arrow_back</span>
                                     </button>
@@ -215,7 +215,11 @@
                                         type="text" 
                                         class="url-input" 
                                         bind:value={chromiumStates[window.id].inputUrl}
-                                        on:keydown={(e) => e.key === 'Enter' && navigateChromium(window.id)}
+                                        on:keydown|stopPropagation={(e) => {
+                                            if (e.key === 'Enter') {
+                                                navigateChromium(window.id);
+                                            }
+                                        }}
                                         placeholder="Search or enter URL"
                                     />
                                     <button class="nav-btn" on:click={() => navigateChromium(window.id)}>
