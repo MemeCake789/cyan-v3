@@ -1,4 +1,4 @@
-const API_URL = "/api/chat";
+const API_URL = "https://cyan-data.vercel.app/api/chat";
 
 export async function getAllChats() {
   const res = await fetch(`${API_URL}?action=get_all_chats`);
