@@ -8,12 +8,6 @@
     let chatContainer: HTMLDivElement;
     let username = "anonymous-" + Math.floor(Math.random() * 10000);
 
-    $: if (messages && chatContainer) {
-        setTimeout(() => {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }, 10);
-    }
-
     $: if (typeof $usernameStore === "string" && $usernameStore.trim()) {
         username = $usernameStore;
     }
@@ -62,6 +56,12 @@
         const textToClear = newMessage;
         newMessage = "";
 
+        setTimeout(() => {
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }, 10);
+
         try {
             await apiSendMessage("global", payload.text, payload.user);
             fetchMessages();
@@ -71,8 +71,13 @@
         }
     }
 
-    onMount(() => {
-        fetchMessages();
+    onMount(async () => {
+        await fetchMessages();
+        setTimeout(() => {
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }, 50);
         const interval = setInterval(fetchMessages, 3000);
         return () => clearInterval(interval);
     });
