@@ -2138,19 +2138,6 @@
       "date": "2025-12-03"
     },
     {
-      "title": "sonic.exe",
-      "imageSrc": "data:image/png;base64,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",
-      "genre": "Platformer",
-      "type": "HTML",
-      "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfnfsonicexe.html",
-      "description": "",
-      "status": [
-        "Working",
-        "This game has no issues :D"
-      ],
-      "date": "2025-12-03"
-    },
-    {
       "title": "Bee Swarm Simulator",
       "imageSrc": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_-K3newL27nIuKIr2l_RulQioKV3pUEqmLd9Br_t_eDC70NQ:https://static.wikia.nocookie.net/bee-swarm-simulator/images/5/5b/Basic_Bee_OriginalIcon.png/revision/latest/scale-to-width-down/512%3Fcb%3D20240110223931&s",
       "genre": "Simulation",
