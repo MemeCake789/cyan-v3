@@ -195,7 +195,7 @@
             <span>{currentDate}</span>
             <span>{currentTime}</span>
         </div>
-        <div class="version">CYAN V3.0.1</div>
+        <div class="version">CYAN V3.0.1a <br><span style="font-size: xx-small; color: #888;">(Sulfur Scroll Fix)</span></div>
     </header>
     <nav class="nav">
         <button class="nav-button" on:click={() => openWindow("games")} title="Games">
