@@ -33,16 +33,16 @@
             id,
             type,
             title: type, // Original title/type
-            displayTitle: type === 'proxy' ? 'chrθmium' : type, // Title currently displayed in the bar
+            displayTitle: type === "proxy" ? "chrθmium" : type, // Title currently displayed in the bar
             minimized: false,
             showBackButton: false,
-            persona: 'cyan', // Add persona state
+            persona: "cyan", // Add persona state
         };
 
-        if (type === 'proxy') {
+        if (type === "proxy") {
             chromiumStates[id] = {
-                inputUrl: 'google.com',
-                component: null
+                inputUrl: "google.com",
+                component: null,
             };
         }
 
@@ -108,17 +108,23 @@
         window.dispatchEvent(event);
     }
 
-    function updateWindowState(id: number, detail: { title: string, showBackButton: boolean }) {
-        windows.update(ws => ws.map(w => {
-            if (w.id === id) {
-                return {
-                    ...w,
-                    displayTitle: detail.title === 'games' ? w.type : detail.title,
-                    showBackButton: detail.showBackButton
-                };
-            }
-            return w;
-        }));
+    function updateWindowState(
+        id: number,
+        detail: { title: string; showBackButton: boolean },
+    ) {
+        windows.update((ws) =>
+            ws.map((w) => {
+                if (w.id === id) {
+                    return {
+                        ...w,
+                        displayTitle:
+                            detail.title === "games" ? w.type : detail.title,
+                        showBackButton: detail.showBackButton,
+                    };
+                }
+                return w;
+            }),
+        );
     }
 
     function handleChromiumUrlChange(id, url) {
@@ -134,14 +140,14 @@
     }
 
     let showFeedbackPopup = false;
-    let feedbackType = 'bug';
-    let feedbackText = '';
-    let feedbackStatus = ''; // '', 'submitting', 'success', 'error'
+    let feedbackType = "bug";
+    let feedbackText = "";
+    let feedbackStatus = ""; // '', 'submitting', 'success', 'error'
 
     function openFeedbackPopup() {
         showFeedbackPopup = true;
-        feedbackStatus = '';
-        feedbackText = '';
+        feedbackStatus = "";
+        feedbackText = "";
     }
 
     function closeFeedbackPopup() {
@@ -150,39 +156,46 @@
 
     async function handleSubmit() {
         if (!feedbackText.trim()) {
-            feedbackStatus = 'Please enter some text.';
+            feedbackStatus = "Please enter some text.";
             setTimeout(() => {
-                if (feedbackStatus === 'Please enter some text.') feedbackStatus = '';
+                if (feedbackStatus === "Please enter some text.")
+                    feedbackStatus = "";
             }, 3000);
             return;
         }
 
-        feedbackStatus = 'submitting';
+        feedbackStatus = "submitting";
         try {
-            const response = await fetch('https://cyan-data.vercel.app/api/feedback', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: feedbackType, text: feedbackText })
-            });
+            const response = await fetch(
+                "https://cyan-data.vercel.app/api/feedback",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        type: feedbackType,
+                        text: feedbackText,
+                    }),
+                },
+            );
 
             if (response.ok) {
-                feedbackStatus = 'success';
+                feedbackStatus = "success";
                 setTimeout(() => {
                     closeFeedbackPopup();
                 }, 1500);
             } else {
                 const errorData = await response.json();
-                console.error('Submission failed:', errorData);
-                feedbackStatus = 'error';
+                console.error("Submission failed:", errorData);
+                feedbackStatus = "error";
                 setTimeout(() => {
-                    if (feedbackStatus === 'error') feedbackStatus = '';
+                    if (feedbackStatus === "error") feedbackStatus = "";
                 }, 3000);
             }
         } catch (error) {
-            console.error('Submission error:', error);
-            feedbackStatus = 'error';
+            console.error("Submission error:", error);
+            feedbackStatus = "error";
             setTimeout(() => {
-                if (feedbackStatus === 'error') feedbackStatus = '';
+                if (feedbackStatus === "error") feedbackStatus = "";
             }, 3000);
         }
     }
@@ -195,19 +208,34 @@
             <span>{currentDate}</span>
             <span>{currentTime}</span>
         </div>
-        <div class="version">CYAN V3.0.1a <br><span style="font-size: xx-small; color: #888;">(Sulfur Scroll Fix)</span></div>
+        <div class="version">
+            CYAN V3.0.1b <br /><span style="font-size: xx-small; color: #888;"
+                >(New Game Status)</span
+            >
+        </div>
     </header>
     <nav class="nav">
-        <button class="nav-button" on:click={() => openWindow("games")} title="Games">
-            <span class="material-symbols-outlined">sports_esports</span
-            >
+        <button
+            class="nav-button"
+            on:click={() => openWindow("games")}
+            title="Games"
+        >
+            <span class="material-symbols-outlined">sports_esports</span>
             cyλnide
         </button>
-        <button class="nav-button" on:click={() => openWindow("proxy")} title="Proxy">
+        <button
+            class="nav-button"
+            on:click={() => openWindow("proxy")}
+            title="Proxy"
+        >
             <span class="material-symbols-outlined">public</span>
             chrθmium
         </button>
-        <button class="nav-button" on:click={() => openWindow("floride")} title="AI">
+        <button
+            class="nav-button"
+            on:click={() => openWindow("floride")}
+            title="AI"
+        >
             <span class="material-symbols-outlined">smart_toy</span>
             °Fluoride
         </button>
@@ -232,7 +260,7 @@
                     role="button"
                     tabindex="0"
                     on:keydown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                        if (e.key === "Enter" || e.key === " ") {
                             dragStart(window);
                         }
                     }}
@@ -240,56 +268,90 @@
                 >
                     <Window
                         title={window.displayTitle}
-                        minimized={window.id === fullscreenWindowId ? false : window.minimized}
+                        minimized={window.id === fullscreenWindowId
+                            ? false
+                            : window.minimized}
                         fullscreen={window.id === fullscreenWindowId}
                         showBackButton={window.showBackButton}
                         on:close={() => closeWindow(window.id)}
                         on:toggleMinimize={() => toggleMinimize(window.id)}
                         on:fullscreen={() => toggleFullscreen(window.id)}
                         on:back={() => handleBack(window.id)}
-                        showPersonaSelector={window.type === 'floride'}
+                        showPersonaSelector={window.type === "floride"}
                         bind:selectedPersona={window.persona}
                     >
                         <svelte:fragment slot="title-center">
-                            {#if window.type === 'proxy'}
-                                <div class="url-bar-container" on:click|stopPropagation>
-                                    <button class="nav-btn" on:click={() => chromiumStates[window.id].component?.goBack()}>
-                                        <span class="material-symbols-outlined">arrow_back</span>
+                            {#if window.type === "proxy"}
+                                <div
+                                    class="url-bar-container"
+                                    on:click|stopPropagation
+                                >
+                                    <button
+                                        class="nav-btn"
+                                        on:click={() =>
+                                            chromiumStates[
+                                                window.id
+                                            ].component?.goBack()}
+                                    >
+                                        <span class="material-symbols-outlined"
+                                            >arrow_back</span
+                                        >
                                     </button>
-                                    <button class="nav-btn" on:click={() => chromiumStates[window.id].component?.goForward()}>
-                                        <span class="material-symbols-outlined">arrow_forward</span>
+                                    <button
+                                        class="nav-btn"
+                                        on:click={() =>
+                                            chromiumStates[
+                                                window.id
+                                            ].component?.goForward()}
+                                    >
+                                        <span class="material-symbols-outlined"
+                                            >arrow_forward</span
+                                        >
                                     </button>
-                                    <input 
-                                        type="text" 
-                                        class="url-input" 
-                                        bind:value={chromiumStates[window.id].inputUrl}
+                                    <input
+                                        type="text"
+                                        class="url-input"
+                                        bind:value={
+                                            chromiumStates[window.id].inputUrl
+                                        }
                                         on:keydown|stopPropagation={(e) => {
-                                            if (e.key === 'Enter') {
+                                            if (e.key === "Enter") {
                                                 navigateChromium(window.id);
                                             }
                                         }}
                                         placeholder="Search or enter URL"
                                     />
-                                    <button class="nav-btn" on:click={() => navigateChromium(window.id)}>
-                                        <span class="material-symbols-outlined">search</span>
+                                    <button
+                                        class="nav-btn"
+                                        on:click={() =>
+                                            navigateChromium(window.id)}
+                                    >
+                                        <span class="material-symbols-outlined"
+                                            >search</span
+                                        >
                                     </button>
                                 </div>
                             {/if}
                         </svelte:fragment>
 
-                        {#if window.type === 'games'}
-                            <Cyanide 
+                        {#if window.type === "games"}
+                            <Cyanide
                                 windowId={window.id}
-                                on:gamestatechange={(e) => updateWindowState(window.id, e.detail)} 
+                                on:gamestatechange={(e) =>
+                                    updateWindowState(window.id, e.detail)}
                             />
-                        {:else if window.type === 'floride'}
+                        {:else if window.type === "floride"}
                             <Flouride persona={window.persona} />
-                        {:else if window.type === 'sulfur'}
+                        {:else if window.type === "sulfur"}
                             <Sulfur />
-                        {:else if window.type === 'proxy'}
-                            <Chromium 
+                        {:else if window.type === "proxy"}
+                            <Chromium
                                 bind:this={chromiumStates[window.id].component}
-                                on:urlchange={(e) => handleChromiumUrlChange(window.id, e.detail.url)}
+                                on:urlchange={(e) =>
+                                    handleChromiumUrlChange(
+                                        window.id,
+                                        e.detail.url,
+                                    )}
                             />
                         {:else}
                             <p>Content for {window.type}</p>
@@ -308,34 +370,50 @@
 </main>
 
 {#if showFeedbackPopup}
-<div class="feedback-popup-overlay" on:click={closeFeedbackPopup}>
-    <div class="feedback-popup" on:click|stopPropagation>
-        <button class="popup-close-btn" on:click={closeFeedbackPopup}>&times;</button>
-        <h3>report a bug / give feedback</h3>
-        <form class="feedback-form" on:submit|preventDefault={handleSubmit}>
-            <select class="feedback-select" bind:value={feedbackType}>
-                <option value="bug">report a bug</option>
-                <option value="recommendation">recommendation</option>
-                <option value="game-request">request a game</option>
-            </select>
-            <textarea class="feedback-textarea" bind:value={feedbackText} placeholder="your feedback..."></textarea>
-            <button class="feedback-submit" type="submit" disabled={feedbackStatus === 'submitting'}>
-                {#if feedbackStatus === 'submitting'}
-                    sending...
-                {:else if feedbackStatus === 'success'}
-                    sent!
-                {:else}
-                    submit
-                {/if}
-            </button>
-        </form>
-        {#if feedbackStatus && !['submitting', 'success'].includes(feedbackStatus)}
-            <div class="feedback-status" class:error={feedbackStatus === 'error' || feedbackStatus === 'Please enter some text.'}>
-                {feedbackStatus === 'error' ? 'oops, something went wrong.' : feedbackStatus}
-            </div>
-        {/if}
+    <div class="feedback-popup-overlay" on:click={closeFeedbackPopup}>
+        <div class="feedback-popup" on:click|stopPropagation>
+            <button class="popup-close-btn" on:click={closeFeedbackPopup}
+                >&times;</button
+            >
+            <h3>report a bug / give feedback</h3>
+            <form class="feedback-form" on:submit|preventDefault={handleSubmit}>
+                <select class="feedback-select" bind:value={feedbackType}>
+                    <option value="bug">report a bug</option>
+                    <option value="recommendation">recommendation</option>
+                    <option value="game-request">request a game</option>
+                </select>
+                <textarea
+                    class="feedback-textarea"
+                    bind:value={feedbackText}
+                    placeholder="your feedback..."
+                ></textarea>
+                <button
+                    class="feedback-submit"
+                    type="submit"
+                    disabled={feedbackStatus === "submitting"}
+                >
+                    {#if feedbackStatus === "submitting"}
+                        sending...
+                    {:else if feedbackStatus === "success"}
+                        sent!
+                    {:else}
+                        submit
+                    {/if}
+                </button>
+            </form>
+            {#if feedbackStatus && !["submitting", "success"].includes(feedbackStatus)}
+                <div
+                    class="feedback-status"
+                    class:error={feedbackStatus === "error" ||
+                        feedbackStatus === "Please enter some text."}
+                >
+                    {feedbackStatus === "error"
+                        ? "oops, something went wrong."
+                        : feedbackStatus}
+                </div>
+            {/if}
+        </div>
     </div>
-</div>
 {/if}
 
 <style>
@@ -412,7 +490,7 @@
         justify-content: center;
         min-height: 100px;
     }
-    
+
     /* Responsive Vertical Layout */
     @media (max-width: 1200px) {
         main {
@@ -427,14 +505,17 @@
             padding: 10px;
         }
 
-        .header, .nav, .right, .footer {
+        .header,
+        .nav,
+        .right,
+        .footer {
             width: 100%;
         }
 
         .header {
             min-height: auto;
         }
-        
+
         .right {
             min-height: 110vh;
         }
@@ -588,7 +669,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.7);
+        background: rgba(0, 0, 0, 0.7);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -633,7 +714,9 @@
         gap: 10px;
     }
 
-    .feedback-select, .feedback-textarea, .feedback-submit {
+    .feedback-select,
+    .feedback-textarea,
+    .feedback-submit {
         background-color: #1a1a1a;
         color: #e0e0e0;
         border: 1px solid #555;
