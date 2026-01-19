@@ -3,6 +3,9 @@
     import { getMessages, sendMessage as apiSendMessage } from "./chatApi";
     import { username as usernameStore } from "./stores";
 
+    export let isMinimized: boolean;
+    export let isMaximized: boolean;
+
     let messages: { text: string; user: string; timestamp: string }[] = [];
     let newMessage = "";
     let chatContainer: HTMLDivElement;
@@ -43,11 +46,20 @@
         return {...msg, isOwner: false};
     }
 
-    async function fetchMessages() {
+    let lastMessageTimestamp: string | null = null;
+
+    async function fetchMessages(forceFull = false) {
+        if (isMinimized) return;
         try {
+            const since = forceFull ? null : lastMessageTimestamp;
             const data: { text: string; user: string; timestamp: string }[] =
-                await getMessages("global");
-            messages = data.reverse();
+                await getMessages("global", null, since);
+
+            if (data.length > 0) {
+                const newMessages = data.reverse();
+                messages = [...messages, ...newMessages];
+                lastMessageTimestamp = newMessages[newMessages.length - 1].timestamp;
+            }
         } catch (err) {
             console.error("Fetch error:", err);
         }
@@ -61,10 +73,6 @@
             user: username,
         };
 
-        messages = [
-            ...messages,
-            { ...payload, timestamp: new Date().toISOString() },
-        ];
         const textToClear = newMessage;
         newMessage = "";
 
@@ -76,7 +84,7 @@
 
         try {
             await apiSendMessage("global", payload.text, payload.user);
-            fetchMessages();
+            await fetchMessages(); // Fetch new messages
         } catch (err) {
             alert("Message failed to send!");
             newMessage = textToClear;
@@ -84,13 +92,13 @@
     }
 
     onMount(async () => {
-        await fetchMessages();
+        await fetchMessages(true); // Initial full fetch
         setTimeout(() => {
             if (chatContainer) {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         }, 50);
-        const interval = setInterval(fetchMessages, 3000);
+        const interval = setInterval(fetchMessages, 6000);
         return () => clearInterval(interval);
     });
 </script>

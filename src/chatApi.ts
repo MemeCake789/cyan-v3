@@ -6,12 +6,20 @@ export async function getAllChats() {
   return await res.json();
 }
 
-export async function getMessages(chatId: string, key: string | null = null) {
+export async function getMessages(
+  chatId: string,
+  key: string | null = null,
+  since: string | null = null
+) {
   const headers = new Headers();
   if (key) {
     headers.append("x-chat-key", key);
   }
-  const res = await fetch(`${API_URL}?chatId=${chatId}`, { headers });
+  let url = `${API_URL}?chatId=${chatId}`;
+  if (since) {
+    url += `&since=${since}`;
+  }
+  const res = await fetch(url, { headers });
   if (!res.ok) throw new Error("Failed to load messages");
   return await res.json();
 }

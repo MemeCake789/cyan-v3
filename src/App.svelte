@@ -209,8 +209,8 @@
             <span>{currentTime}</span>
         </div>
         <div class="version">
-            CYAN V3.0.1c <br /><span style="font-size: xx-small; color: #888;"
-                >(Window Drag Fix)</span
+            CYAN V3.0.1d <br /><span style="font-size: xx-small; color: #888;"
+                >(Sulfur Chat Optimization)</span
             >
         </div>
     </header>
@@ -337,7 +337,10 @@
                         {:else if window.type === "floride"}
                             <Flouride persona={window.persona} />
                         {:else if window.type === "sulfur"}
-                            <Sulfur />
+                            <Sulfur
+                                isMinimized={window.minimized}
+                                isMaximized={!window.minimized && window.id !== fullscreenWindowId}
+                            />
                         {:else if window.type === "proxy"}
                             <Chromium
                                 bind:this={chromiumStates[window.id].component}

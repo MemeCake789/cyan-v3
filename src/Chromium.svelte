@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { createEventDispatcher, onDestroy, afterUpdate } from 'svelte';
+    import { createEventDispatcher, onDestroy, afterUpdate } from "svelte";
 
     export let currentUrl = "";
-    
+
     let inputUrl = "";
     let history: string[] = [];
     let historyIndex = -1;
@@ -16,16 +16,20 @@
 
     function navigate(url: string, addToHistory = true) {
         if (!url) return;
-        
+
         let targetUrl = url;
         // Basic URL validation/fixing
-        if (!url.startsWith('http://') && !url.startsWith('https://') && !url.includes(' ')) {
-             if (url.includes('.') ) {
-                 targetUrl = 'https://' + url;
-             } else {
-                 // Search query
-                 targetUrl = url;
-             }
+        if (
+            !url.startsWith("http://") &&
+            !url.startsWith("https://") &&
+            !url.includes(" ")
+        ) {
+            if (url.includes(".")) {
+                targetUrl = "https://" + url;
+            } else {
+                // Search query
+                targetUrl = url;
+            }
         }
 
         const fullProxyUrl = PROXY_BASE + encodeURIComponent(targetUrl);
@@ -43,11 +47,11 @@
             historyIndex = history.length - 1;
         }
 
-        dispatch('urlchange', { url: targetUrl });
+        dispatch("urlchange", { url: targetUrl });
     }
 
     function handleKeydown(e: KeyboardEvent) {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
             navigate(inputUrl);
         }
     }
@@ -71,7 +75,7 @@
             navigate(history[historyIndex], false);
         }
     }
-    
+
     function acceptWarning() {
         hasAcceptedWarning = true;
     }
@@ -79,7 +83,7 @@
     function initializeChromium() {
         if (!iframeContainer || iframeElement) return;
 
-        iframeElement = document.createElement('iframe');
+        iframeElement = document.createElement("iframe");
         iframeElement.title = "Chromium Proxy";
         iframeElement.style.width = "100%";
         iframeElement.style.height = "100%";
@@ -109,7 +113,6 @@
 
     // Expose methods for the title bar buttons
     export { goBack, goForward, refresh, navigate, inputUrl };
-
 </script>
 
 <div class="browser-container">
@@ -117,7 +120,10 @@
         <div class="warning">
             <span class="material-symbols-outlined">warning</span>
             <h3>Proxy WIP</h3>
-            <p>This proxy is a work-in-progress and may be blocked by some sites.</p>
+            <p>
+                This proxy is a work-in-progress and may be blocked by some
+                extensions.
+            </p>
             <button on:click={acceptWarning}>Ok, Proceed</button>
         </div>
     {:else}
