@@ -7,7 +7,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/2048/2048.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Advance Wars",
@@ -17,7 +20,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/EMULATORS/index%20(4).html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 1",
@@ -26,7 +32,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek1/derek1.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 2",
@@ -35,7 +44,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek2/derek2.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 3",
@@ -44,7 +56,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek3/derek3.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 4",
@@ -53,7 +68,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek4/derek4.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 5",
@@ -62,7 +80,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek5/derek5.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 6",
@@ -71,7 +92,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek6/derek6.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 7",
@@ -80,7 +104,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek7/derek7.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Derek 8",
@@ -89,7 +116,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/derek8/derek8.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Minecraft",
@@ -98,7 +128,10 @@
       "type": "HTML",
       "link": "https://sulfur-cyanide.vercel.app/a/hvtrs8%2F-ecgnepcpadtx.raeeq.fet%2Fhataqcpirt-",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Emerald",
@@ -108,7 +141,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Pokemon%20Emerald%20%2B.zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Fire Red",
@@ -118,7 +154,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Pokemon%20Firered%20251.zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Crystal",
@@ -128,7 +167,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Crystal%20Version%20(UE)%20(V1.1)%20%5BC%5D%5B!%5D.gbc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Red",
@@ -138,7 +180,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Red%20Version%20(UE)%5B!%5D.zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Blue",
@@ -148,7 +193,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/pokemon-blue.gb",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Gold",
@@ -158,7 +206,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Gold%20Version%20(UE)%20%5BC%5D%5B!%5D.gbc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Silver",
@@ -168,7 +219,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Silver%20Version%20(USA%2C%20Europe)%20(SGB%20Enhanced).gbc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Castlevania - Harmony of Dissonance",
@@ -178,7 +232,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Castlevania%20-%20Harmony%20of%20Dissonance%20(USA).zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Jimmy Neutron Boy Genius",
@@ -188,7 +245,10 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Adventures%20of%20Jimmy%20Neutron%20Boy%20Genius%20vs.%20Jimmy%20Negatron%2C%20The%20(USA%2C%20Europe).zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Earthbound",
@@ -198,7 +258,10 @@
       "type": "EMULATOR",
       "link": "https://cyan-assets.vercel.app/EMULATORS/Earthbound/Earthbound.smc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "fixedDate": "2025-10-31"
     },
     {
@@ -208,7 +271,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Papa'sBurgeria/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Papa's Freezeria",
@@ -217,7 +283,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Papa'sFreezeria/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Papa's Pizzeria",
@@ -226,7 +295,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Papa'sPizzeria/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Papa's Sushiria",
@@ -235,7 +307,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Papa'sSushiria/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Duck Life",
@@ -244,7 +319,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Duck Life/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Duck Life 2",
@@ -253,7 +331,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Duck%20Life%202/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Duck Life 3",
@@ -262,7 +343,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Duck%20Life%203/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Duck Life 4",
@@ -271,7 +355,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Duck%20Life%204/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Duck Life 5",
@@ -280,7 +367,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Duck%20Life%205/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-15"
     },
     {
@@ -290,7 +380,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Learn%20to%20Fly/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Learn to Fly 2",
@@ -299,7 +392,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Learn%202%20Fly/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Learn To Fly 3",
@@ -308,7 +404,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Learn%20to%20Fly%203/index.html",
       "description": "",
-      "status": ["Bugged", "flying is a bit laggy"]
+      "status": [
+        "Bugged",
+        "flying is a bit laggy"
+      ]
     },
     {
       "title": "Escaping The Prison",
@@ -317,7 +416,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Escaping%20The%20Prison/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Happy Wheels",
@@ -326,7 +428,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Happy%20Wheels/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Mutilate A Doll 2",
@@ -335,7 +440,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Mutilate%20A%20Doll%202/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "One Chance",
@@ -344,7 +452,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/One%20Chance/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "QWOP",
@@ -353,7 +464,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/QWOP/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Run 2",
@@ -362,7 +476,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Run%202/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Simpsons Home",
@@ -371,7 +488,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Simpsons%20Home/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Stealing The Diamond",
@@ -380,7 +500,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Stealing%20The%20Diamond/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Bloons Tower Defense 5",
@@ -389,7 +512,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/BTD5/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Dig To China",
@@ -410,7 +536,10 @@
       "type": "HTML",
       "link": "https://cdn.jsdelivr.net/gh/gameproxy/swf_storage_1@master/Fireboy%20and%20Watergirl.swf",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "CSGO Clicker",
@@ -419,7 +548,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/csgo-clicker/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Cell Machine",
@@ -428,7 +560,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/cell-machine/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Achievement Unlocked",
@@ -437,7 +572,10 @@
       "type": "HTML",
       "link": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/FLASH/AchivementUnlocked/index.html",
       "description": "there are more achivements in this game than there are games in this site",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Doodle Jump",
@@ -446,7 +584,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/doodle-jump/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Gimme the Airpod",
@@ -455,7 +596,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/gimme-the-airpod/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Rooftop Snipers",
@@ -464,7 +608,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/rooftop-snipers/index.html",
       "description": "360 no scope mlg water bucket hell yeah we are going back to 2010 baby",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "circloO",
@@ -473,7 +620,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/circlo/index.html",
       "description": "circle, thats it.",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "The Heist",
@@ -482,7 +632,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/theheist/index.html",
       "description": "u drive car and get away from ops, simple.",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Pokemon Unbound",
@@ -492,7 +645,10 @@
       "type": "EMULATOR",
       "link": "https://cyan-assets.vercel.app/EMULATORS/Pokemon%20Unbound/POKEMON_UNBOUND.gba",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "fixedDate": "2025-10-31"
     },
     {
@@ -502,7 +658,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/CC3D/Crazy%20Cattle%203D.html",
       "description": "this game got a game of the year award 3 times in a row, it be stupid to not incude this game.",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Buckshot Roulette",
@@ -511,7 +670,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Buckshot%20Roulette/Buckshot%20Roulette.html",
       "description": "suicide but cooler ( jk pls love urself :) )",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Deltarune",
@@ -520,7 +682,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/deltarune-main/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-07",
       "fixedDate": "2025-10-14"
     },
@@ -531,7 +696,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Endoparasitic/Endoparasitic.html",
       "description": "dawg ur a amputee with one arm, id call it quits bro.",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Half Life",
@@ -540,7 +708,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/hl/xash.html",
       "description": "gooordon freeemannnn....",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -562,7 +733,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/People%20Playground/People%20Playground.html",
       "description": "human torture game :P",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Ultrakill",
@@ -571,7 +745,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/ultrakill/index.html",
       "description": "Humanity is ded and hell is real D:",
-      "status": ["Working", "This game has no issues!"],
+      "status": [
+        "Working",
+        "This game has no issues!"
+      ],
       "fixedDate": "2025-10-21"
     },
     {
@@ -581,7 +758,10 @@
       "type": "HTML",
       "link": "https://sulfur-cyanide.vercel.app/a/hvtrs8%2F-wuw%2Cawtksviai%2Copg-bwrlefppoheatq%2FWNFEPTCLG%2F",
       "description": "Game where u dont have to kill people (yawn)",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Broken",
+        "This game has no issues :D"
+      ],
       "fixedDate": "2025-10-24"
     },
     {
@@ -603,7 +783,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/hollow-night/index.html",
       "description": "",
-      "status": ["Bugged", "game crashes randomly "]
+      "status": [
+        "Bugged",
+        "game crashes randomly "
+      ]
     },
     {
       "title": "PokeRouge",
@@ -612,7 +795,10 @@
       "type": "HTML",
       "link": "https://pokerogue-cyan.vercel.app",
       "description": "",
-      "status": ["Bugged", "game can sometimes freeze when loading"]
+      "status": [
+        "Bugged",
+        "game can sometimes freeze when loading"
+      ]
     },
     {
       "title": "Riddle School 1",
@@ -621,7 +807,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/RiddleSchool/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Riddle School 2",
@@ -630,7 +819,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/RiddleSchool2/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Riddle School 3",
@@ -639,7 +831,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/RiddleSchool3/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Riddle School 4",
@@ -648,7 +843,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/RiddleSchool4/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Riddle School 5",
@@ -657,7 +855,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/RiddleSchool5/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Banana Saber",
@@ -666,7 +867,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/BananaSaber/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ]
     },
     {
       "title": "Baldi's Basics",
@@ -675,7 +879,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Baldi/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -685,7 +892,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/WebFishing/index.html",
       "description": "",
-      "status": ["Bugged", "Online does not work, but offline does."],
+      "status": [
+        "Bugged",
+        "Online does not work, but offline does."
+      ],
       "date": "2025-10-01"
     },
     {
@@ -695,7 +905,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/BTTS/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -705,7 +918,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/RetroBowl/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -715,7 +931,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/PixelGunSurvival/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -725,7 +944,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/JustOneBoss/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -735,7 +957,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Bitlife/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -745,7 +970,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/BasketRandom/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -755,7 +983,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/getaway-shootout/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -765,7 +996,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clvex.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-13"
     },
     {
@@ -775,7 +1009,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clvex2.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-13"
     },
     {
@@ -785,7 +1022,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/vex3/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -795,7 +1035,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/vex4/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-01"
     },
     {
@@ -805,7 +1048,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clvex5.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-13"
     },
     {
@@ -815,7 +1061,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clvex6.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-13"
     },
     {
@@ -825,7 +1074,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clvex7.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-13"
     },
     {
@@ -835,7 +1087,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clvex8.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-13"
     },
     {
@@ -845,7 +1100,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Antimatter%20Dimensions",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-02"
     },
     {
@@ -855,7 +1113,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/ropepolice/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-02"
     },
     {
@@ -865,7 +1126,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clcookieclickercool.html",
       "description": "",
-      "status": ["Working", "This game  has no issues :D"],
+      "status": [
+        "Working",
+        "This game  has no issues :D"
+      ],
       "date": "2025-10-03",
       "fixedDate": "2025-12-04"
     },
@@ -876,7 +1140,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/superhot/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-03"
     },
     {
@@ -886,7 +1153,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/idle-breakout/index.html",
       "description": "",
-      "status": ["Bugged", "This game has iframe issues"],
+      "status": [
+        "Bugged",
+        "This game has iframe issues"
+      ],
       "date": "2025-10-03"
     },
     {
@@ -896,7 +1166,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/worlds-hardest-game/index.html",
       "description": "",
-      "status": ["Bugged", "This game has iframe issues"],
+      "status": [
+        "Bugged",
+        "This game has iframe issues"
+      ],
       "date": "2025-10-03"
     },
     {
@@ -906,7 +1179,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/worlds-hardest-game-2/index.html",
       "description": "",
-      "status": ["Bugged", "This game has iframe issues"],
+      "status": [
+        "Bugged",
+        "This game has iframe issues"
+      ],
       "date": "2025-10-03"
     },
     {
@@ -916,7 +1192,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/ages-of-conflict/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-03"
     },
     {
@@ -926,7 +1205,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/crime-city-2-3d-webgl/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10",
       "fixedDate": "2025-10-15"
     },
@@ -937,7 +1219,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/fireboywatergirl2/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -947,7 +1232,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/fireboywatergirl3/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -957,7 +1245,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -967,7 +1258,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -977,7 +1271,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -987,7 +1284,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -997,7 +1297,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -1007,7 +1310,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -1017,7 +1323,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
     {
@@ -1027,10 +1336,12 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/wheely/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-06"
     },
-
     {
       "title": "Subway Surfers",
       "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/SubwaySurfers/sssf.jpg",
@@ -1038,7 +1349,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/SubwaySurfers/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-16"
     },
     {
@@ -1048,7 +1362,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/1/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1058,7 +1375,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/2/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1068,7 +1388,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/3/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1078,7 +1401,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/4/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1088,7 +1414,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/sl/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1098,7 +1427,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/ps/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1108,7 +1440,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/w/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1118,7 +1453,10 @@
       "type": "HTML",
       "link": "https://fnaf-eta.vercel.app/ucn/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1128,7 +1466,10 @@
       "type": "HTML",
       "link": "https://sulfur-cyanide.vercel.app/a/hvtrs8%2F-1eaoeq.ko-gcmg%2Fercnly%2Fhmrpop%2F",
       "description": "",
-      "status": ["Unknown", "This game has unknown working capabilities"],
+      "status": [
+        "Unknown",
+        "This game has unknown working capabilities"
+      ],
       "date": "2025-10-10",
       "fixedDate": "2025-10-31"
     },
@@ -1139,7 +1480,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/revolution-idle/index.html",
       "description": "",
-      "status": ["Bugged", "This game has iframe issues"],
+      "status": [
+        "Bugged",
+        "This game has iframe issues"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1149,7 +1493,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/FLASH/Basketball_legends/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1159,7 +1506,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/fire-emblem/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-10"
     },
     {
@@ -1169,7 +1519,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/clusterrush/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-21"
     },
     {
@@ -1179,7 +1532,10 @@
       "type": "HTML",
       "link": "https://slope-game-dusky.vercel.app/",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-21",
       "fixedDate": "2025-12-09"
     },
@@ -1190,7 +1546,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/slope2/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-10-21"
     },
     {
@@ -1200,7 +1559,10 @@
       "type": "HTML",
       "link": "https://sulfur-cyanide.vercel.app/a/hvtrs8%2F-wuw%2Crmcievgcmgs%2Cim%2Feaoedrcmg%2Fqurep-qmcsj-dlcsj-0",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-4",
       "fixedDate": "2025-11-13"
     },
@@ -1211,7 +1573,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/FLASH/papascheeseria/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-4"
     },
     {
@@ -1221,7 +1586,10 @@
       "type": "HTML",
       "link": "https://n-gon-cyan.vercel.app/",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-3"
     },
     {
@@ -1231,7 +1599,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/SpaceCompany/index.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-5"
     },
     {
@@ -1241,7 +1612,10 @@
       "type": "HTML",
       "link": "https://sulfur-cyanide.vercel.app/a/hvtrs8%2F-jcsmneaoeqdgv%2Cgktju%60.ko-dpidt%2Fhwnveps-",
       "description": "",
-      "status": ["Bugged", "This game has loading issues"],
+      "status": [
+        "Bugged",
+        "This game has loading issues"
+      ],
       "date": "2025-11-5"
     },
     {
@@ -1251,7 +1625,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/1/1.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-5"
     },
     {
@@ -1260,7 +1637,10 @@
       "genre": "Incremental",
       "type": "HTML",
       "link": "https://level13.vercel.app/",
-      "status": ["Working", "This game  has no issues :D"],
+      "status": [
+        "Working",
+        "This game  has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1270,7 +1650,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/1on1soccer/1on1soccer.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1280,7 +1663,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/1v1lol/1v1lol.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1290,7 +1676,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/1v1tennis/1v1tennis.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1300,7 +1689,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/2doom/2doom.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1310,7 +1702,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/3d-dash/3d-dash.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1320,7 +1715,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/3slices2/3slices2.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1330,7 +1728,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/4thandgoal/4thandgoal.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1340,7 +1741,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/8ballpool/8ballpool.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1350,7 +1754,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/10bullets/10bullets.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1360,7 +1767,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/10minutestilldawn/10minutestildawn.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1370,7 +1780,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/12minibattles/12minibattles.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1380,7 +1793,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/60secondsburgerrun/60secondsburgerrun.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1390,7 +1806,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/60secondssantarun/60secondssantarun.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1400,7 +1819,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/99balls/99balls.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1410,7 +1832,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/99nightsintheforest/99nightsitf.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1420,7 +1845,10 @@
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/9007199254740992/9007199254740992.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-6"
     },
     {
@@ -1430,7 +1858,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clDragonBallZTheLegacyofGoku.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1440,7 +1871,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clageofwar.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1450,7 +1884,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clalienhominid.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1460,7 +1897,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clangrybirds-space.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1470,7 +1910,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clanimalcrossingwildworld.html",
       "description": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clanimalcrossingwildworld.html",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1480,7 +1923,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clbasketbros.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1490,7 +1936,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clblockblast.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1500,10 +1949,12 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clblockcraftparkour.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
-
     {
       "title": "Steal a Brainrot 🤢",
       "imageSrc": "data:image/jpeg;base64,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",
@@ -1511,7 +1962,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clbrainrot.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1521,7 +1975,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clbobtherobber.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1531,7 +1988,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clcatmario.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1541,7 +2001,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clceleste.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1551,7 +2014,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/cltanukisunset.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1561,7 +2027,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/cltetris.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-11-10"
     },
     {
@@ -1571,7 +2040,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clPokemonrocketedition.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1581,7 +2053,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clcuttherope.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1591,7 +2066,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfancypantsadventure.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1601,7 +2079,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfancypantsadventure2.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1611,7 +2092,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfancypantsadventure3.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1621,7 +2105,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfinalfantasy.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1631,7 +2118,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clgrandtheftautoadvance.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1641,7 +2131,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfnfsonicexe.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1651,7 +2144,10 @@
       "type": "HTML",
       "link": "https://bss-cyan.vercel.app/",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "date": "2025-12-03"
     },
     {
@@ -1661,7 +2157,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Binding%20of%20Issac_%20Wrath%20of%20the%20Lamb/Binding%20of%20Issac_%20Wrath%20of%20the%20Lamb",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1672,7 +2171,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Cave%20Story/Cave%20Story",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1683,7 +2185,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Fruit%20Ninja/Fruit%20Ninja",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1694,7 +2199,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Gladihoppers/Gladihoppers",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1705,7 +2213,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/In%20Stars%20and%20Time/In%20Stars%20and%20Time",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1716,7 +2227,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Look%20Outside/Look%20Outside",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1727,7 +2241,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Madness%20Combat_%20Project%20Nexus%20(classic)/Madness%20Combat_%20Project%20Nexus%20(classic)",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1738,7 +2255,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Meatboy/Meatboy",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1749,7 +2269,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/OMORI/OMORI",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1760,7 +2283,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Off/Off",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1771,7 +2297,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Oneshot%20(LEGACY)/Oneshot%20(LEGACY)",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1782,7 +2311,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Pizza%20Tower/Pizza%20Tower",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1793,7 +2325,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Sonic.EXE/Sonic.EXE",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1804,7 +2339,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Sort%20the%20Court/Sort%20the%20Court",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1815,7 +2353,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Spelunky%20Classic%20HD/Spelunky%20Classic%20HD",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     },
@@ -1826,7 +2367,10 @@
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Yume%20Nikki/Yume%20Nikki",
       "description": "",
-      "status": ["Working", "This game has no issues :D"],
+      "status": [
+        "Working",
+        "This game has no issues :D"
+      ],
       "dateAdded": "2026-01-18",
       "dateFixed": ""
     }
