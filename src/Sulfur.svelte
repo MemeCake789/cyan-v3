@@ -5,6 +5,7 @@
 
     let messages: { text: string; user: string; timestamp: string }[] = [];
     let newMessage = "";
+    let isTabVisible = true;
     let chatContainer: HTMLDivElement;
     let username = "anonymous-" + Math.floor(Math.random() * 10000);
     let unsubscribe: () => void;
@@ -65,21 +66,38 @@
     }
 
     onMount(() => {
-        unsubscribe = getMessages((newMessages) => {
-            messages = newMessages;
-            setTimeout(() => {
-                if (chatContainer) {
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
-            }, 50);
-        });
-
-        return () => {
+    const handleVisibilityChange = () => {
+        isTabVisible = !document.hidden;
+        if (isTabVisible) {
+            console.log("User is back!");
+            unsubscribe = getMessages((newMessages) => {
+                messages = newMessages;
+                setTimeout(() => {
+                    if (chatContainer) {
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                }, 50);
+            });
+        } else {
+            console.log("User left the tab.");
             if (unsubscribe) {
                 unsubscribe();
             }
-        };
-    });
+        }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Initial check
+    handleVisibilityChange();
+
+    return () => {
+        if (unsubscribe) {
+            unsubscribe();
+        }
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+});
 </script>
 
 <div class="sulfur-container">
