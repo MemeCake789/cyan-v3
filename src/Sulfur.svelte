@@ -31,6 +31,18 @@
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
 
+    function processMessage(msg: { text: string; user: string; timestamp: string }) {
+        if (msg.text.startsWith("sudo ")) {
+            return {
+                ...msg,
+                user: `[OWNER] ${msg.user}`,
+                text: msg.text.slice(5),
+                isOwner: true,
+            };
+        }
+        return {...msg, isOwner: false};
+    }
+
     async function fetchMessages() {
         try {
             const data: { text: string; user: string; timestamp: string }[] =
@@ -91,14 +103,16 @@
 
     <div class="chat-history" bind:this={chatContainer}>
         {#each messages as msg, i (i)}
+            {@const processedMessage = processMessage(msg)}
             <div
                 class="message"
-                style="--sender-color: {stringToColor(msg.user)}"
+                style="--sender-color: {stringToColor(processedMessage.user)}"
             >
-                <span class="timestamp">[{formatTimestamp(msg.timestamp)}]</span
+                <span class="timestamp"
+                    >[{formatTimestamp(processedMessage.timestamp)}]</span
                 >
-                <span class="sender-name">{msg.user}:</span>
-                <span class="content">{msg.text}</span>
+                <span class="sender-name" class:owner={processedMessage.isOwner}>{processedMessage.user}:</span>
+                <span class="content">{processedMessage.text}</span>
             </div>
         {:else}
             <div class="message system">
@@ -176,6 +190,26 @@
         font-weight: bold;
         margin-right: 8px;
         color: var(--sender-color);
+    }
+
+    .sender-name.owner {
+        background: linear-gradient(to right, #00ffff, #fff, #00ffff);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: owner-gradient 3s ease infinite;
+    }
+
+    @keyframes owner-gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
     }
 
     .content {
