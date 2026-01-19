@@ -188,6 +188,9 @@
             padding 0.3s ease-out,
             opacity 0.2s ease-out;
         opacity: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
     }
 
     .content.hidden {

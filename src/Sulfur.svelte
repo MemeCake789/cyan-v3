@@ -1,21 +1,20 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import { getMessages, sendMessage as apiSendMessage } from "./chatApi";
     import { username as usernameStore } from "./stores";
-
-    export let isMinimized: boolean;
-    export let isMaximized: boolean;
 
     let messages: { text: string; user: string; timestamp: string }[] = [];
     let newMessage = "";
     let chatContainer: HTMLDivElement;
     let username = "anonymous-" + Math.floor(Math.random() * 10000);
+    let unsubscribe: () => void;
 
     $: if (typeof $usernameStore === "string" && $usernameStore.trim()) {
         username = $usernameStore;
     }
 
     function formatTimestamp(isoString: string) {
+        if (!isoString) return "";
         return new Date(isoString).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -46,25 +45,6 @@
         return {...msg, isOwner: false};
     }
 
-    let lastMessageTimestamp: string | null = null;
-
-    async function fetchMessages(forceFull = false) {
-        if (isMinimized) return;
-        try {
-            const since = forceFull ? null : lastMessageTimestamp;
-            const data: { text: string; user: string; timestamp: string }[] =
-                await getMessages("global", null, since);
-
-            if (data.length > 0) {
-                const newMessages = data.reverse();
-                messages = [...messages, ...newMessages];
-                lastMessageTimestamp = newMessages[newMessages.length - 1].timestamp;
-            }
-        } catch (err) {
-            console.error("Fetch error:", err);
-        }
-    }
-
     async function sendMessage() {
         if (!newMessage.trim()) return;
 
@@ -76,30 +56,29 @@
         const textToClear = newMessage;
         newMessage = "";
 
-        setTimeout(() => {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-        }, 10);
-
         try {
-            await apiSendMessage("global", payload.text, payload.user);
-            await fetchMessages(); // Fetch new messages
+            await apiSendMessage(payload.text, payload.user);
         } catch (err) {
             alert("Message failed to send!");
             newMessage = textToClear;
         }
     }
 
-    onMount(async () => {
-        await fetchMessages(true); // Initial full fetch
-        setTimeout(() => {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+    onMount(() => {
+        unsubscribe = getMessages((newMessages) => {
+            messages = newMessages;
+            setTimeout(() => {
+                if (chatContainer) {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            }, 50);
+        });
+
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
             }
-        }, 50);
-        const interval = setInterval(fetchMessages, 6000);
-        return () => clearInterval(interval);
+        };
     });
 </script>
 

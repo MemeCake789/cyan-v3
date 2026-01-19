@@ -240,19 +240,19 @@
     }
 
     .main-view {
-        flex-grow: 1;
+        flex: 3;
         display: flex;
         flex-direction: column;
-        width: 100%;
+        overflow: hidden;
     }
 
     .cyanide-container.list-view-details-open .main-view {
-        width: 60%;
         border-right: 1px solid #444;
     }
 
     .detail-view {
-        width: 40%;
+        flex: 2;
+        overflow-y: auto;
     }
 
     .top-bar {

@@ -17,6 +17,7 @@
   "dependencies": {
     "@huggingface/inference": "^4.13.5",
     "colorthief": "^2.6.0",
+    "firebase": "^12.8.0",
     "markdown-it": "^14.1.0",
     "markdown-it-katex": "^2.0.3"
   }
