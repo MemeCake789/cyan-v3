@@ -9,6 +9,7 @@
         imageSrc: string;
         genre: string;
         status: [string, string];
+        isNew?: boolean;
     };
 
     let imgElement: HTMLImageElement;
@@ -124,6 +125,9 @@
     --separator-color: {separatorColor};
 "
 >
+    {#if game.isNew}
+        <div class="new-tag">NEW</div>
+    {/if}
     <div class="image-container">
         <img
             src={visibleSrc}
@@ -163,6 +167,19 @@
             color 0.5s ease,
             border-color 0.5s ease;
         color: var(--text-color);
+    }
+
+    .new-tag {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background-color: yellow;
+        color: black;
+        padding: 2px 6px;
+        font-size: 0.8em;
+        font-weight: bold;
+        border-radius: 0 12px 0 12px;
+        z-index: 1;
     }
 
     .info h2 {

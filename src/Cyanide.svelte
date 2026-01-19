@@ -20,6 +20,8 @@
         description: string;
         status: [string, string];
         favorited?: boolean;
+        dateAdded?: string;
+        isNew?: boolean;
     };
 
     let games: Game[] = [];
@@ -31,6 +33,8 @@
     $: sortedGames = [...games].sort((a, b) => {
         if (a.favorited && !b.favorited) return -1;
         if (!a.favorited && b.favorited) return 1;
+        if (a.isNew && !b.isNew) return -1;
+        if (!a.isNew && b.isNew) return 1;
         return a.title.localeCompare(b.title);
     });
 
@@ -41,6 +45,13 @@
             title: "games",
             showBackButton: false,
         });
+    }
+
+    function isRecent(dateString: string): boolean {
+        const date = new Date(dateString);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        return date > sevenDaysAgo;
     }
 
     onMount(async () => {
@@ -54,9 +65,10 @@
                 throw new Error("Failed to fetch games list");
             }
             const data = await response.json();
-            games = data.games.map((game: Omit<Game, "favorited">) => ({
+            games = data.games.map((game: Omit<Game, "favorited" | "isNew">) => ({
                 ...game,
                 favorited: false,
+                isNew: game.dateAdded ? isRecent(game.dateAdded) : false,
             }));
         } catch (e) {
             if (e instanceof Error) {
