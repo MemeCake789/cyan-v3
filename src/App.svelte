@@ -209,8 +209,8 @@
             <span>{currentTime}</span>
         </div>
         <div class="version">
-            CYAN V3.0.1b <br /><span style="font-size: xx-small; color: #888;"
-                >(New Game Status)</span
+            CYAN V3.0.1c <br /><span style="font-size: xx-small; color: #888;"
+                >(Window Drag Fix)</span
             >
         </div>
     </header>
@@ -253,17 +253,8 @@
             {#each $windows as window (window.id)}
                 <div
                     class:fullscreen={window.id === fullscreenWindowId}
-                    draggable="true"
-                    on:dragstart={() => dragStart(window)}
-                    on:dragover|preventDefault={() => dragOver(window)}
-                    on:dragend={dragEnd}
                     role="button"
                     tabindex="0"
-                    on:keydown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                            dragStart(window);
-                        }
-                    }}
                     animate:flip={{ duration: 300 }}
                 >
                     <Window
@@ -277,6 +268,9 @@
                         on:toggleMinimize={() => toggleMinimize(window.id)}
                         on:fullscreen={() => toggleFullscreen(window.id)}
                         on:back={() => handleBack(window.id)}
+                        on:dragStart={() => dragStart(window)}
+                        on:dragOver={() => dragOver(window)}
+                        on:dragEnd={dragEnd}
                         showPersonaSelector={window.type === "floride"}
                         bind:selectedPersona={window.persona}
                     >

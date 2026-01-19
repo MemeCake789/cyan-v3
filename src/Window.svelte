@@ -46,17 +46,23 @@
     <div
         class="title-bar"
         class:fullscreen
-        on:click={() => dispatch("toggleMinimize")}
+        draggable="true"
+        on:dragstart|stopPropagation={() => dispatch("dragStart")}
+        on:dragover|preventDefault|stopPropagation={() => dispatch("dragOver")}
+        on:dragend|stopPropagation={() => dispatch("dragEnd")}
         role="button"
         tabindex="0"
-        on:keydown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-                dispatch("toggleMinimize");
-            }
-        }}
     >
         <div class="drag-handle">::</div>
-        <div class="title">{title}</div>
+        <div 
+            class="title"
+            on:click={() => dispatch("toggleMinimize")}
+            on:keydown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    dispatch("toggleMinimize");
+                }
+            }}
+        >{title}</div>
 
         <div class="title-center">
             <slot name="title-center" />
