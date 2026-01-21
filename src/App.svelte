@@ -209,7 +209,7 @@
             <span>{currentTime}</span>
         </div>
         <div class="version">
-            CYAN V3.0.1da <br /><span style="font-size: xx-small; color: #888;"
+            CYAN V3.0.1d.a <br /><span style="font-size: xx-small; color: #888;"
                 >(More Messages in Sulfur)</span
             >
         </div>
