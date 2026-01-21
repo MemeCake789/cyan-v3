@@ -24,13 +24,12 @@ The application is a multi-window desktop environment built with Svelte. It feat
     - **Private Key Handling**: When a private chat is created, the user is shown the key once in a popup with a copy-to-clipboard feature and a warning that the key will not be shown again.
     - **Real-time Messaging**: Messages are sent and received, with the chat view updating automatically.
     - **TUI-Style UI**: The entire chat interface is styled to look like a terminal application.
+    - **Advanced Chat API**: The chat system was updated to use a more advanced chat API. This involved restructuring the UI into smaller components (`ChatList.svelte`, `ChatView.svelte`, `CreateChatModal.svelte`, `ChatCreatedPopup.svelte`), building a chat menu to display all available chats, implementing chat creation, adding a post-creation summary with private key handling, and creating a `src/chatApi.ts` module to handle all API calls.
+    - **Message Pagination**: Implemented a "load more" feature to fetch messages in batches, improving initial load performance.
 
 ## plan for current change
-The user wants to update the `@src/Sulfur.svelte` component to use a new, more advanced chat API.
+The user wants to change the build process to output a single HTML file named `cyanide.html`.
 
-1.  **DONE - Restructure the UI**: Split the `Sulfur.svelte` component into smaller pieces: `ChatList.svelte` for the room list, `ChatView.svelte` for messages, `CreateChatModal.svelte` for the creation form, and `ChatCreatedPopup.svelte` for the post-creation summary.
-2.  **DONE - Build the Chat Menu**: Created `ChatList.svelte` to fetch and display all available chats from the `/api/chat?action=get_all_chats` endpoint. It allows selection of a chat and prompts for a key if the chat is private.
-3.  **DONE - Implement Chat Creation**: Built `CreateChatModal.svelte`, a form to create new public or private chats by posting to `/api/chat` with the `create_chat` action.
-4.  **DONE - Add Post-Creation Summary**: Created `ChatCreatedPopup.svelte` to display the new chat's ID and, for private chats, the secret key with a copy button and a security warning.
-5.  **DONE - Update to the New API**: Created a `src/chatApi.ts` module to handle all API calls. All components now use this module for fetching and sending data according to the new API documentation. This includes getting messages, sending messages, and creating chats, all with proper handling for private key authentication via the `x-chat-key` header.
-6.  **DONE - TUI Styling**: Enhanced the TUI styling across all the new chat components, using borders, a monospace font, and a dark color scheme to create a cohesive terminal-like experience.
+1.  **DONE - Configure Vite Build Output**: In `vite.config.js`, I added a `build` configuration with `rollupOptions` to specify the output filenames for entry and asset files as `cyanide.js` and `cyanide.[ext]` respectively.
+2.  **DONE - Configure Single File Plugin**: In `vite.config.js`, I configured the `viteSingleFile` plugin to inline all assets and remove the Vite module loader for a cleaner single-file output.
+3.  **DONE - Update Build Script**: In `package.json`, I updated the `build` script to first run `vite build` and then rename the generated `dist/index.html` to `dist/cyanide.html`.

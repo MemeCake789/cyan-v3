@@ -9,9 +9,15 @@
     let chatContainer: HTMLDivElement;
     let username = "anonymous-" + Math.floor(Math.random() * 10000);
     let unsubscribe: () => void;
+    let batchSize = 50;
 
     $: if (typeof $usernameStore === "string" && $usernameStore.trim()) {
         username = $usernameStore;
+    }
+
+    function loadMoreMessages() {
+        batchSize += 50;
+        subscribeToMessages();
     }
 
     function formatTimestamp(isoString: string) {
@@ -65,39 +71,46 @@
         }
     }
 
-    onMount(() => {
-    const handleVisibilityChange = () => {
-        isTabVisible = !document.hidden;
-        if (isTabVisible) {
-            console.log("User is back!");
-            unsubscribe = getMessages((newMessages) => {
-                messages = newMessages;
-                setTimeout(() => {
-                    if (chatContainer) {
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }
-                }, 50);
-            });
-        } else {
-            console.log("User left the tab.");
-            if (unsubscribe) {
-                unsubscribe();
-            }
-        }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Initial check
-    handleVisibilityChange();
-
-    return () => {
+    function subscribeToMessages() {
         if (unsubscribe) {
             unsubscribe();
         }
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-});
+        unsubscribe = getMessages((newMessages) => {
+            messages = newMessages;
+            setTimeout(() => {
+                if (chatContainer) {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            }, 50);
+        }, batchSize);
+    }
+
+    onMount(() => {
+        const handleVisibilityChange = () => {
+            isTabVisible = !document.hidden;
+            if (isTabVisible) {
+                console.log("User is back!");
+                subscribeToMessages();
+            } else {
+                console.log("User left the tab.");
+                if (unsubscribe) {
+                    unsubscribe();
+                }
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // Initial check
+        handleVisibilityChange();
+
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+            }
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    });
 </script>
 
 <div class="sulfur-container">
@@ -107,6 +120,7 @@
     </div>
 
     <div class="chat-history" bind:this={chatContainer}>
+        <div class="load-more" on:click={loadMoreMessages}>-- load more --</div>
         {#each messages as msg, i (i)}
             {@const processedMessage = processMessage(msg)}
             <div
@@ -177,6 +191,13 @@
         flex-grow: 1;
         overflow-y: auto;
         padding: 10px;
+    }
+
+    .load-more {
+        text-align: center;
+        cursor: pointer;
+        color: #888;
+        margin-bottom: 10px;
     }
 
     .message {
@@ -254,6 +275,7 @@
         margin-left: 10px;
         cursor: pointer;
     }
+
     .chat-input button:disabled {
         background-color: #555;
         cursor: not-allowed;

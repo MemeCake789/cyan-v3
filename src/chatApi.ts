@@ -21,10 +21,11 @@ export async function getAllChats() {
 }
 
 export function getMessages(
-  callback: (messages: any[]) => void
+  callback: (messages: any[]) => void,
+  batchLimit: number
 ) {
   const messagesCol = collection(db, "messages");
-  const q = query(messagesCol, orderBy("timestamp", "desc"), limit(50));
+  const q = query(messagesCol, orderBy("timestamp", "desc"), limit(batchLimit));
 
   return onSnapshot(q, (querySnapshot) => {
     const messages = querySnapshot.docs
