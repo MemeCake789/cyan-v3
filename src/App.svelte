@@ -209,8 +209,8 @@
             <span>{currentTime}</span>
         </div>
         <div class="version">
-            CYAN V3.0.1d.a <br /><span style="font-size: xx-small; color: #888;"
-                >(More Messages in Sulfur)</span
+            CYAN V3.0.1e <br /><span style="font-size: xx-small; color: #888;"
+                >(Floride AI Chat Fix)</span
             >
         </div>
     </header>

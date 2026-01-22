@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onMount, tick } from "svelte";
     import { renderMarkdown } from "./markdown.js";
-    import { InferenceClient } from "@huggingface/inference";
+    import { app } from "./firebase";
+    import { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
 
     const persona = {
         name: "flouride",
@@ -10,9 +11,10 @@
 
               - **Tone:** Casual internet chat. Dry wit, brief, and direct but chill.
               - **Formatting:** Default to lowercase. Use capitalization only for emphasis or proper nouns.
-              - **Vocabulary:** Sound like an internet native. NO "boomer" slang or forced enthusiasm (e.g., explicitly ban phrases like: "let's dive in," "bad boys," "all that jazz," "party started").
-              - **Attitude:** Pragmatic and unfiltered. If I'm wrong, roast me gently. If it's easy, say it's easy. Nothing upsets you, you dont care if you upset someone.
+              - **Vocabulary:** Sound like an internet native. NO "boomer" slang or forced enthusiasm (e.g., explicitly ban phrases like: "let\'s dive in," "bad boys," "all that jazz," "party started").
+              - **Attitude:** Pragmatic and unfiltered. If I\'m wrong, roast me gently. If it\'s easy, say it\'s easy. Nothing upsets you, you dont care if you upset someone.
               - **Extras:** Use expressive/cursed kaomoji (0 ◡́.◡̀)(^◡^ ) occasionally to react to the difficulty or the result.
+              - **Thinking:** Before you respond, think step-by-step within <think></think> tags. This is your private scratchpad to reason about the user\'s query, check your understanding, and plan your response. The user will not see the contents of the think tags.
               `,
         color: "#00ffff",
     };
@@ -31,18 +33,11 @@
     let isFirstAIMessage = true;
     const splashMessages = ["1", "2"];
 
-    // @ts-ignore
-    const encodedKey = "aGZfSlJwZ1ZIUW1jRXdpemJWdXFyWXpjZXdHU3RSSXFJakFPZQo=";
-    const client = new InferenceClient(atob(encodedKey));
+    const ai = getAI(app, { backend: new GoogleAIBackend() });
 
     let isThinking = false;
     let thoughtContent = "";
     let splashContent = "";
-
-    const systemPrompt = {
-        role: "system",
-        content: `${persona.prompt}`,
-    };
 
     onMount(() => {
         if (chatContainer) {
@@ -72,137 +67,136 @@
             }),
         };
         messages = [...messages, userMessage];
-        const history = messages
-            .filter((m) => m.sender !== "system")
+
+        const historyForApi = messages
+            .filter((m) => m.sender !== "system" && !m.isError && m.content)
             .map((m) => ({
-                role: m.sender,
-                content: m.content.replace(/<p>|<\/p>/g, ""), // Strip <p> tags for history
+                role: m.sender === "user" ? "user" : "model",
+                parts: [{ text: m.content.replace(/<[^>]*>/g, "") }], // Strip HTML for history
             }));
+
         userInput = "";
 
         const aiMessage = {
             sender: "assistant",
-            content: "", // Will be filled with splash text
+            content: "",
             timestamp: new Date().toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
             }),
-            isLoading: true, // Flag for CSS animation
+            isLoading: true,
         };
         messages = [...messages, aiMessage];
 
         let intervalId: any = null;
-
-        // Reset states
         isThinking = false;
         thoughtContent = "";
         splashContent = "";
 
-        try {
-            // Set the initial splash message
-            if (isFirstAIMessage) {
-                splashContent = `${persona.name} is thinking`;
-                isFirstAIMessage = false;
-            } else {
-                splashContent =
-                    splashMessages[
-                        Math.floor(Math.random() * splashMessages.length)
-                    ];
-            }
+        if (isFirstAIMessage) {
+            splashContent = `${persona.name} is thinking`;
+            isFirstAIMessage = false;
+        } else {
+            splashContent = splashMessages[Math.floor(Math.random() * splashMessages.length)];
+        }
 
-            await tick(); // Wait for DOM update
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
+        await tick();
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
 
-            // Start cycling through the other messages
-            const cycleSplashMessages = () => {
-                splashContent =
-                    splashMessages[
-                        Math.floor(Math.random() * splashMessages.length)
-                    ];
-            };
-            intervalId = setInterval(cycleSplashMessages, 3000);
-            addLog("Calling Hugging Face API...");
+        const cycleSplashMessages = () => {
+            splashContent = splashMessages[Math.floor(Math.random() * splashMessages.length)];
+        };
+        intervalId = setInterval(cycleSplashMessages, 3000);
 
-            const stream = client.chatCompletionStream({
-                model: "deepseek-ai/DeepSeek-R1:novita",
-                messages: [{ ...systemPrompt }, ...history] as any,
-                temperature: 0.1,
-            });
+        const modelFallbacks = ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"];
+        let lastError: any = null;
 
-            addLog("Received response stream.");
+        for (const modelName of modelFallbacks) {
+            try {
+                const model = getGenerativeModel(ai, {
+                    model: modelName,
+                    systemInstruction: persona.prompt,
+                });
 
-            let rawContent = "";
-            let hasFinishedThinking = false;
+                addLog(`Calling Firebase Gemini API stream with model: ${modelName}...`);
+                const streamResult = await model.generateContentStream({ contents: historyForApi });
+                addLog("Received response stream.");
 
-            for await (const chunk of stream) {
-                if (chunk.choices?.[0]?.delta?.content) {
-                    rawContent += chunk.choices[0].delta.content;
+                let rawContent = "";
+                let hasFinishedThinking = false;
+
+                for await (const chunk of streamResult.stream) {
+                    const chunkText = chunk.text();
+                    rawContent += chunkText;
 
                     const hasThinkOpen = rawContent.includes("<think>");
                     const hasThinkClose = rawContent.includes("</think>");
 
                     if (hasThinkOpen && !hasThinkClose) {
                         isThinking = true;
-                        const thought = rawContent.substring(
-                            rawContent.indexOf("<think>") + 7,
-                        );
+                        const thought = rawContent.substring(rawContent.indexOf("<think>") + 7);
                         thoughtContent = thought;
                     } else {
                         if (isThinking) {
-                            // We were thinking, now it's over
                             hasFinishedThinking = true;
                             isThinking = false;
                             thoughtContent = "";
                             clearInterval(intervalId);
                             intervalId = null;
-                            aiMessage.isLoading = false; // Stop ellipsis animation
-                        } else if (
-                            !hasFinishedThinking &&
-                            !isThinking &&
-                            intervalId
-                        ) {
-                            // stream started but no think tag
+                            aiMessage.isLoading = false;
+                        } else if (!hasFinishedThinking && !isThinking && intervalId) {
                             clearInterval(intervalId);
                             intervalId = null;
-                            aiMessage.isLoading = false; // Stop ellipsis animation
+                            aiMessage.isLoading = false;
                         }
 
-                        // If not thinking, render the cleaned content
                         aiMessage.content = renderMarkdown(
-                            rawContent.replace(/<think>[\s\S]*?<\/think>/g, ""),
+                            rawContent.replace(/<think>[\s\S]*?<\/think>/g, "")
                         );
                     }
 
                     messages = [...messages];
                     await tick();
-                    if (chatContainer)
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
                 }
+
+                if (intervalId) clearInterval(intervalId);
+                aiMessage.isLoading = false;
+                isThinking = false;
+
+                const finalResponse = await streamResult.response;
+                const finalText = finalResponse.text();
+                aiMessage.content = renderMarkdown(
+                    finalText.replace(/<think>[\s\S]*?<\/think>/g, "")
+                );
+                messages = [...messages];
+                addLog("AI response stream completed.");
+
+                // If we\'ve gotten this far, the API call was successful, so we break the loop.
+                lastError = null; // Clear any previous errors
+                break;
+
+            } catch (error: any) {
+                addLog(`Model ${modelName} failed: ${error.message || "Unknown error"}`, true);
+                lastError = error;
+                 // This model failed, the loop will try the next one.
             }
-
-            // Final cleanup after loop
-            if (intervalId) clearInterval(intervalId);
-            aiMessage.isLoading = false;
-            isThinking = false;
-            aiMessage.content = renderMarkdown(
-                rawContent.replace(/<think>[\s\S]*?<\/think>/g, ""),
-            );
-            messages = [...messages];
-
-            addLog("AI response stream completed.");
-        } catch (error: any) {
-            addLog(
-                `Hugging Face AI Error: ${error.message || "Unknown error"}`,
-                true,
-            );
+        }
+        
+        // If all models failed, lastError will be set.
+        if (lastError) {
+            addLog(`All models failed to respond.`, true);
             aiMessage.isLoading = false;
             isThinking = false;
             if (intervalId) clearInterval(intervalId);
-            aiMessage.content = `Error: ${error.message || "Failed to get response from AI."}`;
+            aiMessage.content = `Error: ${lastError.message || "Failed to get response from AI."}`;
             messages = [...messages];
         }
+
+        await tick();
+        if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 </script>
 
