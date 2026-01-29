@@ -2,7 +2,11 @@
     import { onMount, tick } from "svelte";
     import { renderMarkdown } from "./markdown.js";
     import { app } from "./firebase";
-    import { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
+    import { getAI, getGenerativeModel, GoogleAIBackend, type Content } from "firebase/ai";
+
+    // --- Development Flag --- 
+    // Set to true to use dummy logs and disable the AI
+    const devMode = true;
 
     const persona = {
         name: "flouride",
@@ -13,36 +17,50 @@
               - **Formatting:** Default to lowercase. Use capitalization only for emphasis or proper nouns.
               - **Vocabulary:** Sound like an internet native. NO "boomer" slang or forced enthusiasm (e.g., explicitly ban phrases like: "let\'s dive in," "bad boys," "all that jazz," "party started").
               - **Attitude:** Pragmatic and unfiltered. If I\'m wrong, roast me gently. If it\'s easy, say it\'s easy. Nothing upsets you, you dont care if you upset someone.
-              - **Extras:** Use expressive/cursed kaomoji (0 ◡́.◡̀)(^◡^ ) occasionally to react to the difficulty or the result.
-              - **Thinking:** Before you respond, think step-by-step within tags. ALWAYS ensure these tags are properly opened and closed. This is your private scratchpad to reason about the user’s query, check your understanding, and plan your response. The user will not see the contents of the think tags always affirm in your thoughts when you are closing your thoughts and then add a closing tag.
+              - **Extras:** Use expressive/cursed kaomoji ( ◡́.◡̀)(^◡^ ) (NOT JUST THESE) occasionally to react to the difficulty or the result.
               `,
         color: "#00ffff",
     };
 
     interface ChatMessage {
-        sender: string;
+        sender: "user" | "assistant" | "system";
         content: string;
         timestamp: string;
         isLoading?: boolean;
         isError?: boolean;
     }
 
-    let messages: ChatMessage[] = [];
+    const dummyLogs: ChatMessage[] = [
+        {
+            sender: "user",
+            content: renderMarkdown("wats an integral"),
+            timestamp: "09:23 PM",
+        },
+        {
+            sender: "assistant",
+            content: renderMarkdown(`it’s basically just two things depending on how you look at it.\n\n    the area guy: it’s a way to calculate the total area under a curve on a graph. if you have some weird wiggly line and want to know the space between it and the x-axis, you integrate it.\n    the undo button: it’s the reverse of a derivative. if a derivative tells you the rate of change (how fast something is moving), the integral takes that rate and tells you the original total (how far it actually went).\n\nmath nerds call it “accumulation.” imagine adding up an infinite amount of tiny, thin slices to get the whole shape.\n\nit’s not that deep until you have to do it by hand. ( ◡‿◡)っ✂️ 📐`),
+            timestamp: "09:23 PM",
+        }
+    ];
+
+    let messages: ChatMessage[] = devMode ? dummyLogs : [];
     let userInput = "";
     let chatContainer: HTMLElement;
     let isFirstAIMessage = true;
-    const splashMessages = ["1", "2"];
+    const splashMessages = ["loading...", "thinking..."];
 
     const ai = getAI(app, { backend: new GoogleAIBackend() });
 
     let isThinking = false;
     let thoughtContent = "";
     let splashContent = "";
+    let textareaElement: HTMLTextAreaElement;
 
     onMount(() => {
         if (chatContainer) {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
+        adjustTextareaHeight();
     });
 
     function addLog(message: string, isError: boolean = false) {
@@ -53,12 +71,29 @@
         }
     }
 
+    function adjustTextareaHeight() {
+        if (textareaElement) {
+            textareaElement.style.height = "auto";
+            // A small timeout helps ensure the correct scrollHeight is captured after the DOM update.
+            setTimeout(() => {
+                textareaElement.style.height = `${textareaElement.scrollHeight}px`;
+            }, 0);
+        }
+    }
+
+    async function handleKeydown(e: KeyboardEvent) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            await sendMessage();
+        }
+    }
+
     async function sendMessage() {
-        if (userInput.trim() === "") return;
+        if (devMode || userInput.trim() === "") return;
 
         addLog("Attempting to send message...");
 
-        const userMessage = {
+        const userMessage: ChatMessage = {
             sender: "user",
             content: renderMarkdown(userInput),
             timestamp: new Date().toLocaleTimeString([], {
@@ -68,16 +103,18 @@
         };
         messages = [...messages, userMessage];
 
-        const historyForApi = messages
+        const historyForApi: Content[] = messages
             .filter((m) => m.sender !== "system" && !m.isError && m.content)
             .map((m) => ({
-                role: m.sender === "user" ? "user" : "model",
+                role: m.sender === "assistant" ? "model" : "user",
                 parts: [{ text: m.content.replace(/<[^>]*>/g, "") }], // Strip HTML for history
             }));
 
         userInput = "";
+        await tick();
+        adjustTextareaHeight();
 
-        const aiMessage = {
+        const aiMessage: ChatMessage = {
             sender: "assistant",
             content: "",
             timestamp: new Date().toLocaleTimeString([], {
@@ -110,7 +147,14 @@
         };
         intervalId = setInterval(cycleSplashMessages, 3000);
 
-        const modelFallbacks = ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"];
+        const modelFallbacks = [
+            "gemini-3-pro-preview",
+            "gemini-3-flash-preview",
+            "gemini-2.5-pro",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite"
+        ];
+
         let lastError: any = null;
 
         for (const modelName of modelFallbacks) {
@@ -174,18 +218,15 @@
                 messages = [...messages];
                 addLog("AI response stream completed.");
 
-                // If we\'ve gotten this far, the API call was successful, so we break the loop.
-                lastError = null; // Clear any previous errors
+                lastError = null;
                 break;
 
             } catch (error: any) {
                 addLog(`Model ${modelName} failed: ${error.message || "Unknown error"}`, true);
                 lastError = error;
-                 // This model failed, the loop will try the next one.
             }
         }
-        
-        // If all models failed, lastError will be set.
+
         if (lastError) {
             addLog(`All models failed to respond.`, true);
             aiMessage.isLoading = false;
@@ -249,19 +290,21 @@
     </div>
 
     <div class="chat-input">
-        <input
-            type="text"
+        <textarea
+            bind:this={textareaElement}
             bind:value={userInput}
-            on:keydown={(e) => e.key === "Enter" && sendMessage()}
+            on:keydown={handleKeydown}
+            on:input={adjustTextareaHeight}
+            rows="1"
             placeholder="Type a message..."
         />
-
-        <button on:click={sendMessage}>Send</button>
+        <button on:click={sendMessage} disabled={!userInput.trim()}>Send</button>
     </div>
 </div>
 
 <style>
     .flouride-container {
+        padding: 15px;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -269,7 +312,6 @@
         color: #b3b3b3;
         font-family: "Courier New", Courier, monospace;
         border-radius: 5px;
-        overflow: hidden;
     }
 
     .thinking-container {
@@ -280,46 +322,21 @@
     }
 
     .thought-snippet {
-        opacity: 0.5; /* Make it dimmer */
+        opacity: 0.5; 
         font-family: monospace;
-        /*font-size: 0.9em;*/
-        margin-left: 15px; /* Add space between splash and thought */
-    }
-
-    .auth-prompt {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        text-align: center;
-        padding: 20px;
-    }
-
-    .auth-prompt button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1em;
-        margin-top: 15px;
-    }
-
-    .auth-prompt button:hover {
-        background-color: #0056b3;
+        margin-left: 15px; 
     }
 
     .chat-history {
         flex-grow: 1;
         overflow-y: auto;
         padding: 10px;
+        padding-right: 45px;
     }
 
     .message {
         display: flex;
-        align-items: baseline;
+        flex-direction: column;
         margin-bottom: 10px;
     }
 
@@ -338,7 +355,13 @@
 
     .content {
         word-break: break-word;
-        width: 100%; /* Ensure content div takes full width */
+        width: 100%;
+        padding-left: 15px;
+    }
+
+    .content :global(pre) {
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
 
     .content :global(.katex) {
@@ -358,39 +381,67 @@
     }
 
     .chat-input {
+        position: relative;
         display: flex;
+        align-items: center; /* Vertically center items */
         padding: 15px;
         border-top: 1px solid #222;
     }
 
-    .chat-input input {
-        flex-grow: 1;
-        background-color: #111;
+    .chat-input textarea {
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #1c1c1c;
         color: #f0f0f0;
-        border: 1px solid #242424;
-        border-radius: 50px;
-        padding: 5px 10px;
+        border: 1px solid #2f2f2f;
+        border-radius: 25px;
+        padding: 14px 85px 14px 25px; /* Adjusted padding */
         outline: none;
+        resize: none;
+        overflow-y: hidden;
+        font-family: "Courier New", Courier, monospace;
+        max-height: 150px;
+        line-height: 1.5; /* Improved line height for centering */
+        transition: all 0.2s ease;
     }
 
     .chat-input button {
+        position: absolute;
+        right: 25px; /* Keep it inside on the right */
+        bottom: auto; /* Remove bottom positioning to allow flex to center it */
         background-color: cyan;
         color: #000;
         border: none;
-        padding: 5px 15px;
+        padding: 8px 20px;
         border-radius: 50px;
-        margin-left: 10px;
         cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 255, 255, 0.3);
+    }
+    
+    .chat-input textarea:not(:placeholder-shown) + button {
+         bottom: 24px; /* Move button to bottom when there is text */
+    }
+
+    .chat-input button:hover {
+        background-color: #00e0e0;
+    }
+
+    .chat-input button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #555;
+        box-shadow: none;
     }
 
     .loading-ellipsis .splash-message::after {
         content: ".";
-        padding-left: 5px; /* Add some space */
+        padding-left: 5px; 
         animation: dots 1.4s infinite;
     }
 
     .loading-ellipsis .thought-snippet {
-        display: none; /* Hide thought snippet when not thinking, to prevent ellipsis from showing */
+        display: none; 
     }
 
     @keyframes dots {
