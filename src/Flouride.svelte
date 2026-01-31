@@ -173,33 +173,18 @@
     }
 
 
-    async function handleImageTag(message: ChatMessage) {
-        const imageRegex = /<image>(.*?)<\/image>/g;
-        let match;
 
-        // Use a unique ID for each placeholder
+    async function handleImageGeneration(message: ChatMessage, params: ImageGenerationParams) {
         const placeholderId = `placeholder-${Date.now()}`;
         const spinnerId = `spinner-${Date.now()}`;
-
-        // Replace <image> tag with a placeholder div that includes a spinner span
-        const imageParamsJson = (/<image>(.*?)<\/image>/).exec(message.content)?.[1] || '{}';
-        let imageParams: ImageGenerationParams;
-        let imagePrompt: string;
-        try {
-            imageParams = JSON.parse(imageParamsJson);
-            imagePrompt = imageParams.prompt;
-        } catch(e) {
-            console.error("Invalid image params JSON:", imageParamsJson);
-            imagePrompt = imageParamsJson; // Fallback to using the whole string as prompt
-            imageParams = { prompt: imagePrompt };
-        }
+        const imagePrompt = params.prompt;
 
         const placeholder = `<div id="${placeholderId}" class="image-placeholder" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
                                 <span id="${spinnerId}" style="font-size: 2em; margin-bottom: 10px;"></span>
                                 <span>generating image: "${imagePrompt}"</span>
                              </div>`;
-        message.content = message.content.replace(/<image>.*?<\/image>/, placeholder);
-        messages = [...messages]; // Update UI
+        message.content = placeholder;
+        messages = [...messages];
         await tick();
 
         // Start the spinner animation
@@ -216,7 +201,7 @@
         }, 80);
 
         try {
-            const imageUrl = await generateImage(imageParams);
+            const imageUrl = await generateImage(params);
             clearInterval(intervalId); // Stop spinner
 
             const img = new Image();
@@ -247,17 +232,60 @@
         }
     }
 
+
+    async function handleImageTag(message: ChatMessage) {
+        const imageParamsJson = (/<image>(.*?)<\/image>/).exec(message.content)?.[1] || '{}';
+        let imageParams: ImageGenerationParams;
+        try {
+            imageParams = JSON.parse(imageParamsJson);
+        } catch(e) {
+            console.error("Invalid image params JSON:", imageParamsJson);
+            imageParams = { prompt: imageParamsJson }; // Fallback
+        }
+        
+        // Replace the AI's <image> tag with the placeholder, then generate
+        message.content = ""; // Clear the original content
+        await handleImageGeneration(message, imageParams);
+    }
+
     async function sendMessage() {
-        if (devMode || userInput.trim() === "") return;
+        if (userInput.trim() === "") return;
+
+        if (imageGenModeActive) {
+            const prompt = userInput;
+            userInput = "";
+            deactivateImageGenMode();
+            adjustTextareaHeight();
+
+            // 1. Add the "bubble" message to the chat
+            const userMessage: ChatMessage = {
+                sender: "user",
+                content: `<div class="bubble">generate_image(prompt:"${prompt}")</div>`,
+                timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            };
+            messages = [...messages, userMessage];
+            await tick();
+
+            // 2. Create the placeholder message and handle the image generation
+            const aiMessage: ChatMessage = {
+                sender: "assistant",
+                content: "", // This will be replaced by the placeholder logic
+                timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            };
+            messages = [...messages, aiMessage];
+            
+            await handleImageGeneration(aiMessage, { prompt: prompt });
+            
+            await tick();
+            if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            return;
+        }
+
+        if (devMode) return;
 
         addLog("Attempting to send message...");
 
         let messageToSend = userInput;
-        if (imageGenModeActive) {
-            const imageParams = { prompt: userInput };
-            messageToSend = `<image>${JSON.stringify(imageParams)}</image>`;
-            deactivateImageGenMode();
-        }
 
         const userMessage: ChatMessage = {
             sender: "user",
@@ -270,7 +298,7 @@
         messages = [...messages, userMessage];
 
         const historyForApi: Content[] = messages
-            .filter((m) => m.sender !== "system" && !m.isError && m.content)
+            .filter((m) => m.sender !== "system" && !m.isError && m.content && !m.content.includes("bubble"))
             .map((m) => ({
                 role: m.sender === "assistant" ? "model" : "user",
                 parts: [{ text: m.content.replace(/<[^>]*>/g, "") }], // Strip HTML for history
@@ -793,5 +821,12 @@ left: 70px; /* Adjusted to be after the plus button */
         cursor: pointer;
         font-size: 20px;
         padding: 0 5px;
+    }
+
+    .content :global(.bubble) {
+        background-color: #333;
+        padding: 5px 10px;
+        border-radius: 10px;
+        display: inline-block;
     }
 </style>
