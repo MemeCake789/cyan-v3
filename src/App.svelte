@@ -209,8 +209,8 @@
             <span>{currentTime}</span>
         </div>
         <div class="version">
-            CYAN V3.0.1e.a <br /><span style="font-size: xx-small; color: #888;"
-                >(Floride AI Chat Fix II)</span
+            CYAN V3.0.1f <br /><span style="font-size: xx-small; color: #888;"
+                >(Floride AI Image Gen)</span
             >
         </div>
     </header>
