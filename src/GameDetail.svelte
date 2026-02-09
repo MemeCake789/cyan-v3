@@ -20,11 +20,17 @@
     const isSwf = (url: string) => url.toLowerCase().endsWith(".swf");
     // detect Game Boy Advance ROMs
     const isGba = (url: string) => url.toLowerCase().endsWith(".gba");
-    // detect Game Boy / Game Boy Color ROMs
-    const isGb = (url: string) =>
-        url.toLowerCase().endsWith(".gb") || url.toLowerCase().endsWith(".gbc");
-    // Helper to detect .gba links (case‑insensitive)
-    // (removed duplicate – primary definition is above)
+    // detect Game Boy / Game Boy Color ROMs – returns the appropriate emulator core
+    const getGbCore = (url: string): "gb" | "gbc" => {
+        const lower = url.toLowerCase();
+        if (lower.endsWith(".gbc")) return "gbc";
+        return "gb";
+    };
+    // also keep a simple boolean check for GB/GBC
+    const isGb = (url: string) => {
+        const lower = url.toLowerCase();
+        return lower.endsWith(".gb") || lower.endsWith(".gbc");
+    };
 
     function handlePlay() {
         isPlaying = true;
@@ -50,7 +56,7 @@
         ></iframe>
     {:else if isGb(game.link)}
         <iframe
-            srcdoc={`<html><head><style>body,html{margin:0;padding:0;}</style></head><body><div style="width:100%;height:100%;max-width:100%"><div id="game"></div></div><script>EJS_player="#game";EJS_core="gb";EJS_pathtodata="https://cdn.emulatorjs.org/stable/data/";EJS_gameUrl="${game.link}";</script><script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script></body></html>`}
+            srcdoc={`<html><head><style>body,html{margin:0;padding:0;}</style></head><body><div style="width:100%;height:100%;max-width:100%"><div id="game"></div></div><script>EJS_player="#game";EJS_core="${getGbCore(game.link)}";EJS_pathtodata="https://cdn.emulatorjs.org/stable/data/";EJS_gameUrl="${game.link}";</script><script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script></body></html>`}
             style="width:100%;height:100%;border:none;"
         ></iframe>
     {:else}

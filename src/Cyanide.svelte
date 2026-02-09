@@ -65,11 +65,13 @@
                 throw new Error("Failed to fetch games list");
             }
             const data = await response.json();
-            games = data.games.map((game: Omit<Game, "favorited" | "isNew">) => ({
-                ...game,
-                favorited: false,
-                isNew: game.dateAdded ? isRecent(game.dateAdded) : false,
-            }));
+            games = data.games.map(
+                (game: Omit<Game, "favorited" | "isNew">) => ({
+                    ...game,
+                    favorited: false,
+                    isNew: game.dateAdded ? isRecent(game.dateAdded) : false,
+                }),
+            );
         } catch (e) {
             if (e instanceof Error) {
                 error = e.message;
