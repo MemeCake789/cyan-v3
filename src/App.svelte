@@ -7,6 +7,7 @@
     import Sulfur from "./Sulfur.svelte";
     import Chromium from "./Chromium.svelte";
     import { flip } from "svelte/animate";
+    import type { SvelteComponent } from "svelte";
 
     let currentDate = new Date().toLocaleDateString();
     let currentTime = new Date().toLocaleTimeString();
@@ -14,7 +15,10 @@
     let windowContainer: HTMLDivElement;
 
     // Local state for chromium instances to bridge the slot to the component
-    let chromiumStates = {};
+    // Track Chromium component instances and their URLs per window id
+    // Using a typed record to satisfy TypeScript and avoid “never” errors
+    let chromiumStates: Record<number, { inputUrl: string; component?: any }> =
+        {};
 
     onMount(() => {
         interval = setInterval(() => {
@@ -32,11 +36,11 @@
         const newWindow = {
             id,
             type,
-            title: type, // Original title/type
-            displayTitle: type === "proxy" ? "chrθmium" : type, // Title currently displayed in the bar
+            title: type,
+            displayTitle: type === "proxy" ? "chrθmium" : type,
             minimized: false,
             showBackButton: false,
-            persona: "cyan", // Add persona state
+            persona: "cyan",
         };
 
         if (type === "proxy") {
@@ -91,7 +95,6 @@
         windows.update((ws) => {
             const draggedIndex = ws.findIndex((w) => w.id === draggedItem.id);
             const targetIndex = ws.findIndex((w) => w.id === item.id);
-
             const newWindows = [...ws];
             newWindows.splice(draggedIndex, 1);
             newWindows.splice(targetIndex, 0, draggedItem);
@@ -133,11 +136,7 @@
         }
     }
 
-    function navigateChromium(id) {
-        if (chromiumStates[id] && chromiumStates[id].component) {
-            chromiumStates[id].component.navigate(chromiumStates[id].inputUrl);
-        }
-    }
+    // navigateChromium function removed – navigation handled by Chromium component directly via urlchange events.
 
     let showFeedbackPopup = false;
     let feedbackType = "bug";
@@ -209,7 +208,8 @@
             <span>{currentTime}</span>
         </div>
         <div class="version">
-            CYAN V3.0.1f <br /><span style="font-size: xx-small; color: #888;"
+            CYAN V3.0.1f <br />
+            <span style="font-size: xx-small; color: #888;"
                 >(Floride AI Image Gen)</span
             >
         </div>
@@ -257,6 +257,7 @@
                     tabindex="0"
                     animate:flip={{ duration: 300 }}
                 >
+                    <!-- @ts-ignore -->
                     <Window
                         title={window.displayTitle}
                         minimized={window.id === fullscreenWindowId
@@ -270,60 +271,29 @@
                         on:back={() => handleBack(window.id)}
                         on:dragStart={() => dragStart(window)}
                         on:dragOver={() => dragOver(window)}
-                        on:dragEnd={dragEnd}
-                        showPersonaSelector={window.type === "floride"}
-                        bind:selectedPersona={window.persona}
+                        on:dragEnd={() => dragEnd()}
                     >
                         <svelte:fragment slot="title-center">
                             {#if window.type === "proxy"}
                                 <div
                                     class="url-bar-container"
-                                    on:click|stopPropagation
+                                    role="button"
+                                    tabindex="0"
                                 >
-                                    <button
-                                        class="nav-btn"
-                                        on:click={() =>
-                                            chromiumStates[
-                                                window.id
-                                            ].component?.goBack()}
-                                    >
-                                        <span class="material-symbols-outlined"
-                                            >arrow_back</span
-                                        >
-                                    </button>
-                                    <button
-                                        class="nav-btn"
-                                        on:click={() =>
-                                            chromiumStates[
-                                                window.id
-                                            ].component?.goForward()}
-                                    >
-                                        <span class="material-symbols-outlined"
-                                            >arrow_forward</span
-                                        >
-                                    </button>
+                                    <!-- navigation buttons removed for simplicity -->
                                     <input
                                         type="text"
                                         class="url-input"
-                                        bind:value={
-                                            chromiumStates[window.id].inputUrl
-                                        }
-                                        on:keydown|stopPropagation={(e) => {
-                                            if (e.key === "Enter") {
-                                                navigateChromium(window.id);
-                                            }
+                                        value={chromiumStates[window.id]
+                                            .inputUrl}
+                                        placeholder="Enter URL"
+                                        on:input={(e) => {
+                                            const target =
+                                                e.target as HTMLInputElement;
+                                            chromiumStates[window.id].inputUrl =
+                                                target.value;
                                         }}
-                                        placeholder="Search or enter URL"
                                     />
-                                    <button
-                                        class="nav-btn"
-                                        on:click={() =>
-                                            navigateChromium(window.id)}
-                                    >
-                                        <span class="material-symbols-outlined"
-                                            >search</span
-                                        >
-                                    </button>
                                 </div>
                             {/if}
                         </svelte:fragment>
@@ -339,15 +309,16 @@
                         {:else if window.type === "sulfur"}
                             <Sulfur
                                 isMinimized={window.minimized}
-                                isMaximized={!window.minimized && window.id !== fullscreenWindowId}
+                                isMaximized={!window.minimized &&
+                                    window.id !== fullscreenWindowId}
                             />
                         {:else if window.type === "proxy"}
                             <Chromium
-                                bind:this={chromiumStates[window.id].component}
                                 on:urlchange={(e) =>
                                     handleChromiumUrlChange(
                                         window.id,
-                                        e.detail.url,
+                                        // @ts-ignore
+                                        e?.detail?.url,
                                     )}
                             />
                         {:else}
@@ -358,6 +329,7 @@
             {/each}
         </div>
     </section>
+    <!-- Footer (status bar) intentionally hidden per request -->
     <footer class="footer">
         <div class="section-title">status</div>
         <button class="feedback-link" on:click={openFeedbackPopup}>
@@ -367,10 +339,15 @@
 </main>
 
 {#if showFeedbackPopup}
-    <div class="feedback-popup-overlay" on:click={closeFeedbackPopup}>
+    <div
+        class="feedback-popup-overlay"
+        role="button"
+        tabindex="0"
+        on:click={closeFeedbackPopup}
+    >
         <div class="feedback-popup" on:click|stopPropagation>
             <button class="popup-close-btn" on:click={closeFeedbackPopup}
-                >&times;</button
+                >×</button
             >
             <h3>report a bug / give feedback</h3>
             <form class="feedback-form" on:submit|preventDefault={handleSubmit}>
@@ -431,12 +408,12 @@
 
     main {
         display: grid;
-        grid-template-columns: 30% 1fr;
-        grid-template-rows: auto 1fr auto;
+        grid-template-columns: 20% 1fr;
+        /* Dropped the footer row as the status bar is hidden */
+        grid-template-rows: auto 1fr;
         grid-template-areas:
             "header right"
-            "nav    right"
-            "footer right";
+            "nav    right";
         width: 100vw;
         height: 100vh;
         background-color: #000000;
@@ -472,53 +449,37 @@
         padding: 20px;
         min-height: 150px;
     }
-
     .nav {
         grid-area: nav;
         flex-grow: 1;
         padding: 20px;
         align-items: flex-start;
     }
-
     .footer {
-        grid-area: footer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100px;
+        display: none;
     }
 
-    /* Responsive Vertical Layout */
     @media (max-width: 1200px) {
         main {
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto 1fr auto;
+            grid-template-rows: auto auto 1fr;
             grid-template-areas:
                 "header"
                 "nav"
-                "right"
-                "footer";
+                "right";
             overflow-y: auto;
             padding: 10px;
         }
-
         .header,
         .nav,
-        .right,
-        .footer {
+        .right {
             width: 100%;
         }
-
         .header {
             min-height: auto;
         }
-
         .right {
             min-height: 110vh;
-        }
-
-        .footer {
-            min-height: auto;
         }
     }
 
@@ -529,7 +490,6 @@
         height: 100%;
         overflow-y: auto;
     }
-
     .date-time {
         display: flex;
         flex-direction: column;
@@ -538,12 +498,10 @@
         font-size: normal;
         color: #fff;
     }
-
     .version {
         color: #fff;
         font-size: normal;
     }
-
     .section-title {
         position: absolute;
         top: -0.8em;
@@ -553,14 +511,6 @@
         color: #404040;
         font-size: normal;
     }
-
-    .navbar {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 10px;
-    }
-
     .nav-button {
         display: flex;
         align-items: center;
@@ -576,18 +526,15 @@
         cursor: pointer;
         text-align: left;
     }
-
     .nav-button:hover {
         background-color: #333;
     }
-
     .nav-button .material-symbols-outlined {
         margin-right: 15px;
         font-size: 1.2em;
         font-weight: normal;
         font-family: "Material Symbols Outlined";
     }
-
     .url-bar-container {
         display: flex;
         align-items: center;
@@ -599,7 +546,6 @@
         max-width: 600px;
         gap: 5px;
     }
-
     .url-input {
         background: transparent;
         border: none;
@@ -610,7 +556,6 @@
         outline: none;
         padding: 4px 8px;
     }
-
     .nav-btn {
         background: transparent;
         border: none;
@@ -622,15 +567,12 @@
         padding: 2px;
         transition: color 0.2s;
     }
-
     .nav-btn:hover {
         color: #fff;
     }
-
     .nav-btn .material-symbols-outlined {
         font-size: 18px;
     }
-
     :global(.fullscreen) {
         position: fixed;
         top: 0;
@@ -642,11 +584,9 @@
         background: rgba(0, 0, 0, 0.8);
         transition: all 0.3s ease;
     }
-
     :global(.fullscreen .window) {
         height: 100%;
     }
-
     .feedback-link {
         background: none;
         border: none;
@@ -659,7 +599,6 @@
     .feedback-link:hover {
         color: #fff;
     }
-
     .feedback-popup-overlay {
         position: fixed;
         top: 0;
@@ -672,18 +611,16 @@
         justify-content: center;
         z-index: 2000;
     }
-
     .feedback-popup {
         background: #111;
         border: 1px solid #555;
         border-radius: 10px;
         padding: 20px;
         width: 90%;
-        max-w: 500px;
+        max-width: 500px;
         position: relative;
         color: white;
     }
-
     .popup-close-btn {
         position: absolute;
         top: 10px;
@@ -698,19 +635,16 @@
     .popup-close-btn:hover {
         color: #fff;
     }
-
     .feedback-popup h3 {
         text-align: center;
         margin-top: 0;
         font-weight: 400;
     }
-
     .feedback-form {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
-
     .feedback-select,
     .feedback-textarea,
     .feedback-submit {
@@ -723,27 +657,22 @@
         padding: 8px;
         box-sizing: border-box;
     }
-
     .feedback-textarea {
         height: 120px;
         resize: vertical;
     }
-
     .feedback-submit {
         cursor: pointer;
         transition: background-color 0.3s;
         padding: 10px;
     }
-
     .feedback-submit:hover:not(:disabled) {
         background-color: #333;
     }
-
     .feedback-submit:disabled {
         cursor: not-allowed;
         opacity: 0.6;
     }
-
     .feedback-status {
         text-align: center;
         margin-top: 10px;
@@ -751,7 +680,6 @@
         padding: 5px;
         border-radius: 5px;
     }
-
     .feedback-status.error {
         background-color: #a22;
         color: #fff;

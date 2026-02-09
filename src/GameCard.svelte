@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount, tick } from 'svelte';
+    import { onMount, tick } from "svelte";
     import ColorThief from "colorthief";
     import PENDING from "./assets/PENDING.jpg";
     import OFFLINE from "./assets/OFFLINE.jpg";
@@ -10,6 +10,7 @@
         genre: string;
         status: [string, string];
         isNew?: boolean;
+        fixedDate?: string;
     };
 
     let imgElement: HTMLImageElement;
@@ -47,11 +48,11 @@
 
     onMount(() => {
         checkForTicker();
-        window.addEventListener('resize', checkForTicker);
-        return () => window.removeEventListener('resize', checkForTicker);
+        window.addEventListener("resize", checkForTicker);
+        return () => window.removeEventListener("resize", checkForTicker);
     });
 
-    $: if(game.title) {
+    $: if (game.title) {
         isScrolling = false; // reset
         checkForTicker();
     }
@@ -85,7 +86,7 @@
         Promise.resolve().then(() => {
             if (imgElement && imgElement.complete) {
                 try {
-                    const colorThief = new ColorThief();
+                    const colorThief = new (ColorThief as any)();
                     const color = colorThief.getColor(imgElement);
                     backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
 
@@ -128,6 +129,9 @@
     {#if game.isNew}
         <div class="new-tag">NEW</div>
     {/if}
+    {#if game.fixedDate}
+        <div class="fixed-tag">FIXED</div>
+    {/if}
     <div class="image-container">
         <img
             src={visibleSrc}
@@ -143,8 +147,10 @@
                 bind:this={titleText}
                 class:scrolling={isScrolling}
                 style:--scroll-distance={`${scrollDistance}px`}
-                style:--total-duration={isScrolling ? `${(scrollDistance / 40) / 0.5}s` : '0s'}
-            >{game.title}</span>
+                style:--total-duration={isScrolling
+                    ? `${scrollDistance / 40 / 0.5}s`
+                    : "0s"}>{game.title}</span
+            >
         </h2>
         <div class="details">
             <span class="genre">{game.genre}</span>
@@ -181,6 +187,18 @@
         border-radius: 0 12px 0 12px;
         z-index: 1;
     }
+    .fixed-tag {
+        position: absolute;
+        top: 20px;
+        right: 0px;
+        background-color: #ff69b4;
+        color: black;
+        padding: 2px 6px;
+        font-size: 0.8em;
+        font-weight: bold;
+        border-radius: 0 12px 0 12px;
+        z-index: 1;
+    }
 
     .info h2 {
         font-size: 1.2em;
@@ -203,10 +221,14 @@
             transform: translateX(0); /* Pause at start */
         }
         75% {
-            transform: translateX(calc(-1 * var(--scroll-distance))); /* Scroll */
+            transform: translateX(
+                calc(-1 * var(--scroll-distance))
+            ); /* Scroll */
         }
         100% {
-            transform: translateX(calc(-1 * var(--scroll-distance))); /* Pause at end */
+            transform: translateX(
+                calc(-1 * var(--scroll-distance))
+            ); /* Pause at end */
         }
     }
 

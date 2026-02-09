@@ -96,9 +96,10 @@
       "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/minecraft/minecraft.jpg",
       "genre": "Sandbox",
       "type": "HTML",
-      "link": "https://sulfur-cyanide.vercel.app/a/hvtrs8%2F-ecgnepcpadtx.raeeq.fet%2Fhataqcpirt-",
+      "link": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/minecraft/minecraft.html",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Emerald",
@@ -108,7 +109,8 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Pokemon%20Emerald%20%2B.zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Fire Red",
@@ -118,7 +120,8 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Pokemon%20Firered%20251.zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Crystal",
@@ -128,17 +131,19 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Crystal%20Version%20(UE)%20(V1.1)%20%5BC%5D%5B!%5D.gbc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Red",
       "core": "mgba",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Red%20Version%20(UE)%5B!%5D.zip",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/EMULATORS/images/pokemonred.jpg",
       "genre": "Action-RPG",
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Red%20Version%20(UE)%5B!%5D.zip",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Blue",
@@ -148,27 +153,30 @@
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/pokemon-blue.gb",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Gold",
       "core": "mgba",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Gold%20Version%20(UE)%20%5BC%5D%5B!%5D.gbc",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/EMULATORS/images/pokemongold.jpg",
       "genre": "Action-RPG",
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Gold%20Version%20(UE)%20%5BC%5D%5B!%5D.gbc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Pokemon Silver",
       "core": "mgba",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Silver%20Version%20(USA%2C%20Europe)%20(SGB%20Enhanced).gbc",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/EMULATORS/images/pokemonsilver.jpg",
       "genre": "Action-RPG",
       "type": "EMULATOR",
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Silver%20Version%20(USA%2C%20Europe)%20(SGB%20Enhanced).gbc",
       "description": "",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Castlevania - Harmony of Dissonance",
@@ -493,7 +501,7 @@
       "link": "https://cyan-assets.vercel.app/EMULATORS/Pokemon%20Unbound/POKEMON_UNBOUND.gba",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2025-10-31"
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Crazy Cattle 3D",
@@ -1564,13 +1572,14 @@
     },
     {
       "title": "Pokemon : Team Rocket Editon",
-      "imageSrc": "https://preview.redd.it/pok%C3%A9mon-rocket-edition-cover-edited-by-me-for-the-community-v0-9vnibj7ji2ne1.png?auto=webp&amp;s=12ae9f9f33f92caa9ecfd539cc1e5b989930963b",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/EMULATORS/images/ptre.webp",
       "genre": "RPG",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clPokemonrocketedition.html",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "date": "2025-12-03"
+      "date": "2025-12-03",
+      "fixedDate": "2026-03-08"
     },
     {
       "title": "Cut The Rope",
