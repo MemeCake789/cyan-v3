@@ -10,6 +10,7 @@
     const dispatch = createEventDispatcher();
 
     export let windowId: number;
+    export let gameTitleContext: string | undefined = undefined;
 
     type Game = {
         title: string;
@@ -120,6 +121,16 @@
             }
         } finally {
             loading = false;
+            if (gameTitleContext) {
+                const match = games.find(
+                    (g) =>
+                        g.title.toLowerCase() ===
+                        gameTitleContext.toLowerCase(),
+                );
+                if (match) {
+                    selectedGame = match;
+                }
+            }
         }
     });
 

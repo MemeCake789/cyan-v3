@@ -53,7 +53,7 @@
             <div class="logo-area">
                 <div class="site-info">
                     <span class="site-name">CYAN</span>
-                    <span class="version">v3.1.0</span>
+                    <span class="version">v3.1.1</span>
                 </div>
             </div>
 

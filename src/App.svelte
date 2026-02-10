@@ -195,6 +195,7 @@
                         {:else if tab.type === "games"}
                             <Cyanide
                                 windowId={tab.id}
+                                gameTitleContext={tab.gameTitleContext}
                                 on:gamestatechange={(e) =>
                                     updateTabTitle(tab.id, e.detail.title)}
                             />
