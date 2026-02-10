@@ -11,6 +11,7 @@
         status: [string, string];
         isNew?: boolean;
         fixedDate?: string;
+        isFixed?: boolean;
     };
 
     let imgElement: HTMLImageElement;
@@ -129,6 +130,9 @@
     {#if game.isNew}
         <div class="new-tag">NEW</div>
     {/if}
+    {#if game.isFixed}
+        <div class="fixed-tag">FIXED</div>
+    {/if}
     <div class="image-container">
         <img
             src={visibleSrc}
@@ -177,6 +181,19 @@
         top: 0px;
         right: 0px;
         background-color: yellow;
+        color: black;
+        padding: 2px 6px;
+        font-size: 0.8em;
+        font-weight: bold;
+        border-radius: 0 12px 0 12px;
+        z-index: 1;
+    }
+
+    .fixed-tag {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background-color: #00e676; /* Green for fixed */
         color: black;
         padding: 2px 6px;
         font-size: 0.8em;

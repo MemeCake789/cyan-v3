@@ -21,7 +21,9 @@
         status: [string, string];
         favorited?: boolean;
         dateAdded?: string;
+        fixedDate?: string;
         isNew?: boolean;
+        isFixed?: boolean;
     };
 
     let games: Game[] = [];
@@ -33,6 +35,8 @@
     $: sortedGames = [...games].sort((a, b) => {
         if (a.favorited && !b.favorited) return -1;
         if (!a.favorited && b.favorited) return 1;
+        if (a.isFixed && !b.isFixed) return -1;
+        if (!a.isFixed && b.isFixed) return 1;
         if (a.isNew && !b.isNew) return -1;
         if (!a.isNew && b.isNew) return 1;
         return a.title.localeCompare(b.title);
@@ -54,6 +58,38 @@
         return date > sevenDaysAgo;
     }
 
+    function isRecentlyFixed(dateString: string): boolean {
+        const date = new Date(dateString);
+
+        // Create a date for "5 days ago" at the start of the day in local time
+        // Since input dates are likely YYYY-MM-DD (UTC midnight), we should likely compare
+        // against a cutoff that respects the "date only" nature if possible.
+        // However, standard JS Date parsing of YYYY-MM-DD is UTC.
+        // Let's standardise on time-agnostic comparison if possible, or just crude timestamp.
+
+        // Let's use a simple timestamp comparison where we allow 5 * 24h worth of milliseconds.
+        // Or better: ensure we are comparing midnight to midnight.
+        const now = new Date();
+        // Reset to midnight to avoid time-of-day issues
+        const today = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+        );
+        const cutoff = new Date(today);
+        cutoff.setDate(today.getDate() - 5);
+
+        // If dateString is YYYY-MM-DD, `new Date(dateString)` is UTC midnight.
+        // If the user meant local time dates, this mismatch might be annoying.
+        // But assuming YYYY-MM-DD is the standard input:
+        // We should probably treat the input date as "local midnight" to match `today`.
+        // So we parse the parts.
+        const [y, m, d] = dateString.split("-").map(Number);
+        const fixedDateLocal = new Date(y, m - 1, d); // Month is 0-indexed
+
+        return fixedDateLocal >= cutoff;
+    }
+
     onMount(async () => {
         window.addEventListener(`back-${windowId}`, handleBackEvent);
 
@@ -66,10 +102,13 @@
             }
             const data = await response.json();
             games = data.games.map(
-                (game: Omit<Game, "favorited" | "isNew">) => ({
+                (game: Omit<Game, "favorited" | "isNew" | "isFixed">) => ({
                     ...game,
                     favorited: false,
                     isNew: game.dateAdded ? isRecent(game.dateAdded) : false,
+                    isFixed: game.fixedDate
+                        ? isRecentlyFixed(game.fixedDate)
+                        : false,
                 }),
             );
         } catch (e) {

@@ -9,10 +9,11 @@
         genre: string;
         status: [string, string];
         favorited?: boolean;
+        isFixed?: boolean;
     };
 
     // Ticker logic
-    let titleContainer: HTMLTableCellElement;
+    let titleContainer: HTMLDivElement;
     let titleText: HTMLSpanElement;
     let isScrolling = false;
     let scrollDistance = 0; // New variable for scroll distance
@@ -47,8 +48,27 @@
     }
 </script>
 
-<div class="game-list-item" on:click={() => dispatch("click")}>
-    <div class="favorite-cell" on:click|stopPropagation={() => dispatch("toggleFavorite")}>
+<div
+    class="game-list-item"
+    on:click={() => dispatch("click")}
+    role="button"
+    tabindex="0"
+    on:keydown={(e) => {
+        if (e.key === "Enter" || e.key === " ") dispatch("click");
+    }}
+>
+    <div
+        class="favorite-cell"
+        on:click|stopPropagation={() => dispatch("toggleFavorite")}
+        role="button"
+        tabindex="0"
+        on:keydown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+                dispatch("toggleFavorite");
+            }
+        }}
+    >
         <span
             class="material-symbols-outlined star-icon"
             class:favorited={game.favorited}
@@ -60,14 +80,19 @@
         <img src={game.imageSrc} alt={game.title} class="game-image" />
     </div>
     <div class="game-info-cell" bind:this={titleContainer}>
-        <span
-            bind:this={titleText}
-            class:scrolling={isScrolling}
-            style:--scroll-distance={`${scrollDistance}px`}
-            style:--total-duration={isScrolling
-                ? `${scrollDistance / 40 / 0.5}s`
-                : "0s"}>{game.title}</span
-        >
+        <div class="title-row">
+            <span
+                bind:this={titleText}
+                class:scrolling={isScrolling}
+                style:--scroll-distance={`${scrollDistance}px`}
+                style:--total-duration={isScrolling
+                    ? `${scrollDistance / 40 / 0.5}s`
+                    : "0s"}>{game.title}</span
+            >
+            {#if game.isFixed}
+                <span class="fixed-badge">FIXED</span>
+            {/if}
+        </div>
         <div class="genre-status">{game.genre} | {game.status[0]}</div>
     </div>
 </div>
@@ -84,7 +109,8 @@
         background-color: #252525;
     }
 
-    .favorite-cell, .image-cell {
+    .favorite-cell,
+    .image-cell {
         margin-right: 10px;
     }
 
@@ -93,6 +119,23 @@
         white-space: nowrap;
         display: flex;
         flex-direction: column;
+        flex: 1; /* Allow it to take up remaining space */
+    }
+
+    .title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .fixed-badge {
+        background-color: #00e676;
+        color: black;
+        font-size: 0.7em;
+        font-weight: bold;
+        padding: 1px 4px;
+        border-radius: 4px;
+        flex-shrink: 0;
     }
 
     .game-info-cell .genre-status {
