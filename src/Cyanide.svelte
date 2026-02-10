@@ -184,21 +184,23 @@
             <p class="error">Error: {error}</p>
         {:else if currentView === "grid"}
             {#if selectedGame}
-                {#key selectedGame.title}
-                    <GameDetail
-                        game={selectedGame}
-                        view="grid"
-                        on:close={() => {
-                            selectedGame = null;
-                            isGamePlaying = false;
-                            dispatch("gamestatechange", {
-                                title: "games",
-                                showBackButton: false,
-                            });
-                        }}
-                        on:play={handlePlay}
-                    />
-                {/key}
+                <div class="detail-full">
+                    {#key selectedGame.title}
+                        <GameDetail
+                            game={selectedGame}
+                            view="grid"
+                            on:close={() => {
+                                selectedGame = null;
+                                isGamePlaying = false;
+                                dispatch("gamestatechange", {
+                                    title: "games",
+                                    showBackButton: false,
+                                });
+                            }}
+                            on:play={handlePlay}
+                        />
+                    {/key}
+                </div>
             {:else}
                 <div class="grid-view">
                     {#each filteredGames as game (game.title)}
@@ -350,5 +352,12 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+    .detail-full {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
 </style>

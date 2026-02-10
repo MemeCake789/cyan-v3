@@ -128,9 +128,7 @@
             <h2>{game.title}</h2>
             <p>{game.genre}</p>
             <div class="actions">
-                <button class="play-button" on:click={handlePlay}
-                    >Deploy (Play)</button
-                >
+                <button class="play-button" on:click={handlePlay}>Play</button>
                 <button class="back-button" on:click={() => dispatch("close")}
                     >Back</button
                 >
@@ -160,7 +158,7 @@
                     <span class="value">{game.type || "Web Game"}</span>
                 </div>
                 <button class="play-button wide" on:click={handlePlay}
-                    >Visit Deployment</button
+                    >Play</button
                 >
             </div>
         </div>

@@ -241,6 +241,7 @@
         height: 100%;
         overflow: hidden;
         background-color: var(--bg-color);
+        margin-left: 8px;
     }
 
     /* Tabs Header */
