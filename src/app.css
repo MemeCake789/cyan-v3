@@ -1,5 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+/* Modern TUI / Vercel-Inspired Theme */
+:root {
+    /* Colors */
+    --bg-color: #000000;
+    --surface-color: #111111;
+    --surface-hover: #1a1a1a;
+    --border-color: #333333;
+    --border-subtle: #222222;
+
+    /* Text */
+    --text-primary: #ededed;
+    --text-secondary: #888888;
+    --text-muted: #555555;
+
+    /* Accents */
+    --accent-cyan: #50e3c2;
+    --accent-cyan-dim: rgba(80, 227, 194, 0.1);
+    --accent-error: #ff0033;
+    --accent-warning: #f5a623;
+
+    /* Typography */
+    --font-mono: 'DM Mono', monospace;
+
+    /* Spacing & Layout */
+    --sidebar-width: 250px;
+    --header-height: 50px;
+    --border-radius: 6px;
+
+    /* Effects */
+    --glass-bg: rgba(10, 10, 10, 0.7);
+    --glass-blur: blur(12px);
+    --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
 
 * {
-    font-family: 'JetBrains Mono', monospace;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: var(--font-mono);
 }

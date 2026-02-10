@@ -1,7 +1,7 @@
 <script lang="ts">
     import { quintOut } from "svelte/easing";
     import { fly } from "svelte/transition";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onDestroy } from "svelte";
     import GamePlayer from "./GamePlayer.svelte";
 
     const dispatch = createEventDispatcher();
@@ -11,10 +11,13 @@
         imageSrc: string;
         genre: string;
         link: string;
+        core?: string;
+        type?: string;
     };
     export let view: "grid" | "list";
 
     let isPlaying = false;
+    let iframeSrc: string | null = null;
 
     // Helper to detect .swf links (case‑insensitive)
     const isSwf = (url: string) => url.toLowerCase().endsWith(".swf");
@@ -32,7 +35,31 @@
         return lower.endsWith(".gb") || lower.endsWith(".gbc");
     };
 
+    function addToRecents(gameData) {
+        try {
+            const raw = localStorage.getItem("recentGames");
+            let recents = raw ? JSON.parse(raw) : [];
+
+            // Remove if exists
+            recents = recents.filter((g) => g.title !== gameData.title);
+
+            // Add to front
+            recents.unshift({
+                ...gameData,
+                timestamp: new Date().toISOString(),
+            });
+
+            // Limit to 10
+            if (recents.length > 10) recents = recents.slice(0, 10);
+
+            localStorage.setItem("recentGames", JSON.stringify(recents));
+        } catch (e) {
+            console.error("Failed to save recent game", e);
+        }
+    }
+
     function handlePlay() {
+        addToRecents(game);
         isPlaying = true;
         dispatch("play");
     }
@@ -41,22 +68,46 @@
         isPlaying = false;
         dispatch("close");
     }
+
+    function getEmulatorCore(game: {
+        link: string;
+        core?: string;
+    }): string | null {
+        if (game.core) return game.core;
+        if (isGba(game.link)) return "gba";
+        if (isGb(game.link)) return getGbCore(game.link);
+        return null;
+    }
+
+    function createEmulatorSrc(core: string, gameUrl: string) {
+        const html = `<html><head><style>body,html{margin:0;padding:0;}</style></head><body><div style="width:100%;height:100%;max-width:100%"><div id="game"></div></div><script>EJS_player="#game";EJS_core="${core}";EJS_pathtodata="https://cdn.emulatorjs.org/stable/data/";EJS_gameUrl="${gameUrl}";<\/script><script src="https://cdn.emulatorjs.org/stable/data/loader.js"><\/script></body></html>`;
+        const blob = new Blob([html], { type: "text/html" });
+        return URL.createObjectURL(blob);
+    }
+
+    $: emulatorCore = getEmulatorCore(game);
+
+    $: if (emulatorCore && game && isPlaying) {
+        if (iframeSrc) URL.revokeObjectURL(iframeSrc);
+        iframeSrc = createEmulatorSrc(emulatorCore, game.link);
+    }
+
+    onDestroy(() => {
+        if (iframeSrc) URL.revokeObjectURL(iframeSrc);
+    });
 </script>
 
 {#if isPlaying}
     {#if isSwf(game.link)}
         <iframe
+            title={game.title}
             srcdoc={`<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/></head><body><script src="https://unpkg.com/@ruffle-rs/ruffle"></script><object width="100%" height="100%"><param name="movie" value="${game.link}"><embed src="${game.link}" width="100%" height="100%"></object></body></html>`}
             style="width:100%;height:100%;border:none;"
         ></iframe>
-    {:else if isGba(game.link)}
+    {:else if emulatorCore && iframeSrc}
         <iframe
-            srcdoc={`<html><head><style>body,html{margin:0;padding:0;}</style></head><body><div style="width:100%;height:100%;max-width:100%"><div id="game"></div></div><script>EJS_player="#game";EJS_core="gba";EJS_pathtodata="https://cdn.emulatorjs.org/stable/data/";EJS_gameUrl="${game.link}";</script><script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script></body></html>`}
-            style="width:100%;height:100%;border:none;"
-        ></iframe>
-    {:else if isGb(game.link)}
-        <iframe
-            srcdoc={`<html><head><style>body,html{margin:0;padding:0;}</style></head><body><div style="width:100%;height:100%;max-width:100%"><div id="game"></div></div><script>EJS_player="#game";EJS_core="${getGbCore(game.link)}";EJS_pathtodata="https://cdn.emulatorjs.org/stable/data/";EJS_gameUrl="${game.link}";</script><script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script></body></html>`}
+            title={game.title}
+            src={iframeSrc}
             style="width:100%;height:100%;border:none;"
         ></iframe>
     {:else}
@@ -76,21 +127,42 @@
         >
             <h2>{game.title}</h2>
             <p>{game.genre}</p>
-            <button class="play-button" on:click={handlePlay}>> Play</button>
-            <button class="back-button" on:click={() => dispatch("close")}
-                >Back</button
-            >
+            <div class="actions">
+                <button class="play-button" on:click={handlePlay}
+                    >Deploy (Play)</button
+                >
+                <button class="back-button" on:click={() => dispatch("close")}
+                    >Back</button
+                >
+            </div>
         </div>
     </div>
 {:else}
     <div class="game-detail-list">
-        <div class="image-container">
-            <img src={game.imageSrc} alt={game.title} />
-        </div>
-        <div class="info">
+        <div class="header-row">
             <h2>{game.title}</h2>
-            <p>{game.genre}</p>
-            <button class="play-button" on:click={handlePlay}>> Play</button>
+            <button class="back-button-small" on:click={() => dispatch("close")}
+                >Back</button
+            >
+        </div>
+        <div class="content-row">
+            <div class="image-container">
+                <img src={game.imageSrc} alt={game.title} />
+            </div>
+            <div class="info">
+                <p class="genre">{game.genre}</p>
+                <div class="meta-row">
+                    <span class="label">Status</span>
+                    <span class="value ready">Ready</span>
+                </div>
+                <div class="meta-row">
+                    <span class="label">Type</span>
+                    <span class="value">{game.type || "Web Game"}</span>
+                </div>
+                <button class="play-button wide" on:click={handlePlay}
+                    >Visit Deployment</button
+                >
+            </div>
         </div>
     </div>
 {/if}
@@ -103,17 +175,23 @@
         gap: 40px;
         width: 100%;
         height: 100%;
+        color: var(--text-primary);
     }
     .game-detail-grid .image-container {
         max-width: 200px; /* Smaller container */
         width: 100%; /* Allow to shrink */
+        border: 1px solid var(--border-color);
+        padding: 5px;
+        border-radius: 8px;
+        background: var(--surface-color);
     }
     .game-detail-grid .image-container img {
-        width: 100%; /* Make image responsive within its container */
-        height: auto; /* Maintain aspect ratio */
-        max-height: 200px; /* Limit image height */
-        object-fit: contain; /* Ensure the image fits within the bounds */
-        border-radius: 12px;
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+        object-fit: contain;
+        border-radius: 4px;
+        display: block;
     }
     .game-detail-grid .info {
         width: 40%;
@@ -121,41 +199,125 @@
 
     .game-detail-list {
         padding: 20px;
+        color: var(--text-primary);
     }
-    .game-detail-list .image-container {
-        width: 100%;
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+    }
+
+    .content-row {
+        display: flex;
+        gap: 20px;
+    }
+
+    .game-detail-list .image-container {
+        width: 200px;
+        border: 1px solid var(--border-color);
+        padding: 5px;
+        border-radius: 8px;
+        background: var(--surface-color);
     }
     .game-detail-list .image-container img {
         width: 100%;
-        border-radius: 12px;
+        border-radius: 4px;
+        display: block;
+    }
+
+    .game-detail-list .info {
+        flex: 1;
+        max-width: 400px;
     }
 
     h2 {
-        font-size: 2em;
-        margin-bottom: 10px;
+        font-size: 24px;
+        margin: 0 0 10px 0;
+        font-weight: 600;
     }
     p {
-        font-size: 1.2em;
+        font-size: 14px;
         margin-bottom: 20px;
+        color: var(--text-secondary);
     }
+
+    .meta-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 8px 0;
+        font-size: 14px;
+    }
+
+    .meta-row .label {
+        color: var(--text-muted);
+    }
+    .meta-row .value {
+        color: var(--text-primary);
+    }
+    .meta-row .value.ready {
+        color: var(--accent-cyan);
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+    }
+
     .play-button {
-        background-color: #e0e0e0;
-        color: #0d0d0d;
-        border: none;
-        border-radius: 20px;
-        padding: 10px 20px;
-        font-size: 1em;
+        background-color: var(--text-primary);
+        color: var(--bg-color);
+        border: 1px solid var(--text-primary);
+        border-radius: 4px;
+        padding: 8px 20px;
+        font-size: 14px;
         cursor: pointer;
-        margin-right: 10px;
+        font-weight: 500;
+        transition: all 0.2s;
     }
+
+    .play-button:hover {
+        background-color: transparent;
+        color: var(--text-primary);
+    }
+
+    .play-button.wide {
+        width: 100%;
+        margin-top: 20px;
+    }
+
     .back-button {
         background-color: transparent;
-        color: #e0e0e0;
-        border: 1px solid #e0e0e0;
-        border-radius: 20px;
-        padding: 10px 20px;
-        font-size: 1em;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 8px 20px;
+        font-size: 14px;
         cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .back-button:hover {
+        border-color: var(--text-primary);
+        color: var(--text-primary);
+    }
+
+    .back-button-small {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .back-button-small:hover {
+        border-color: var(--text-primary);
+        color: var(--text-primary);
     }
 </style>

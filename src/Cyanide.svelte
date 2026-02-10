@@ -24,6 +24,7 @@
         fixedDate?: string;
         isNew?: boolean;
         isFixed?: boolean;
+        core?: string;
     };
 
     let games: Game[] = [];
@@ -46,7 +47,7 @@
         isGamePlaying = false;
         selectedGame = null;
         dispatch("gamestatechange", {
-            title: "games",
+            title: "Games",
             showBackButton: false,
         });
     }

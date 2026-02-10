@@ -19,7 +19,6 @@
     let batchSize = 50;
 
     let replyToIndex: number | null = null;
-
     let isLoadingMore = false;
     let previousHeight = 0;
 
@@ -39,6 +38,7 @@
         return new Date(iso).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
+            hour12: false, // 24h format for terminal feel
         });
     }
 
@@ -48,7 +48,7 @@
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
         const hue = (hash * 137) % 360;
-        return `hsl(${hue}, 75%, 55%)`;
+        return `hsl(${hue}, 60%, 65%)`; // Slightly desaturated for TUI
     }
 
     function processMessage(msg: {
@@ -59,11 +59,12 @@
         isOwner?: boolean;
         id?: string;
     }) {
+        // --- SUDO COMMAND LOGIC ---
+        // Verify if the message text starts with "sudo " (case-sensitive or insensitive? Let's do sensitive for strictness)
         if (msg.text.startsWith("sudo ")) {
             return {
                 ...msg,
-                user: `[OWNER] ${msg.user}`,
-                text: msg.text.slice(5),
+                text: msg.text.slice(5), // Remove "sudo "
                 isOwner: true,
             };
         }
@@ -145,8 +146,15 @@
 
 <div class="sulfur-container">
     <div class="header">
-        <span>[*] public-chat</span>
-        <input type="text" bind:value={$usernameStore} class="username-input" />
+        <span class="channel-name"># public-chat</span>
+        <div class="user-block">
+            <span>user:</span>
+            <input
+                type="text"
+                bind:value={$usernameStore}
+                class="username-input"
+            />
+        </div>
     </div>
 
     <div class="chat-history" bind:this={chatContainer}>
@@ -156,41 +164,55 @@
             {@const processed = processMessage(msg)}
             <div
                 id={"message-" + i}
-                class="message"
-                style="--sender-color: {stringToColor(processed.user)}"
+                class="message-line"
+                class:owner-line={processed.isOwner}
             >
-                {#if msg.replyTo}
-                    {@const parent = getMessageById(msg.replyTo)}
-                    {#if parent}
-                        {@const replied = processMessage(parent)}
-                        <div
-                            class="reply-context"
-                            on:click={() =>
-                                scrollToMessage(
-                                    getMessageIndexById(msg.replyTo),
-                                )}
-                        >
-                            ↱ {replied.user}: {replied.text}
-                        </div>
-                    {/if}
+                <!-- Timestamp -->
+                <span class="timestamp"
+                    >[{formatTimestamp(processed.timestamp)}]</span
+                >
+
+                <!-- User -->
+                {#if processed.isOwner}
+                    <span class="owner-badge">[OWNER]</span>
+                    <span class="sender-name owner">{processed.user}</span>
+                {:else}
+                    <span
+                        class="sender-name"
+                        style="color: {stringToColor(processed.user)}"
+                        >{processed.user}</span
+                    >
                 {/if}
 
-                <div class="message-line">
-                    <span class="timestamp"
-                        >[{formatTimestamp(processed.timestamp)}]</span
-                    >
-                    <span class="sender-name" class:owner={processed.isOwner}
-                        >{processed.user}:</span
-                    >
-                    <span class="content">{processed.text}</span>
-                    <span
-                        class="reply-button"
-                        on:click={() => (replyToIndex = i)}>↱ reply</span
-                    >
-                </div>
+                <!-- Separator -->
+                <span class="sep">&gt;</span>
+
+                <!-- Content -->
+                <span class="content">
+                    {#if msg.replyTo}
+                        {@const parent = getMessageById(msg.replyTo)}
+                        {#if parent}
+                            {@const replied = processMessage(parent)}
+                            <span
+                                class="reply-ref"
+                                on:click={() =>
+                                    scrollToMessage(
+                                        getMessageIndexById(msg.replyTo),
+                                    )}
+                                >@{replied.user}
+                            </span>
+                        {/if}
+                    {/if}
+                    {processed.text}
+                </span>
+
+                <!-- Actions -->
+                <button class="reply-btn" on:click={() => (replyToIndex = i)}
+                    >reply</button
+                >
             </div>
         {:else}
-            <div class="message system">
+            <div class="message-line system">
                 <span class="content"
                     >No messages yet. Start the conversation!</span
                 >
@@ -200,23 +222,29 @@
 
     {#if replyToIndex !== null && messages[replyToIndex]}
         {@const preview = processMessage(messages[replyToIndex])}
-        <div class="reply-preview">
-            replying to <strong>{preview.user}</strong>: {preview.text}
-            <span class="cancel-reply" on:click={() => (replyToIndex = null)}
-                >✖</span
+        <div class="reply-preview-bar">
+            <span
+                >replying to <strong>{preview.user}</strong>: {preview.text}</span
+            >
+            <button class="cancel-reply" on:click={() => (replyToIndex = null)}
+                >✖</button
             >
         </div>
     {/if}
 
-    <div class="chat-input">
+    <div class="input-area">
+        <span class="prompt">&gt;</span>
         <input
             type="text"
             bind:value={newMessage}
-            placeholder="type a message..."
+            placeholder="SendMessage..."
             on:keydown={(e) => e.key === "Enter" && sendMessage()}
+            class="chat-input-field"
         />
-        <button on:click={sendMessage} disabled={!newMessage.trim()}
-            >send</button
+        <button
+            class="send-btn"
+            on:click={sendMessage}
+            disabled={!newMessage.trim()}>Send</button
         >
     </div>
 </div>
@@ -226,150 +254,212 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        background: #000;
-        color: #b3b3b3;
-        font-family: "Courier New", Courier, monospace;
-        border-radius: 5px;
-        overflow: hidden;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        background-color: transparent;
     }
+
     .header {
-        padding: 5px 10px;
-        background: #1a1a1a;
-        border-bottom: 1px solid #333;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.9em;
+        font-size: 13px;
+        margin-bottom: 10px;
     }
+
+    .channel-name {
+        color: var(--text-secondary);
+        font-weight: bold;
+    }
+
+    .user-block {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-muted);
+    }
+
     .username-input {
-        background: #333;
-        color: #f0f0f0;
-        border: 1px solid #555;
-        border-radius: 3px;
-        padding: 2px 5px;
-        width: 120px;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--border-subtle);
+        color: var(--accent-cyan);
+        width: 100px;
         text-align: right;
+        font-family: var(--font-mono);
     }
+
+    .username-input:focus {
+        border-bottom-color: var(--accent-cyan);
+        outline: none;
+    }
+
     .chat-history {
         flex-grow: 1;
         overflow-y: auto;
-        padding: 10px;
+        padding-right: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
+
     .load-more {
         text-align: center;
         cursor: pointer;
-        color: #888;
-        margin-bottom: 10px;
+        color: var(--text-muted);
+        font-size: 11px;
+        padding: 5px;
+        opacity: 0.5;
     }
-    .message {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 5px;
-        line-height: 1.3;
-    }
-    .message-line {
-        display: grid;
-        grid-template-columns: auto auto 1fr auto;
-        column-gap: 8px;
-        align-items: baseline;
-    }
-    .timestamp {
-        color: #888;
-        margin-right: 8px;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-    .reply-context {
-        color: #888;
-        font-size: 0.85em;
-        margin-bottom: 2px;
-        cursor: pointer;
-    }
-    .sender-name {
-        font-weight: bold;
-        margin-right: 8px;
-        color: var(--sender-color);
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-    .sender-name.owner {
-        background: linear-gradient(to right, #00ffff, #fff, #00ffff);
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: owner-gradient 3s ease infinite;
-    }
-    @keyframes owner-gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-    .content {
-        word-break: break-word;
-    }
-    .message.system .content {
-        width: 100%;
-        text-align: center;
-        font-style: italic;
-        color: #888;
-    }
-    .chat-input {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #333;
-    }
-    .chat-input input {
-        flex-grow: 1;
-        background: #333;
-        color: #f0f0f0;
-        border: 1px solid #555;
-        border-radius: 5px;
-        padding: 5px 10px;
-        outline: none;
-    }
-    .chat-input button {
-        background: #4caf50;
-        color: white;
-        border: none;
-        padding: 5px 15px;
-        border-radius: 5px;
-        margin-left: 10px;
-        cursor: pointer;
-    }
-    .chat-input button:disabled {
-        background: #555;
-        cursor: not-allowed;
-    }
-    .reply-button {
-        margin-left: 6px;
-        cursor: pointer;
-        color: #555;
-        opacity: 0;
-        transition: opacity 0.2s;
-        white-space: nowrap;
-    }
-    .message:hover .reply-button {
+    .load-more:hover {
         opacity: 1;
     }
-    .reply-button:hover {
-        color: #aaa;
+
+    .message-line {
+        display: flex;
+        align-items: baseline;
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 2px 4px;
+        border-radius: 4px;
     }
-    .reply-preview {
-        background: #222;
-        padding: 5px;
-        margin: 5px 0;
-        font-size: 0.9em;
-        color: #ddd;
+
+    .message-line:hover {
+        background-color: var(--surface-hover);
     }
-    .cancel-reply {
-        margin-left: 8px;
+
+    .message-line:hover .reply-btn {
+        opacity: 0.5;
+    }
+
+    .timestamp {
+        color: var(--text-muted);
+        margin-right: 8px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .owner-badge {
+        background-color: var(--accent-cyan);
+        color: #000;
+        font-size: 10px;
+        padding: 0 4px;
+        border-radius: 2px;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+
+    .sender-name {
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .sender-name.owner {
+        color: var(--accent-cyan);
+        text-shadow: 0 0 5px var(--accent-cyan-dim);
+    }
+
+    .sep {
+        margin: 0 8px;
+        color: var(--text-muted);
+    }
+
+    .content {
+        word-break: break-word;
+        flex-grow: 1;
+    }
+
+    .reply-ref {
+        color: var(--text-secondary);
+        background-color: var(--surface-hover);
+        border-radius: 3px;
+        padding: 0 4px;
+        margin-right: 4px;
         cursor: pointer;
-        color: #f88;
+    }
+
+    .reply-btn {
+        opacity: 0;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 11px;
+        margin-left: 10px;
+        padding: 0;
+    }
+
+    .reply-btn:hover {
+        color: var(--text-primary);
+        opacity: 1 !important;
+    }
+
+    .reply-preview-bar {
+        background-color: var(--surface-hover);
+        border-left: 2px solid var(--accent-cyan);
+        padding: 8px;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+    .cancel-reply {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+    }
+
+    .input-area {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid var(--border-color);
+        padding-top: 10px;
+        margin-top: 5px;
+    }
+
+    .prompt {
+        color: var(--accent-cyan);
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
+    .chat-input-field {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    .chat-input-field:focus {
+        outline: none;
+    }
+
+    .send-btn {
+        background: transparent;
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .send-btn:hover:not(:disabled) {
+        border-color: var(--text-primary);
+        color: var(--text-primary);
+    }
+
+    .send-btn:disabled {
+        opacity: 0.3;
+        cursor: default;
     }
 </style>

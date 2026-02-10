@@ -54,7 +54,7 @@
         tabindex="0"
     >
         <div class="drag-handle">::</div>
-        <div 
+        <div
             class="title"
             on:click={() => dispatch("toggleMinimize")}
             on:keydown={(e) => {
@@ -62,7 +62,9 @@
                     dispatch("toggleMinimize");
                 }
             }}
-        >{title}</div>
+        >
+            {title}
+        </div>
 
         <div class="title-center">
             <slot name="title-center" />

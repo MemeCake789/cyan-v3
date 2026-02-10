@@ -1,5 +1,10 @@
 <script lang="ts">
-    import { createEventDispatcher, onDestroy, afterUpdate } from "svelte";
+    import {
+        createEventDispatcher,
+        onDestroy,
+        onMount,
+        afterUpdate,
+    } from "svelte";
 
     export let currentUrl = "";
 
@@ -9,45 +14,147 @@
     let iframeElement: HTMLIFrameElement | null;
     let iframeContainer: HTMLDivElement;
     let hasAcceptedWarning = false;
+    let proxyType: "uv" | "scramjet" = "uv";
+    let scramjet: any = null;
+    let isProxyReady = false;
 
     const dispatch = createEventDispatcher();
 
-    const PROXY_BASE = "http://sulfur-flax.vercel.app/rx?q=";
+    async function initProxy() {
+        if (typeof window === "undefined") return;
 
-    function navigate(url: string, addToHistory = true) {
-        if (!url) return;
-
-        let targetUrl = url;
-        // Basic URL validation/fixing
-        if (
-            !url.startsWith("http://") &&
-            !url.startsWith("https://") &&
-            !url.includes(" ")
-        ) {
-            if (url.includes(".")) {
-                targetUrl = "https://" + url;
-            } else {
-                // Search query
-                targetUrl = url;
+        // Register Service Workers
+        if ("serviceWorker" in navigator) {
+            try {
+                await navigator.serviceWorker.register("/sw.js", {
+                    scope: "/",
+                });
+                console.log("Main SW registered");
+            } catch (err) {
+                console.error("Main SW registration failed:", err);
             }
         }
 
-        const fullProxyUrl = PROXY_BASE + encodeURIComponent(targetUrl);
-        currentUrl = fullProxyUrl;
-        inputUrl = targetUrl;
+        // Initialize BareMux
+        try {
+            // @ts-ignore
+            if (window.BareMux) {
+                // @ts-ignore
+                const connection = new BareMux.BareMuxConnection(
+                    "/baremux/worker.js",
+                );
+                const wispUrl =
+                    (location.protocol === "https:" ? "wss" : "ws") +
+                    "://" +
+                    location.host +
+                    "/wisp/";
+                // Defaulting to epoxy as in robux.js
+                await connection.setTransport("/epoxy/index.mjs", [
+                    { wisp: wispUrl },
+                ]);
+            }
+        } catch (err) {
+            console.error("BareMux init failed:", err);
+        }
+
+        // Initialize Scramjet
+        try {
+            // @ts-ignore
+            if (window.$scramjetLoadController) {
+                // @ts-ignore
+                const { ScramjetController } = window.$scramjetLoadController();
+                scramjet = new ScramjetController({
+                    files: {
+                        wasm: "/scram/scramjet.wasm.wasm",
+                        all: "/scram/scramjet.all.js",
+                        sync: "/scram/scramjet.sync.js",
+                    },
+                });
+                await scramjet.init();
+                console.log("Scramjet initialized");
+            }
+        } catch (err) {
+            console.error("Scramjet init failed:", err);
+        }
+
+        isProxyReady = true;
+    }
+
+    async function loadScripts() {
+        const scripts = [
+            "/baremux/index.js",
+            "/uv/uv.bundle.js",
+            "/assets/js/uv/uv.config.js",
+            "/scram/scramjet.all.js",
+        ];
+
+        for (const src of scripts) {
+            await new Promise((resolve) => {
+                const script = document.createElement("script");
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = resolve; // Continue even on error to try others
+                document.head.appendChild(script);
+            });
+        }
+    }
+
+    onMount(async () => {
+        await loadScripts();
+        await initProxy();
+        if (hasAcceptedWarning) {
+            initializeChromium();
+        }
+    });
+
+    function getProxiedUrl(url: string) {
+        if (!url) return "";
+        let targetUrl = url;
+
+        // Basic URL validation/fixing
+        if (!/^https?:\/\//i.test(targetUrl) && !targetUrl.includes(" ")) {
+            if (targetUrl.includes(".")) {
+                targetUrl = "https://" + targetUrl;
+            } else {
+                // fallback to search
+                targetUrl = `https://duckduckgo.com/?q=${encodeURIComponent(targetUrl)}`;
+            }
+        }
+
+        if (proxyType === "uv") {
+            // @ts-ignore
+            if (window.__uv$config) {
+                // @ts-ignore
+                return (
+                    window.__uv$config.prefix +
+                    window.__uv$config.encodeUrl(targetUrl)
+                );
+            }
+        } else if (proxyType === "scramjet" && scramjet) {
+            return scramjet.encodeUrl(targetUrl);
+        }
+
+        return targetUrl;
+    }
+
+    async function navigate(url: string, addToHistory = true) {
+        if (!url) return;
+
+        const proxied = getProxiedUrl(url);
+        currentUrl = proxied;
+        inputUrl = url;
 
         if (iframeElement) {
-            iframeElement.src = fullProxyUrl;
+            iframeElement.src = proxied;
         }
 
         if (addToHistory) {
-            // Remove any forward history if we're in the middle of the stack
             history = history.slice(0, historyIndex + 1);
-            history.push(targetUrl);
+            history.push(url);
             historyIndex = history.length - 1;
         }
 
-        dispatch("urlchange", { url: targetUrl });
+        dispatch("urlchange", { url });
     }
 
     function handleKeydown(e: KeyboardEvent) {
@@ -60,6 +167,12 @@
         if (historyIndex > 0) {
             historyIndex--;
             navigate(history[historyIndex], false);
+        } else if (iframeElement) {
+            try {
+                iframeElement.contentWindow?.history.back();
+            } catch (e) {
+                console.warn("Cross-origin history access denied");
+            }
         }
     }
 
@@ -67,11 +180,19 @@
         if (historyIndex < history.length - 1) {
             historyIndex++;
             navigate(history[historyIndex], false);
+        } else if (iframeElement) {
+            try {
+                iframeElement.contentWindow?.history.forward();
+            } catch (e) {
+                console.warn("Cross-origin history access denied");
+            }
         }
     }
 
     function refresh() {
-        if (historyIndex !== -1) {
+        if (iframeElement) {
+            iframeElement.contentWindow?.location.reload();
+        } else if (historyIndex !== -1) {
             navigate(history[historyIndex], false);
         }
     }
@@ -89,18 +210,22 @@
         iframeElement.style.height = "100%";
         iframeElement.style.border = "none";
         iframeElement.style.background = "white";
+        // Enable suggested features for better proxy compatibility
+        iframeElement.setAttribute(
+            "allow",
+            "fullscreen; geolocation; microphone; camera;",
+        );
         iframeContainer.appendChild(iframeElement);
 
-        // Initial page or default
-        if (!currentUrl) {
-            navigate("google.com");
-        } else if (iframeElement) {
+        if (currentUrl) {
             iframeElement.src = currentUrl;
+        } else {
+            navigate("google.com");
         }
     }
 
     afterUpdate(() => {
-        if (hasAcceptedWarning) {
+        if (hasAcceptedWarning && !iframeElement) {
             initializeChromium();
         }
     });
@@ -111,7 +236,6 @@
         }
     });
 
-    // Expose methods for the title bar buttons
     export { goBack, goForward, refresh, navigate, inputUrl };
 </script>
 
@@ -184,13 +308,6 @@
     .iframe-wrapper {
         flex-grow: 1;
         position: relative;
-    }
-
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: white;
     }
 
     .placeholder {
