@@ -3,6 +3,8 @@
     import { getMessages, sendMessage as apiSendMessage } from "./chatApi";
     import { username as usernameStore } from "./stores";
 
+    const MAX_MESSAGE_LENGTH = 200;
+
     let messages: {
         text: string;
         user: string;
@@ -21,9 +23,15 @@
     let replyToIndex: number | null = null;
     let isLoadingMore = false;
     let previousHeight = 0;
+    let expandedMessages = new Map<number, boolean>();
 
     $: if (typeof $usernameStore === "string" && $usernameStore.trim()) {
         username = $usernameStore;
+    }
+
+    function toggleExpanded(index: number) {
+        expandedMessages.set(index, !expandedMessages.get(index));
+        expandedMessages = expandedMessages;
     }
 
     function loadMoreMessages() {
@@ -193,17 +201,30 @@
                         {@const parent = getMessageById(msg.replyTo)}
                         {#if parent}
                             {@const replied = processMessage(parent)}
+                            <!-- svelte-ignore a11y_click_events_have_key_events -->
+                            <!-- svelte-ignore a11y_no_static_element_interactions -->
                             <span
                                 class="reply-ref"
                                 on:click={() =>
                                     scrollToMessage(
                                         getMessageIndexById(msg.replyTo),
                                     )}
-                                >@{replied.user}
+                                >{replied.text}
                             </span>
                         {/if}
                     {/if}
-                    {processed.text}
+                    {#if processed.text.length > MAX_MESSAGE_LENGTH}
+                        {#if expandedMessages.get(i)}
+                            {processed.text}
+                            <button class="show-more-less" on:click={() => toggleExpanded(i)}>Show Less</button>
+                        {:else}
+                            {processed.text.slice(0, MAX_MESSAGE_LENGTH) + "..."}
+                             <button class="show-more-less" on:click={() => toggleExpanded(i)}>Show More ({processed.text.length})</button>
+                        {/if}
+                    {:else}
+                        {processed.text}
+                    {/if}
+
                 </span>
 
                 <!-- Actions -->
@@ -311,7 +332,7 @@
         color: var(--text-muted);
         font-size: 11px;
         padding: 5px;
-        opacity: 0.5;
+        opacity: 0.8;
     }
     .load-more:hover {
         opacity: 1;
@@ -411,7 +432,20 @@
         background: transparent;
         border: none;
         color: var(--text-muted);
+        cursor: pointer;.show-more-less {
+        background: none;
+        border: none;
+        color: var(--accent-cyan);
         cursor: pointer;
+        font-size: 11px;
+        margin-left: 10px;
+        padding: 0;
+        text-decoration: underline;
+    }
+    .show-more-less:hover {
+        color: var(--accent-cyan-dim);
+    }
+
     }
 
     .input-area {
@@ -461,5 +495,18 @@
     .send-btn:disabled {
         opacity: 0.3;
         cursor: default;
+    }
+    .show-more-less {
+        background: none;
+        border: none;
+        color: var(--accent-cyan);
+        cursor: pointer;
+        font-size: 11px;
+        margin-left: 10px;
+        padding: 0;
+        text-decoration: underline;
+    }
+    .show-more-less:hover {
+        color: var(--accent-cyan-dim);
     }
 </style>
