@@ -3,6 +3,7 @@
     import { fly } from "svelte/transition";
     import { createEventDispatcher, onDestroy } from "svelte";
     import GamePlayer from "./GamePlayer.svelte";
+    import GameToolbar from "./GameToolbar.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -17,6 +18,8 @@
     export let view: "grid" | "list";
 
     let isPlaying = false;
+    let reloadKey = 0;
+    let gameContainer: HTMLElement;
     let iframeSrc: string | null = null;
 
     // Helper to detect .swf links (case‑insensitive)
@@ -66,7 +69,25 @@
 
     function handleClose() {
         isPlaying = false;
+        showControlsModal = false;
         dispatch("close");
+    }
+
+    function handleFullscreen() {
+        if (!gameContainer) return;
+        if (!document.fullscreenElement) {
+            gameContainer.requestFullscreen().catch((err) => {
+                console.error(
+                    `Error attempting to enable fullscreen: ${err.message}`,
+                );
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function handleReload() {
+        reloadKey++;
     }
 
     function getEmulatorCore(game: {
@@ -98,21 +119,36 @@
 </script>
 
 {#if isPlaying}
-    {#if isSwf(game.link)}
-        <iframe
-            title={game.title}
-            srcdoc={`<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/></head><body><script src="https://unpkg.com/@ruffle-rs/ruffle"></script><object width="100%" height="100%"><param name="movie" value="${game.link}"><embed src="${game.link}" width="100%" height="100%"></object></body></html>`}
-            style="width:100%;height:100%;border:none;"
-        ></iframe>
-    {:else if emulatorCore && iframeSrc}
-        <iframe
-            title={game.title}
-            src={iframeSrc}
-            style="width:100%;height:100%;border:none;"
-        ></iframe>
-    {:else}
-        <GamePlayer link={game.link} on:close={handleClose} />
-    {/if}
+    <div class="game-wrapper" bind:this={gameContainer}>
+        <GameToolbar
+            on:close={handleClose}
+            on:fullscreen={handleFullscreen}
+            on:reload={handleReload}
+        />
+        <div class="game-content">
+            {#key reloadKey}
+                {#if isSwf(game.link)}
+                    <iframe
+                        title={game.title}
+                        srcdoc={`<html lang="en"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/></head><body><script src="https://unpkg.com/@ruffle-rs/ruffle"></script><object width="100%" height="100%"><param name="movie" value="${game.link}"><embed src="${game.link}" width="100%" height="100%"></object></body></html>`}
+                        style="width:100%;height:100%;border:none;"
+                        allow="pointer-lock; fullscreen; autoplay; gamepad; microphone"
+                        allowfullscreen
+                    ></iframe>
+                {:else if emulatorCore && iframeSrc}
+                    <iframe
+                        title={game.title}
+                        src={iframeSrc}
+                        style="width:100%;height:100%;border:none;"
+                        allow="pointer-lock; fullscreen; autoplay; gamepad; microphone"
+                        allowfullscreen
+                    ></iframe>
+                {:else}
+                    <GamePlayer link={game.link} on:close={handleClose} />
+                {/if}
+            {/key}
+        </div>
+    </div>
 {:else if view === "grid"}
     <div class="game-detail-grid">
         <div
@@ -166,6 +202,23 @@
 {/if}
 
 <style>
+    .game-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: #000;
+        position: relative;
+    }
+
+    .game-content {
+        flex: 1;
+        width: 100%;
+        /* Ensure it takes remaining height */
+        height: 0;
+        position: relative;
+    }
+
     .game-detail-grid {
         display: flex;
         align-items: center;

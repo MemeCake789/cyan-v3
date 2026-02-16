@@ -109,7 +109,7 @@
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Pokemon%20Emerald%20%2B.zip",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Pokemon Fire Red",
@@ -120,7 +120,7 @@
       "link": "https://cdn.jsdelivr.net/gh/vbaemulator/GBA-Roms@main/Pokemon%20Firered%20251.zip",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Pokemon Crystal",
@@ -131,7 +131,7 @@
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Crystal%20Version%20(UE)%20(V1.1)%20%5BC%5D%5B!%5D.gbc",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Pokemon Red",
@@ -142,7 +142,7 @@
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Red%20Version%20(UE)%5B!%5D.zip",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Pokemon Blue",
@@ -153,7 +153,7 @@
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/pokemon-blue.gb",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Pokemon Gold",
@@ -164,7 +164,7 @@
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Gold%20Version%20(UE)%20%5BC%5D%5B!%5D.gbc",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Pokemon Silver",
@@ -175,7 +175,7 @@
       "link": "https://cdn.jsdelivr.net/gh/mehransab101/GBC_ROMS@master/Pokemon%20-%20Silver%20Version%20(USA%2C%20Europe)%20(SGB%20Enhanced).gbc",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Castlevania - Harmony of Dissonance",
@@ -206,7 +206,7 @@
       "link": "https://cyan-assets.vercel.app/EMULATORS/Earthbound/earthbound",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Papa's Burgeria",
@@ -495,12 +495,12 @@
       "title": "Pokemon Unbound",
       "core": "mgba",
       "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/EMULATORS/Pokemon%20Unbound/Unbound.png",
-      "genre": "Action-Adventure",
+      "genre": "Action-RPG",
       "type": "EMULATOR",
       "link": "https://cyan-assets.vercel.app/EMULATORS/Pokemon%20Unbound/POKEMON_UNBOUND.gba",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Crazy Cattle 3D",
@@ -593,15 +593,16 @@
     },
     {
       "title": "Balatro",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/Balatro/bala.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/Balatro/bala.png",
       "genre": "Rougelike",
       "type": "HTML",
-      "link": "https://cyan-assets.vercel.app/HTML/Balatro/index.html",
+      "link": "https://rawcdn.githack.com/MemeCake789/cyan-games/989c59cfdf57b47f656ae39ee8fba3fbd74055b5/Balatro/index.min.html",
       "description": "joker poker balala",
       "status": [
         "Bugged",
         "Game saving does not work, but you can just unlock everything in the profile menu."
-      ]
+      ],
+      "fixedDate": "2026-02-15"
     },
     {
       "title": "Hollow Night",
@@ -677,7 +678,7 @@
     },
     {
       "title": "Baldi's Basics",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/Baldi/unnamed.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/Baldi/unnamed.png",
       "genre": "Horror",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Baldi/index.html",
@@ -1578,7 +1579,7 @@
       "description": "",
       "status": ["Working", "This game has no issues :D"],
       "date": "2025-12-03",
-      "fixedDate": "2026-03-08"
+      "fixedDate": "2026-02-08"
     },
     {
       "title": "Cut The Rope",

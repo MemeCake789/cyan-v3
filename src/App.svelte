@@ -25,7 +25,7 @@
     });
 
     function createNewTab() {
-        const id = Date.now();
+        const id = Math.floor(Math.random() * 1000000000) + Date.now();
         const newTab = {
             id,
             type: "home",
@@ -181,39 +181,37 @@
         <!-- Active Tab Content -->
         <div class="tab-content">
             {#each $windows as tab (tab.id)}
-                {#if activeTabId === tab.id}
-                    <div class="tab-pane visible">
-                        {#if tab.type === "home"}
-                            <Home
-                                on:launch={(e) =>
-                                    handleLaunch(
-                                        tab.id,
-                                        e.detail.appId,
-                                        e.detail.gameTitle,
-                                    )}
-                            />
-                        {:else if tab.type === "games"}
-                            <Cyanide
-                                windowId={tab.id}
-                                gameTitleContext={tab.gameTitleContext}
-                                on:gamestatechange={(e) =>
-                                    updateTabTitle(tab.id, e.detail.title)}
-                            />
-                        {:else if tab.type === "floride"}
-                            <Flouride />
-                        {:else if tab.type === "sulfur"}
-                            <Sulfur />
-                        {:else if tab.type === "proxy"}
-                            <Chromium
-                                on:urlchange={(e) =>
-                                    handleChromiumUrlChange(
-                                        tab.id,
-                                        e?.detail?.url,
-                                    )}
-                            />
-                        {/if}
-                    </div>
-                {/if}
+                <div class="tab-pane" class:visible={activeTabId === tab.id}>
+                    {#if tab.type === "home"}
+                        <Home
+                            on:launch={(e) =>
+                                handleLaunch(
+                                    tab.id,
+                                    e.detail.appId,
+                                    e.detail.gameTitle,
+                                )}
+                        />
+                    {:else if tab.type === "games"}
+                        <Cyanide
+                            windowId={tab.id}
+                            gameTitleContext={tab.gameTitleContext}
+                            on:gamestatechange={(e) =>
+                                updateTabTitle(tab.id, e.detail.title)}
+                        />
+                    {:else if tab.type === "floride"}
+                        <Flouride />
+                    {:else if tab.type === "sulfur"}
+                        <Sulfur />
+                    {:else if tab.type === "proxy"}
+                        <Chromium
+                            on:urlchange={(e) =>
+                                handleChromiumUrlChange(
+                                    tab.id,
+                                    e?.detail?.url,
+                                )}
+                        />
+                    {/if}
+                </div>
             {/each}
         </div>
     </div>

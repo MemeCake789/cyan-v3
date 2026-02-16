@@ -8,7 +8,8 @@
 <div class="game-player">
     <iframe
         src={link}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-pointer-lock"
+        allow="pointer-lock"
         allowfullscreen
     ></iframe>
 </div>

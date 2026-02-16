@@ -61,35 +61,25 @@
     }
 
     function isRecentlyFixed(dateString: string): boolean {
-        const date = new Date(dateString);
+        // Parse the fixedDate as a local midnight date (YYYY‑MM‑DD)
+        const [y, m, d] = dateString.split("-").map(Number);
+        const fixedDate = new Date(y, m - 1, d); // local midnight
 
-        // Create a date for "5 days ago" at the start of the day in local time
-        // Since input dates are likely YYYY-MM-DD (UTC midnight), we should likely compare
-        // against a cutoff that respects the "date only" nature if possible.
-        // However, standard JS Date parsing of YYYY-MM-DD is UTC.
-        // Let's standardise on time-agnostic comparison if possible, or just crude timestamp.
-
-        // Let's use a simple timestamp comparison where we allow 5 * 24h worth of milliseconds.
-        // Or better: ensure we are comparing midnight to midnight.
+        // Get today's date at local midnight
         const now = new Date();
-        // Reset to midnight to avoid time-of-day issues
         const today = new Date(
             now.getFullYear(),
             now.getMonth(),
             now.getDate(),
         );
-        const cutoff = new Date(today);
-        cutoff.setDate(today.getDate() - 5);
 
-        // If dateString is YYYY-MM-DD, `new Date(dateString)` is UTC midnight.
-        // If the user meant local time dates, this mismatch might be annoying.
-        // But assuming YYYY-MM-DD is the standard input:
-        // We should probably treat the input date as "local midnight" to match `today`.
-        // So we parse the parts.
-        const [y, m, d] = dateString.split("-").map(Number);
-        const fixedDateLocal = new Date(y, m - 1, d); // Month is 0-indexed
+        // The "fixed" tag should be visible for 5 days **starting** on the fixedDate.
+        const endDate = new Date(fixedDate);
+        endDate.setDate(fixedDate.getDate() + 5);
 
-        return fixedDateLocal >= cutoff;
+        // Show the tag only if today is on or after the fixed date
+        // and before the end of the 5‑day window.
+        return today >= fixedDate && today <= endDate;
     }
 
     onMount(async () => {
@@ -147,8 +137,9 @@
     }
 
     let searchTerm = "";
-    let selectedGame: Game | null = null;
+    let selectedGame: any = null;
 
+    let filteredGames: Game[] = [];
     $: filteredGames = sortedGames.filter((game) =>
         game.title.toLowerCase().includes(searchTerm.toLowerCase()),
     );
@@ -215,14 +206,15 @@
             {:else}
                 <div class="grid-view">
                     {#each filteredGames as game (game.title)}
+                        <!-- @ts-ignore -->
                         <div
                             animate:flip={{ duration: 500, easing: quintOut }}
-                            on:click={() => (selectedGame = game)}
+                            on:click={() => (selectedGame = game as any)}
                             role="button"
                             tabindex="0"
-                            on:keydown={(e) => {
+                            on:keydown={(e: any) => {
                                 if (e.key === "Enter" || e.key === " ") {
-                                    selectedGame = game;
+                                    selectedGame = game as any;
                                 }
                             }}
                         >
@@ -235,13 +227,14 @@
             <div class="list-view">
                 {#each filteredGames as game (game.title)}
                     <div animate:flip={{ duration: 500 }}>
+                        <!-- @ts-ignore -->
                         <div
-                            on:click={() => (selectedGame = game)}
+                            on:click={() => (selectedGame = game as any)}
                             role="button"
                             tabindex="0"
-                            on:keydown={(e) => {
+                            on:keydown={(e: any) => {
                                 if (e.key === "Enter" || e.key === " ") {
-                                    selectedGame = game;
+                                    selectedGame = game as any;
                                 }
                             }}
                         >
