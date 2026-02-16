@@ -522,7 +522,7 @@
     },
     {
       "title": "Deltarune",
-      "imageSrc": "https://www.marefa.org/w/images/thumb/4/43/Deltarune_vector_logo.svg/1200px-Deltarune_vector_logo.svg.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/deltarune-main/delta.png",
       "genre": "RPG",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/deltarune-main/index.html",
@@ -542,7 +542,7 @@
     },
     {
       "title": "Half Life",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/Half%20Life/half.jpg",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/hl.webp",
       "genre": "Shooter",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/hl/xash.html",
@@ -573,7 +573,7 @@
     },
     {
       "title": "Ultrakill",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/Ultrakill/ultrakill-l6f-logo.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/ultrakill.png",
       "genre": "Shooter",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/ultrakill/index.html",
@@ -606,7 +606,7 @@
     },
     {
       "title": "Hollow Night",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/Hollow_Night/hn.webp",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/hollowNight/hn.webp",
       "genre": "Metroidvania",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/hollow-night/index.html",
@@ -738,7 +738,7 @@
     },
     {
       "title": "Bitlife",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/Bitlife/logo.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/Bitlife/logo.png",
       "genre": "Simulation",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/HTML/Bitlife/index.html",
@@ -1263,7 +1263,7 @@
     },
     {
       "title": "Level 13",
-      "imageSrc": "https://preview.redd.it/complete-the-game-2-times-on-version-0-6-xx-v0-2t5k1mc97dff1.png?width=793&format=png&auto=webp&s=f32c92c3330f418c888e0eeeae562b0e08ae96a9",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@f45a796d2931a0edd176366a7d667ad4dffef1f6/UGS/UGS%20Files/lvl13.png",
       "genre": "Incremental",
       "type": "HTML",
       "link": "https://level13.vercel.app/",
@@ -1303,7 +1303,7 @@
     {
       "title": "2DOOM",
       "imageSrc": "https://th.bing.com/th/id/OIP.uI1AArmbiv-0TSsSMHt1AgHaHa?w=172&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.5&pid=1.7&rm=3&ucfimg=1",
-      "genre": "Shooter-Platformer",
+      "genre": "Shooter",
       "type": "HTML",
       "link": "https://cyan-assets2.vercel.app/HTML/2doom/2doom.html",
       "description": "",
@@ -1522,7 +1522,7 @@
     },
     {
       "title": "Bob The Robber",
-      "imageSrc": "https://gameforge.com/de-DE/littlegames/includes/images/games/10139_5eb3f08bdb854.jpg",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/btr.webp",
       "genre": "Story",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clbobtherobber.html",
@@ -1637,16 +1637,6 @@
       "genre": "Simulation",
       "type": "HTML",
       "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clgrandtheftautoadvance.html",
-      "description": "",
-      "status": ["Working", "This game has no issues :D"],
-      "date": "2025-12-03"
-    },
-    {
-      "title": "sonic.exe",
-      "imageSrc": "data:image/png;base64,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",
-      "genre": "Platformer",
-      "type": "HTML",
-      "link": "https://cyan-assets.vercel.app/UGS/UGS%20Files/clfnfsonicexe.html",
       "description": "",
       "status": ["Working", "This game has no issues :D"],
       "date": "2025-12-03"
