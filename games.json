@@ -593,7 +593,7 @@
     },
     {
       "title": "Balatro",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/Balatro/bala.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-games@main/Balatro/bala.jpg",
       "genre": "Rougelike",
       "type": "HTML",
       "link": "https://rawcdn.githack.com/MemeCake789/cyan-games/989c59cfdf57b47f656ae39ee8fba3fbd74055b5/Balatro/index.min.html",
@@ -602,7 +602,7 @@
         "Bugged",
         "Game saving does not work, but you can just unlock everything in the profile menu."
       ],
-      "fixedDate": "2026-02-15"
+      "fixedbDate": "2026-02-15"
     },
     {
       "title": "Hollow Night",
