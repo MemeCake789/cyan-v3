@@ -50,23 +50,14 @@
     let titleContainer: HTMLHeadingElement;
     let titleText: HTMLSpanElement;
     let isScrolling = false;
-    let scrollDistance = 0; // New variable for scroll distance
+    let textWidth = 0;
 
     async function checkForTicker() {
         await tick();
         if (titleContainer && titleText) {
-            const textWidth = titleText.offsetWidth;
+            textWidth = titleText.offsetWidth;
             const containerWidth = titleContainer.offsetWidth;
-            const needsTicker = textWidth > containerWidth;
-
-            if (needsTicker !== isScrolling) {
-                isScrolling = needsTicker;
-            }
-            if (needsTicker) {
-                scrollDistance = textWidth - containerWidth;
-            } else {
-                scrollDistance = 0;
-            }
+            isScrolling = textWidth > containerWidth;
         }
     }
 
@@ -174,13 +165,19 @@
     <div class="info">
         <h2 bind:this={titleContainer}>
             <span
-                bind:this={titleText}
+                class="ticker-wrapper"
                 class:scrolling={isScrolling}
-                style:--scroll-distance={`${scrollDistance}px`}
                 style:--total-duration={isScrolling
-                    ? `${scrollDistance / 40 / 0.5}s`
-                    : "0s"}>{game.title}</span
+                    ? `${(textWidth + 40) / 40}s`
+                    : "0s"}
             >
+                <span bind:this={titleText}>{game.title}</span>
+                {#if isScrolling}
+                    <span class="ticker-spacer"></span>
+                    <span>{game.title}</span>
+                    <span class="ticker-spacer"></span>
+                {/if}
+            </span>
         </h2>
         <div class="details">
             <span class="genre">{game.genre}</span>
@@ -246,27 +243,26 @@
         white-space: nowrap;
     }
 
-    .info h2 span.scrolling {
+    .ticker-wrapper {
         display: inline-block;
+        white-space: nowrap;
+    }
+
+    .ticker-wrapper.scrolling {
         animation: ticker-scroll var(--total-duration) linear infinite;
+    }
+
+    .ticker-spacer {
+        display: inline-block;
+        width: 40px;
     }
 
     @keyframes ticker-scroll {
         0% {
             transform: translateX(0);
         }
-        25% {
-            transform: translateX(0); /* Pause at start */
-        }
-        75% {
-            transform: translateX(
-                calc(-1 * var(--scroll-distance))
-            ); /* Scroll */
-        }
         100% {
-            transform: translateX(
-                calc(-1 * var(--scroll-distance))
-            ); /* Pause at end */
+            transform: translateX(-50%);
         }
     }
 
