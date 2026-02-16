@@ -15,7 +15,7 @@
     const persona = {
         name: "flouride",
         prompt: `
-              # Your name is flouride.
+              # Your name is flouride. (not the chemical element, its just a cool name with no relation to it)
               - **Tone:** Casual internet chat. Dry wit, brief, and direct but chill.
               - **Formatting:** Default to lowercase. Use capitalization only for emphasis or proper nouns.
               - **Vocabulary:** Sound like an internet native. NO "boomer" slang.
@@ -133,11 +133,23 @@
                 if (chatContainer)
                     chatContainer.scrollTop = chatContainer.scrollHeight;
             }
+            // Ensure the final answer is rendered even if the stream emitted no chunks
+            aiMessage.content = renderMarkdown(accumulatedText);
             aiMessage.isLoading = false;
+            messages = [...messages]; // final UI refresh
+            await tick();
+            if (chatContainer)
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            // (Removed stray duplicate loading flag and error‑handling block)
         } catch (e: any) {
             aiMessage.content = "Error: " + e.message;
             aiMessage.isError = true;
             aiMessage.isLoading = false;
+            // Refresh the messages list so the error appears immediately
+            messages = [...messages];
+            await tick();
+            if (chatContainer)
+                chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     }
 </script>
@@ -159,10 +171,9 @@
                 <span class="path-sep">~</span>
                 <span class="prompt-char">$</span>
                 <div class="message-content">
+                    {@html message.content}
                     {#if message.isLoading}
                         <span class="cursor-block">█</span>
-                    {:else}
-                        {@html message.content}
                     {/if}
                 </div>
             </div>
@@ -290,9 +301,7 @@
         display: none; /* Only show if input is focused? Or just rely on native caret */
     }
 
-    .console-input:focus + .cursor-blink {
-        /* display: block; Native caret might be enough */
-    }
+    /* removed empty rule for .console-input:focus + .cursor-blink */
 
     @keyframes blink {
         50% {

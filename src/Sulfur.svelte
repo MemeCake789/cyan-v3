@@ -4,6 +4,7 @@
     import { username as usernameStore } from "./stores";
 
     const MAX_MESSAGE_LENGTH = 200;
+    const MAX_REPLY_MESSAGE_PREVIEW_LENGTH = 100;
 
     let messages: {
         text: string;
@@ -209,22 +210,33 @@
                                     scrollToMessage(
                                         getMessageIndexById(msg.replyTo),
                                     )}
-                                >{replied.text}
+                                >{replied.text.length >
+                                MAX_REPLY_MESSAGE_PREVIEW_LENGTH
+                                    ? `${replied.text.slice(0, MAX_REPLY_MESSAGE_PREVIEW_LENGTH)}(...)`
+                                    : replied.text}
                             </span>
                         {/if}
                     {/if}
                     {#if processed.text.length > MAX_MESSAGE_LENGTH}
                         {#if expandedMessages.get(i)}
                             {processed.text}
-                            <button class="show-more-less" on:click={() => toggleExpanded(i)}>Show Less</button>
+                            <button
+                                class="show-more-less"
+                                on:click={() => toggleExpanded(i)}
+                                >Show Less</button
+                            >
                         {:else}
-                            {processed.text.slice(0, MAX_MESSAGE_LENGTH) + "..."}
-                             <button class="show-more-less" on:click={() => toggleExpanded(i)}>Show More ({processed.text.length})</button>
+                            {processed.text.slice(0, MAX_MESSAGE_LENGTH) +
+                                "..."}
+                            <button
+                                class="show-more-less"
+                                on:click={() => toggleExpanded(i)}
+                                >Show More ({processed.text.length})</button
+                            >
                         {/if}
                     {:else}
                         {processed.text}
                     {/if}
-
                 </span>
 
                 <!-- Actions -->
@@ -432,20 +444,20 @@
         background: transparent;
         border: none;
         color: var(--text-muted);
-        cursor: pointer;.show-more-less {
-        background: none;
-        border: none;
-        color: var(--accent-cyan);
         cursor: pointer;
-        font-size: 11px;
-        margin-left: 10px;
-        padding: 0;
-        text-decoration: underline;
-    }
-    .show-more-less:hover {
-        color: var(--accent-cyan-dim);
-    }
-
+        .show-more-less {
+            background: none;
+            border: none;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 10px;
+            padding: 0;
+            text-decoration: underline;
+        }
+        .show-more-less:hover {
+            color: var(--accent-cyan-dim);
+        }
     }
 
     .input-area {
