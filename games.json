@@ -439,12 +439,33 @@
     },
     {
       "title": "Achievement Unlocked",
-      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/achievementunlocked/achievementunlocked.png",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/FLASH/AchivementUnlocked/achivement1.jpg",
       "genre": "Platformer",
       "type": "HTML",
-      "link": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/FLASH/AchivementUnlocked/index.html",
+      "link": "https://cyan-assets.vercel.app/FLASH/AchivementUnlocked/achievement1",
       "description": "there are more achivements in this game than there are games in this site",
-      "status": ["Working", "This game has no issues :D"]
+      "status": ["Working", "This game has no issues :D"],
+      "fixedDate": "2026-02-16"
+    },
+    {
+      "title": "Achievement Unlocked 2",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/FLASH/AchivementUnlocked/achivment2.jpg",
+      "genre": "Platformer",
+      "type": "HTML",
+      "link": "https://cyan-assets.vercel.app/FLASH/AchivementUnlocked/achievement2",
+      "description": "there are more achivements in this game than there are games in this site",
+      "status": ["Working", "This game has no issues :D"],
+      "dateAdded": "2026-02-16"
+    },
+    {
+      "title": "Achievement Unlocked 3",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/FLASH/AchivementUnlocked/achievement-unlocked-3.jpg",
+      "genre": "Platformer",
+      "type": "HTML",
+      "link": "https://cyan-assets.vercel.app/FLASH/AchivementUnlocked/achievement3",
+      "description": "there are more achivements in this game than there are games in this site",
+      "status": ["Working", "This game has no issues :D"],
+      "dateAdded": "2026-02-16"
     },
     {
       "title": "Doodle Jump",
