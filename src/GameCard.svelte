@@ -17,6 +17,29 @@
     let imgElement: HTMLImageElement;
     let backgroundColor = "#57575c";
 
+    // tilt state
+    let cardElement: HTMLDivElement;
+    // strength of the tilt effect (degrees). Exportable so parent can adjust.
+    export let tiltStrength: number = 15;
+    let rotX = 0;
+    let rotY = 0;
+
+    function handleMouseMove(e: MouseEvent) {
+        if (!cardElement) return;
+        const rect = cardElement.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const halfW = rect.width / 2;
+        const halfH = rect.height / 2;
+        rotY = ((x - halfW) / halfW) * tiltStrength;
+        rotX = ((halfH - y) / halfH) * tiltStrength;
+    }
+
+    function handleMouseLeave() {
+        rotX = 0;
+        rotY = 0;
+    }
+
     // Reactive colors for text, borders, and separators
     let textColor = "#fff";
     let borderColor = "rgba(255, 255, 255, 0.15)";
@@ -120,12 +143,18 @@
 
 <div
     class="game-card"
+    role="button"
+    tabindex="0"
+    bind:this={cardElement}
+    on:mousemove={handleMouseMove}
+    on:mouseleave={handleMouseLeave}
     style="
     background-color: {backgroundColor};
     --text-color: {textColor};
     --border-color: {borderColor};
     --separator-color: {separatorColor};
-"
+    transform: perspective(800px) rotateX({rotX}deg) rotateY({rotY}deg) scale(1.02);
+ "
 >
     {#if game.isNew}
         <div class="new-tag">NEW</div>
@@ -169,11 +198,18 @@
         flex-direction: column;
         position: relative;
         border-radius: 12px;
+        transform-style: preserve-3d;
         transition:
             background-color 0.5s ease,
             color 0.5s ease,
-            border-color 0.5s ease;
+            border-color 0.5s ease,
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
         color: var(--text-color);
+    }
+    .game-card:hover {
+        /* only subtle shadow on hover; tilt is handled via JS */
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
     }
 
     .new-tag {
