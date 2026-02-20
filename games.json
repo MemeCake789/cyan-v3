@@ -630,8 +630,9 @@
       "imageSrc": "https://cdn.jsdelivr.net/gh/MemeCake789/cyan-assets@main/HTML/hollowNight/hn.webp",
       "genre": "Metroidvania",
       "type": "HTML",
-      "link": "https://cyan-assets.vercel.app/HTML/hollow-night/index.html",
+      "link": "https://cyan-assets.vercel.app/HTML/hollowNight",
       "description": "",
+      "fixedDate" :"2026-02-20",
       "status": ["Bugged", "game crashes randomly "]
     },
     {
