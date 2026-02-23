@@ -8,7 +8,7 @@
     let iframeContainer: HTMLDivElement;
     let hasAcceptedWarning = false;
 
-    const PROXY_URL = "https://about.infotechnology.com/robux.html";
+    const PROXY_URL = "https://fastforwarder.org/learn.html";
 
     const dispatch = createEventDispatcher();
 
@@ -142,13 +142,5 @@
         position: relative;
         min-height: 0;
         overflow: hidden;
-    }
-
-    .iframe-wrapper :global(iframe) {
-        position: absolute;
-        top: -34px;
-        left: 0;
-        width: 100%;
-        height: calc(100% + 34px);
     }
 </style>
