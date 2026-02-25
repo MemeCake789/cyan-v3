@@ -45,7 +45,14 @@
     let isFirstAIMessage = true;
     const splashMessages = ["loading...", "thinking..."];
 
-    const ai = getAI(app, { backend: new GoogleAIBackend() });
+    let aiInstance: any = null;
+
+    function getAIInstance() {
+        if (!aiInstance) {
+            aiInstance = getAI(app, { backend: new GoogleAIBackend() });
+        }
+        return aiInstance;
+    }
 
     const MODELS = [
         { id: "gemini-3-flash-preview", provider: "gemini" },
@@ -134,6 +141,7 @@
 
                 let accumulatedText = "";
                 if (modelConfig.provider === "gemini") { // Simplified logic
+                    const ai = getAIInstance();
                     const model = getGenerativeModel(ai, {
                         model: modelConfig.id,
                         systemInstruction: persona.prompt,

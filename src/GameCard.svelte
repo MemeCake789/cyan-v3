@@ -46,14 +46,12 @@
     let separatorColor = "rgba(255, 255, 255, 0.3)";
     let visibleSrc = PENDING;
 
-    // Ticker logic
     let titleContainer: HTMLHeadingElement;
     let titleText: HTMLSpanElement;
     let isScrolling = false;
     let textWidth = 0;
 
     async function checkForTicker() {
-        await tick();
         if (titleContainer && titleText) {
             textWidth = titleText.offsetWidth;
             const containerWidth = titleContainer.offsetWidth;
@@ -62,34 +60,25 @@
     }
 
     onMount(() => {
-        checkForTicker();
+        // Defer ticker check to avoid layout thrashing during initial render
+        const timeout = setTimeout(checkForTicker, 100);
         window.addEventListener("resize", checkForTicker);
-        return () => window.removeEventListener("resize", checkForTicker);
+        return () => {
+            clearTimeout(timeout);
+            window.removeEventListener("resize", checkForTicker);
+        };
     });
 
     $: if (game.title) {
-        isScrolling = false; // reset
         checkForTicker();
     }
 
-    $: {
-        // This block will re-run whenever game.imageSrc changes
-        visibleSrc = PENDING;
-        const img = new Image();
-        img.src = game.imageSrc;
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-            visibleSrc = game.imageSrc;
-        };
-        img.onerror = () => {
-            visibleSrc = OFFLINE;
-        };
-    }
+    // Simplify image source logic
+    $: visibleSrc = game.imageSrc || PENDING;
 
     function onImageLoad() {
         // Run color thief only for the actual game image
-        if (visibleSrc === PENDING || visibleSrc === OFFLINE) {
-            // for placeholders, reset to default dark theme
+        if (!visibleSrc || visibleSrc === PENDING || visibleSrc === OFFLINE) {
             backgroundColor = "#57575c";
             textColor = "#fff";
             borderColor = "rgba(255, 255, 255, 0.15)";
@@ -97,8 +86,9 @@
             return;
         }
 
-        // For the actual image, wait a microtask for bind:this to be updated
-        Promise.resolve().then(() => {
+        // Defer color thief to avoid blocking the main thread
+        const defer = (window as any).requestIdleCallback || setTimeout;
+        defer(() => {
             if (imgElement && imgElement.complete) {
                 try {
                     const colorThief = new (ColorThief as any)();
@@ -109,26 +99,25 @@
                         0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2];
 
                     if (luminance > 150) {
-                        // Light background
                         textColor = "#1a1a1a";
                         borderColor = "rgba(0, 0, 0, 0.15)";
                         separatorColor = "rgba(0, 0, 0, 0.3)";
                     } else {
-                        // Dark background
                         textColor = "#fff";
                         borderColor = "rgba(255, 255, 255, 0.15)";
                         separatorColor = "rgba(255, 255, 255, 0.3)";
                     }
                 } catch (error) {
                     console.error("Error getting dominant color:", error);
-                    // Fallback to default dark theme
                     backgroundColor = "#57575c";
                     textColor = "#fff";
-                    borderColor = "rgba(255, 255, 255, 0.15)";
-                    separatorColor = "rgba(255, 255, 255, 0.3)";
                 }
             }
         });
+    }
+
+    function onImageError() {
+        visibleSrc = OFFLINE;
     }
 </script>
 
@@ -158,8 +147,10 @@
             src={visibleSrc}
             alt={game.title}
             crossorigin="anonymous"
+            loading="lazy"
             bind:this={imgElement}
             on:load={onImageLoad}
+            on:error={onImageError}
         />
     </div>
     <div class="info">

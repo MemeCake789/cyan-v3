@@ -137,12 +137,38 @@
     }
 
     let searchTerm = "";
+    let debouncedSearchTerm = "";
+    let searchTimeout: any;
+
+    $: {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            debouncedSearchTerm = searchTerm;
+            displayLimit = 40; // Reset limit on search
+        }, 300);
+    }
+
     let selectedGame: any = null;
 
     let filteredGames: Game[] = [];
     $: filteredGames = sortedGames.filter((game) =>
-        game.title.toLowerCase().includes(searchTerm.toLowerCase()),
+        game.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
     );
+
+    let displayLimit = 40;
+    $: visibleGames = filteredGames.slice(0, displayLimit);
+
+    function handleScroll(e: Event) {
+        const target = e.target as HTMLElement;
+        if (
+            target.scrollHeight - target.scrollTop <=
+            target.clientHeight + 100
+        ) {
+            if (displayLimit < filteredGames.length) {
+                displayLimit += 20;
+            }
+        }
+    }
 
     function handlePlay() {
         isGamePlaying = true;
@@ -204,11 +230,10 @@
                     {/key}
                 </div>
             {:else}
-                <div class="grid-view">
-                    {#each filteredGames as game (game.title)}
+                <div class="grid-view" on:scroll={handleScroll}>
+                    {#each visibleGames as game (game.title)}
                         <!-- @ts-ignore -->
                         <div
-                            animate:flip={{ duration: 500, easing: quintOut }}
                             on:click={() => (selectedGame = game as any)}
                             role="button"
                             tabindex="0"
@@ -224,25 +249,23 @@
                 </div>
             {/if}
         {:else}
-            <div class="list-view">
-                {#each filteredGames as game (game.title)}
-                    <div animate:flip={{ duration: 500 }}>
-                        <!-- @ts-ignore -->
-                        <div
-                            on:click={() => (selectedGame = game as any)}
-                            role="button"
-                            tabindex="0"
-                            on:keydown={(e: any) => {
-                                if (e.key === "Enter" || e.key === " ") {
-                                    selectedGame = game as any;
-                                }
-                            }}
-                        >
-                            <GameListItem
-                                {game}
-                                on:toggleFavorite={() => toggleFavorite(game)}
-                            />
-                        </div>
+            <div class="list-view" on:scroll={handleScroll}>
+                {#each visibleGames as game (game.title)}
+                    <!-- @ts-ignore -->
+                    <div
+                        on:click={() => (selectedGame = game as any)}
+                        role="button"
+                        tabindex="0"
+                        on:keydown={(e: any) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                                selectedGame = game as any;
+                            }
+                        }}
+                    >
+                        <GameListItem
+                            {game}
+                            on:toggleFavorite={() => toggleFavorite(game)}
+                        />
                     </div>
                 {/each}
             </div>

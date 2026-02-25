@@ -4,58 +4,116 @@ import './app.css'
 import App from './App.svelte'
 import EpoxyTransport from "@mercuryworkshop/epoxy-transport";
 
-// global proxy for about:blank environments
+// global proxy for testing/about:blank environments
 async function initGlobalProxy() {
     if (typeof window === "undefined") return;
-    const isAboutBlank = window.location.protocol === "about:" || window.location.origin === "null";
-    if (!isAboutBlank) return;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceProxy = urlParams.get('proxy') === 'true';
+    const isRestricted = 
+        window.location.protocol === "about:" || 
+        window.location.origin === "null" || 
+        window.location.origin === null ||
+        window.location.href === "about:blank";
 
+    if (!isRestricted && !forceProxy) return;
+    
+    console.log("[proxy] restricted environment or manual override detected, initializing epoxy...");
     try {
         const transport = new EpoxyTransport({ wisp: "wss://fastforwarder.org/wisp/" });
         await transport.init();
 
+        // 1. PATCH FETCH
         const originalFetch = window.fetch;
         window.fetch = async (input, init) => {
             const url = typeof input === "string" ? input : (input && input.url) || input.toString();
             
             // proxy google ai, firebase, and huggingface requests
             if (url.includes("googleapis.com") || url.includes("firebase") || url.includes("huggingface")) {
+                console.log(`[proxy] fetching: ${url}`);
                 const method = init?.method || "GET";
-                let headers = {};
+                let headers = new Headers();
                 if (init?.headers) {
-                    if (init.headers instanceof Headers) {
-                        init.headers.forEach((v, k) => { headers[k] = v; });
-                    } else if (Array.isArray(init.headers)) {
-                        init.headers.forEach(([k, v]) => { headers[k] = v; });
-                    } else {
-                        headers = init.headers;
-                    }
+                    if (init.headers instanceof Headers) headers = init.headers;
+                    else if (Array.isArray(init.headers)) init.headers.forEach(([k, v]) => headers.set(k, v));
+                    else Object.entries(init.headers).forEach(([k, v]) => headers.set(k, v));
                 }
-                const body = init?.body || null;
                 
                 try {
-                    const resp = await transport.request(new URL(url), method, body, headers);
-                    return new Response(resp.body, { 
-                        status: resp.status, 
-                        headers: resp.headers 
-                    });
+                    const resp = await transport.request(new URL(url), method, init?.body || null, headers);
+                    const finalHeaders = new Headers();
+                    if (resp.headers) {
+                        if (Array.isArray(resp.headers)) resp.headers.forEach(([k, v]) => finalHeaders.set(k, v));
+                        else Object.entries(resp.headers).forEach(([k, v]) => finalHeaders.set(k, v));
+                    }
+                    return new Response(resp.body, { status: resp.status, headers: finalHeaders });
                 } catch (e) {
-                    console.error("[proxy] fetch failed, falling back:", e);
+                    console.error("[proxy] fetch failed:", e);
                     return originalFetch(input, init);
                 }
             }
             return originalFetch(input, init);
         };
-        console.log("[proxy] global fetch patched for about:blank");
+
+        // 2. PATCH XHR
+        const RealXHR = window.XMLHttpRequest;
+        window.XMLHttpRequest = function() {
+            const xhr = new RealXHR();
+            const originalOpen = xhr.open;
+            const originalSend = xhr.send;
+            let targetUrl = "";
+            let targetMethod = "";
+            const requestHeaders = new Headers();
+
+            xhr.open = function(method, url) {
+                targetMethod = method;
+                targetUrl = typeof url === 'string' ? url : (url && url.toString());
+                return originalOpen.apply(xhr, arguments);
+            };
+
+            xhr.setRequestHeader = function(header, value) {
+                requestHeaders.set(header, value);
+                return RealXHR.prototype.setRequestHeader.apply(xhr, arguments);
+            };
+
+            xhr.send = async function(body) {
+                if (targetUrl.includes("googleapis.com") || targetUrl.includes("firebase")) {
+                    console.log(`[proxy] XHR sending: ${targetUrl}`);
+                    try {
+                        const resp = await transport.request(new URL(targetUrl), targetMethod, body, requestHeaders);
+                        
+                        Object.defineProperty(xhr, 'status', { value: resp.status, writable: true });
+                        Object.defineProperty(xhr, 'readyState', { value: 4, writable: true });
+                        
+                        const respText = await new Response(resp.body).text();
+                        Object.defineProperty(xhr, 'responseText', { value: respText, writable: true });
+                        Object.defineProperty(xhr, 'response', { value: respText, writable: true });
+                        
+                        if (xhr.onreadystatechange) xhr.onreadystatechange(new Event('readystatechange'));
+                        if (xhr.onload) xhr.onload(new Event('load'));
+                        xhr.dispatchEvent(new Event('readystatechange'));
+                        xhr.dispatchEvent(new Event('load'));
+                        return;
+                    } catch (e) {
+                        console.error("[proxy] XHR failed:", e);
+                    }
+                }
+                return originalSend.apply(xhr, arguments);
+            };
+            return xhr;
+        };
+
+        console.log("[proxy] global fetch and XHR patched");
     } catch (e) {
         console.error("[proxy] global init failed:", e);
     }
 }
 
-initGlobalProxy();
+// wait for proxy before mounting
+initGlobalProxy().then(() => {
+    mount(App, {
+        target: document.getElementById('app'),
+    })
+});
 
-const app = mount(App, {
-  target: document.getElementById('app'),
-})
-
-export default app
+export default App

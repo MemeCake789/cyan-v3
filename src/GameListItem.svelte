@@ -19,7 +19,6 @@
     let scrollDistance = 0; // New variable for scroll distance
 
     async function checkForTicker() {
-        await tick();
         if (titleContainer && titleText) {
             const textWidth = titleText.offsetWidth;
             const containerWidth = titleContainer.offsetWidth;
@@ -37,13 +36,15 @@
     }
 
     onMount(() => {
-        checkForTicker();
+        const timeout = setTimeout(checkForTicker, 100);
         window.addEventListener("resize", checkForTicker);
-        return () => window.removeEventListener("resize", checkForTicker);
+        return () => {
+            clearTimeout(timeout);
+            window.removeEventListener("resize", checkForTicker);
+        };
     });
 
     $: if (game.title) {
-        isScrolling = false; // reset
         checkForTicker();
     }
 </script>
@@ -77,7 +78,12 @@
         </span>
     </div>
     <div class="image-cell">
-        <img src={game.imageSrc} alt={game.title} class="game-image" />
+        <img
+            src={game.imageSrc}
+            alt={game.title}
+            class="game-image"
+            loading="lazy"
+        />
     </div>
     <div class="game-info-cell" bind:this={titleContainer}>
         <div class="title-row">
