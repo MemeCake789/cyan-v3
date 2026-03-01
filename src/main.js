@@ -1,24 +1,23 @@
 import { mount } from 'svelte'
 import 'katex/dist/katex.min.css'; // KaTeX CSS for math rendering
 import './app.css'
-import App from './App.svelte'
 import EpoxyTransport from "@mercuryworkshop/epoxy-transport";
 
 // global proxy for testing/about:blank environments
 async function initGlobalProxy() {
     if (typeof window === "undefined") return;
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const forceProxy = urlParams.get('proxy') === 'true';
-    const isRestricted = 
-        window.location.protocol === "about:" || 
-        window.location.origin === "null" || 
+    const isRestricted =
+        window.location.protocol === "about:" ||
+        window.location.origin === "null" ||
         window.location.origin === null ||
         window.location.href === "about:blank" ||
         window.location.hostname.includes("googleusercontent.com");
 
     if (!isRestricted && !forceProxy) return;
-    
+
     console.log("[proxy] initializing epoxy for restricted environment...");
     try {
         const transport = new EpoxyTransport({ wisp: "wss://fastforwarder.org/wisp/" });
@@ -28,7 +27,7 @@ async function initGlobalProxy() {
         const originalFetch = window.fetch;
         window.fetch = async (input, init) => {
             const url = typeof input === "string" ? input : (input && input.url) || input.toString();
-            
+
             if (url.includes("googleapis.com") || url.includes("firebase") || url.includes("huggingface")) {
                 const method = init?.method || "GET";
                 let headers = new Headers();
@@ -37,7 +36,7 @@ async function initGlobalProxy() {
                     else if (Array.isArray(init.headers)) init.headers.forEach(([k, v]) => headers.set(k, v));
                     else Object.entries(init.headers).forEach(([k, v]) => headers.set(k, v));
                 }
-                
+
                 try {
                     const resp = await transport.request(new URL(url), method, init?.body || null, headers);
                     const finalHeaders = new Headers();
@@ -45,12 +44,12 @@ async function initGlobalProxy() {
                         if (Array.isArray(resp.headers)) resp.headers.forEach(([k, v]) => finalHeaders.set(k, v));
                         else Object.entries(resp.headers).forEach(([k, v]) => finalHeaders.set(k, v));
                     }
-                    
+
                     // pass the body directly as a stream
-                    return new Response(resp.body, { 
-                        status: resp.status, 
+                    return new Response(resp.body, {
+                        status: resp.status,
                         statusText: resp.statusText || 'OK',
-                        headers: finalHeaders 
+                        headers: finalHeaders
                     });
                 } catch (e) {
                     console.error("[proxy] fetch failed:", e);
@@ -62,7 +61,7 @@ async function initGlobalProxy() {
 
         // 2. PATCH XHR
         const RealXHR = window.XMLHttpRequest;
-        window.XMLHttpRequest = function() {
+        window.XMLHttpRequest = function () {
             const xhr = new RealXHR();
             const originalOpen = xhr.open;
             const originalSend = xhr.send;
@@ -70,29 +69,29 @@ async function initGlobalProxy() {
             let targetMethod = "";
             const requestHeaders = new Headers();
 
-            xhr.open = function(method, url) {
+            xhr.open = function (method, url) {
                 targetMethod = method;
                 targetUrl = typeof url === 'string' ? url : (url && url.toString());
                 return originalOpen.apply(xhr, arguments);
             };
 
-            xhr.setRequestHeader = function(header, value) {
+            xhr.setRequestHeader = function (header, value) {
                 requestHeaders.set(header, value);
                 return RealXHR.prototype.setRequestHeader.apply(xhr, arguments);
             };
 
-            xhr.send = async function(body) {
+            xhr.send = async function (body) {
                 if (targetUrl.includes("googleapis.com") || targetUrl.includes("firebase")) {
                     try {
                         const resp = await transport.request(new URL(targetUrl), targetMethod, body, requestHeaders);
-                        
+
                         Object.defineProperty(xhr, 'status', { value: resp.status, writable: true });
                         Object.defineProperty(xhr, 'readyState', { value: 4, writable: true });
-                        
+
                         const respText = await new Response(resp.body).text();
                         Object.defineProperty(xhr, 'responseText', { value: respText, writable: true });
                         Object.defineProperty(xhr, 'response', { value: respText, writable: true });
-                        
+
                         if (xhr.onreadystatechange) xhr.onreadystatechange(new Event('readystatechange'));
                         if (xhr.onload) xhr.onload(new Event('load'));
                         xhr.dispatchEvent(new Event('readystatechange'));
@@ -113,10 +112,11 @@ async function initGlobalProxy() {
     }
 }
 
-initGlobalProxy().then(() => {
+// Dynamic import: App (and firebase.ts) must load AFTER proxy patches are applied,
+// otherwise Firestore connects before fetch is intercepted.
+initGlobalProxy().then(async () => {
+    const { default: App } = await import('./App.svelte');
     mount(App, {
         target: document.getElementById('app'),
     })
 });
-
-export default App

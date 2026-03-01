@@ -1,11 +1,16 @@
 <script lang="ts">
     import { quintOut } from "svelte/easing";
     import { fly } from "svelte/transition";
-    import { createEventDispatcher, onDestroy } from "svelte";
+    import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import GamePlayer from "./GamePlayer.svelte";
     import GameToolbar from "./GameToolbar.svelte";
+    import GameCard from "./GameCard.svelte";
 
     const dispatch = createEventDispatcher();
+    let mounted = false;
+    onMount(() => {
+        mounted = true;
+    });
 
     export let game: {
         title: string;
@@ -113,6 +118,30 @@
         iframeSrc = createEmulatorSrc(emulatorCore, game.link);
     }
 
+    function threeD(
+        node: HTMLElement,
+        { duration = 1200, delay = 0, easing = quintOut },
+    ) {
+        return {
+            delay,
+            duration,
+            easing,
+            css: (t: number) => {
+                const inv = 1 - t;
+                return `
+                    transform: perspective(1200px) 
+                               rotateX(${inv * -60}deg) 
+                               rotateY(${inv * 60}deg) 
+                               rotateZ(${inv * -20}deg) 
+                               translate3d(${inv * -500}px, ${inv * -500}px, ${inv * -500}px) 
+                               scale(${0.3 + 0.7 * t});
+                    opacity: ${t};
+                    transform-origin: center center;
+                `;
+            },
+        };
+    }
+
     onDestroy(() => {
         if (iframeSrc) URL.revokeObjectURL(iframeSrc);
     });
@@ -150,55 +179,58 @@
         </div>
     </div>
 {:else if view === "grid"}
-    <div class="game-detail-grid">
-        <div
-            class="image-container"
-            in:fly={{ y: -20, duration: 500, easing: quintOut }}
-        >
-            <img src={game.imageSrc} alt={game.title} />
+    {#if mounted}
+        <div class="game-detail-grid">
+            <div class="card-animation-wrapper" in:threeD={{ duration: 1000 }}>
+                <!-- @ts-ignore -->
+                <GameCard {game} tiltStrength={0} />
+            </div>
+            <div
+                class="info"
+                in:fly={{ x: 50, duration: 500, easing: quintOut, delay: 200 }}
+            >
+                <h2>{game.title}</h2>
+                <p>{game.genre}</p>
+                <div class="actions">
+                    <button class="play-button" on:click={handlePlay}>Play</button>
+                    <button class="back-button" on:click={() => dispatch("close")}
+                        >Back</button
+                    >
+                </div>
+            </div>
         </div>
-        <div
-            class="info"
-            in:fly={{ x: 50, duration: 500, easing: quintOut, delay: 200 }}
-        >
-            <h2>{game.title}</h2>
-            <p>{game.genre}</p>
-            <div class="actions">
-                <button class="play-button" on:click={handlePlay}>Play</button>
-                <button class="back-button" on:click={() => dispatch("close")}
+    {/if}
+{:else}
+    {#if mounted}
+        <div class="game-detail-list">
+            <div class="header-row">
+                <h2>{game.title}</h2>
+                <button class="back-button-small" on:click={() => dispatch("close")}
                     >Back</button
                 >
             </div>
-        </div>
-    </div>
-{:else}
-    <div class="game-detail-list">
-        <div class="header-row">
-            <h2>{game.title}</h2>
-            <button class="back-button-small" on:click={() => dispatch("close")}
-                >Back</button
-            >
-        </div>
-        <div class="content-row">
-            <div class="image-container">
-                <img src={game.imageSrc} alt={game.title} />
-            </div>
-            <div class="info">
-                <p class="genre">{game.genre}</p>
-                <div class="meta-row">
-                    <span class="label">Status</span>
-                    <span class="value ready">Ready</span>
+            <div class="content-row">
+                <div class="card-animation-wrapper" in:threeD={{ duration: 1000 }}>
+                    <!-- @ts-ignore -->
+                    <GameCard {game} tiltStrength={0} />
                 </div>
-                <div class="meta-row">
-                    <span class="label">Type</span>
-                    <span class="value">{game.type || "Web Game"}</span>
+                <div class="info">
+                    <p class="genre">{game.genre}</p>
+                    <div class="meta-row">
+                        <span class="label">Status</span>
+                        <span class="value ready">Ready</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="label">Type</span>
+                        <span class="value">{game.type || "Web Game"}</span>
+                    </div>
+                    <button class="play-button wide" on:click={handlePlay}
+                        >Play</button
+                    >
                 </div>
-                <button class="play-button wide" on:click={handlePlay}
-                    >Play</button
-                >
             </div>
         </div>
-    </div>
+    {/if}
 {/if}
 
 <style>
@@ -228,21 +260,8 @@
         height: 100%;
         color: var(--text-primary);
     }
-    .game-detail-grid .image-container {
-        max-width: 200px; /* Smaller container */
-        width: 100%; /* Allow to shrink */
-        border: 1px solid var(--border-color);
-        padding: 5px;
-        border-radius: 8px;
-        background: var(--surface-color);
-    }
-    .game-detail-grid .image-container img {
-        width: 100%;
-        height: auto;
-        max-height: 200px;
-        object-fit: contain;
-        border-radius: 4px;
-        display: block;
+    .card-animation-wrapper {
+        width: 250px;
     }
     .game-detail-grid .info {
         width: 40%;
@@ -265,19 +284,6 @@
     .content-row {
         display: flex;
         gap: 20px;
-    }
-
-    .game-detail-list .image-container {
-        width: 200px;
-        border: 1px solid var(--border-color);
-        padding: 5px;
-        border-radius: 8px;
-        background: var(--surface-color);
-    }
-    .game-detail-list .image-container img {
-        width: 100%;
-        border-radius: 4px;
-        display: block;
     }
 
     .game-detail-list .info {

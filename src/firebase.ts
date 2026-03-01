@@ -1,11 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAoGrWdWu__JHiTz5t9Udo0UkEy0DLBVVs",
   authDomain: "cyan-ide-cyan.firebaseapp.com",
@@ -18,4 +15,20 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+
+// In restricted environments (about:blank, null origin), force Firestore to
+// use long-polling HTTP instead of WebSocket/WebChannel. The global Epoxy
+// proxy patches fetch but not WebSocket, so this is required for chat to work.
+const isRestricted =
+  typeof window !== "undefined" &&
+  (window.location.protocol === "about:" ||
+    window.location.origin === "null" ||
+    window.location.origin === null ||
+    window.location.href === "about:blank" ||
+    window.location.hostname.includes("googleusercontent.com"));
+
+export const db = isRestricted
+  ? initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+  })
+  : getFirestore(app);

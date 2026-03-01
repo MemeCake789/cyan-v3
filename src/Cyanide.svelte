@@ -332,15 +332,29 @@
         align-items: center;
         margin-bottom: 20px;
         padding: 20px;
+        gap: 20px;
+    }
+
+    .search-bar {
+        flex-grow: 1;
     }
 
     .search-bar input {
-        background-color: #222;
+        width: 100%;
+        background-color: #111;
         color: #e0e0e0;
-        border: 1px solid #444;
-        border-radius: 20px;
-        padding: 5px 10px;
+        border: 1px solid #222;
+        border-radius: 16px;
+        padding: 8px 16px;
         font-family: "monospace", monospace;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+
+    .search-bar input:focus {
+        border-color: var(--accent-cyan, #50e3c2);
+        box-shadow: 0 0 0 2px rgba(80, 227, 194, 0.1);
     }
 
     .view-switcher button {
