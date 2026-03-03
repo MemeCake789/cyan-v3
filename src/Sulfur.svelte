@@ -453,21 +453,19 @@
         border: none;
         color: var(--text-muted);
         cursor: pointer;
-    }
-
-    .show-more-less {
-        background: none;
-        border: none;
-        color: var(--accent-cyan);
-        cursor: pointer;
-        font-size: 11px;
-        margin-left: 10px;
-        padding: 0;
-        text-decoration: underline;
-    }
-
-    .show-more-less:hover {
-        color: var(--accent-cyan-dim);
+        .show-more-less {
+            background: none;
+            border: none;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 10px;
+            padding: 0;
+            text-decoration: underline;
+        }
+        .show-more-less:hover {
+            color: var(--accent-cyan-dim);
+        }
     }
 
     .input-area {

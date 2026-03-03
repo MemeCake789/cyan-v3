@@ -1,6 +1,7 @@
 import { mount } from 'svelte'
 import 'katex/dist/katex.min.css'; // KaTeX CSS for math rendering
 import './app.css'
+import EpoxyTransport from "@mercuryworkshop/epoxy-transport";
 
 // global proxy for testing/about:blank environments
 async function initGlobalProxy() {
@@ -10,25 +11,16 @@ async function initGlobalProxy() {
     const forceProxy = urlParams.get('proxy') === 'true';
     const isRestricted =
         window.location.protocol === "about:" ||
-        window.location.protocol === "file:" ||
         window.location.origin === "null" ||
         window.location.origin === null ||
         window.location.href === "about:blank" ||
-        window.location.hostname.includes("googleusercontent.com") ||
-        !window.location.host;
+        window.location.hostname.includes("googleusercontent.com");
 
-    if (!isRestricted && !forceProxy) {
-        console.log("[proxy] not restricted, skipping proxy...");
-        return;
-    }
+    if (!isRestricted && !forceProxy) return;
 
-    console.log("[proxy] initializing epoxy for restricted environment (" + (window.location.protocol || "about:blank") + ")...");
+    console.log("[proxy] initializing epoxy for restricted environment...");
     try {
-        const { default: EpoxyTransport } = await import("@mercuryworkshop/epoxy-transport");
-        const transport = new EpoxyTransport({ 
-            wisp: "wss://fastforwarder.org/wisp/",
-            wasm: "https://unpkg.com/@mercuryworkshop/epoxy-transport/dist/epoxy.wasm" 
-        });
+        const transport = new EpoxyTransport({ wisp: "wss://fastforwarder.org/wisp/" });
         await transport.init();
 
         // 1. PATCH FETCH
@@ -120,14 +112,11 @@ async function initGlobalProxy() {
     }
 }
 
-// App must load AFTER proxy patches are applied,
+// Dynamic import: App (and firebase.ts) must load AFTER proxy patches are applied,
 // otherwise Firestore connects before fetch is intercepted.
-async function initApp() {
-    await initGlobalProxy();
+initGlobalProxy().then(async () => {
     const { default: App } = await import('./App.svelte');
     mount(App, {
         target: document.getElementById('app'),
     })
-}
-
-initApp();
+});
