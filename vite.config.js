@@ -9,7 +9,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         app: './index.html'
-      }
+      },
+      onwarn(warning, warn) {
+        if (warning.code === 'ASSET_NOT_FOUND' && warning.message.includes('epoxy.wasm')) return;
+        warn(warning);
+      },
     }
   },
   server: {

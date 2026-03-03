@@ -11,16 +11,24 @@ async function initGlobalProxy() {
     const forceProxy = urlParams.get('proxy') === 'true';
     const isRestricted =
         window.location.protocol === "about:" ||
+        window.location.protocol === "file:" ||
         window.location.origin === "null" ||
         window.location.origin === null ||
         window.location.href === "about:blank" ||
-        window.location.hostname.includes("googleusercontent.com");
+        window.location.hostname.includes("googleusercontent.com") ||
+        !window.location.host;
 
-    if (!isRestricted && !forceProxy) return;
+    if (!isRestricted && !forceProxy) {
+        console.log("[proxy] not restricted, skipping proxy...");
+        return;
+    }
 
-    console.log("[proxy] initializing epoxy for restricted environment...");
+    console.log("[proxy] initializing epoxy for restricted environment (" + (window.location.protocol || "about:blank") + ")...");
     try {
-        const transport = new EpoxyTransport({ wisp: "wss://fastforwarder.org/wisp/" });
+        const transport = new EpoxyTransport({ 
+            wisp: "wss://fastforwarder.org/wisp/",
+            wasm: "https://unpkg.com/@mercuryworkshop/epoxy-transport/dist/epoxy.wasm" 
+        });
         await transport.init();
 
         // 1. PATCH FETCH

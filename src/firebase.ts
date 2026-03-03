@@ -1,6 +1,5 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, initializeFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore, memoryLocalCache, setLogLevel } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,19 +15,26 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 
+// Set debug logging for easier troubleshooting
+setLogLevel("debug");
+
 // In restricted environments (about:blank, null origin), force Firestore to
 // use long-polling HTTP instead of WebSocket/WebChannel. The global Epoxy
 // proxy patches fetch but not WebSocket, so this is required for chat to work.
 const isRestricted =
   typeof window !== "undefined" &&
   (window.location.protocol === "about:" ||
+    window.location.protocol === "file:" ||
     window.location.origin === "null" ||
     window.location.origin === null ||
     window.location.href === "about:blank" ||
-    window.location.hostname.includes("googleusercontent.com"));
+    window.location.hostname.includes("googleusercontent.com") ||
+    !window.location.host);
 
 export const db = isRestricted
   ? initializeFirestore(app, {
     experimentalForceLongPolling: true,
+    experimentalAutoDetectLongPolling: true,
+    localCache: memoryLocalCache(),
   })
   : getFirestore(app);
