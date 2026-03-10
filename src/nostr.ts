@@ -7,7 +7,6 @@ function stringToBytes(str: string): Uint8Array {
     const data = encoder.encode(str);
     const result = new Uint8Array(32);
     
-    // Simple mixing algorithm
     for (let i = 0; i < 32; i++) {
         let val = i;
         for (let j = 0; j < data.length; j++) {
@@ -30,7 +29,7 @@ function bytesToHex(bytes: Uint8Array): string {
 const CHANNEL_NAME = 'cyanv3-public-chat1';
 const CHANNEL_ID = bytesToHex(stringToBytes(CHANNEL_NAME));
 
-// Relay pool - reliable relays (removed restrictive ones)
+// Relay pool
 const RELAYS = [
     'wss://relay.damus.io',
     'wss://relay.snort.social',
@@ -40,10 +39,9 @@ const RELAYS = [
     'wss://nostr.bitcoiner.social'
 ];
 
-// Global pool instance
+// Global pool instance - shared across component instances
 let pool: SimplePool | null = null;
-let currentSub: any = null;
-let receivedEventIds = new Set<string>();
+let activeSubscriptionCount = 0;
 
 // Generate deterministic private key from username
 function getKeypairFromUsername(username: string): { sk: Uint8Array; pk: string } {
@@ -60,19 +58,6 @@ export function initPool(): SimplePool {
     return pool;
 }
 
-// Close pool
-export function closePool() {
-    if (currentSub) {
-        currentSub.close();
-        currentSub = null;
-    }
-    if (pool) {
-        pool.close(RELAYS);
-        pool = null;
-    }
-    receivedEventIds.clear();
-}
-
 // Get channel ID
 export function getChannelId(): string {
     return CHANNEL_ID;
@@ -83,17 +68,13 @@ export function getRelays(): string[] {
     return [...RELAYS];
 }
 
-// Subscribe to messages
+// Subscribe to messages - each call creates a new independent subscription
 export function subscribeToMessages(
     onMessage: (event: Event) => void,
     onEose?: () => void
 ): () => void {
     const p = initPool();
-    
-    if (currentSub) {
-        currentSub.close();
-        currentSub = null;
-    }
+    activeSubscriptionCount++;
     
     const filter = {
         kinds: [42],
@@ -103,47 +84,64 @@ export function subscribeToMessages(
     
     console.log('[nostr] subscribing to channel:', CHANNEL_ID);
     
+    // Track events for this subscription only
+    const seenEvents = new Set<string>();
+    
+    // Wrapper to handle deduplication for this subscription
+    const handleEvent = (event: Event) => {
+        if (seenEvents.has(event.id)) {
+            return;
+        }
+        seenEvents.add(event.id);
+        console.log('[nostr] received event:', event.id?.slice(0, 8));
+        onMessage(event);
+    };
+    
     // Subscribe for realtime updates
-    // subscribeMany expects: relays, filters (spread), callbacks
-    currentSub = p.subscribeMany(
+    const sub = p.subscribeMany(
         RELAYS,
-        filter, // Pass filter object directly, not wrapped in array
+        filter,
         {
-            onevent: (event: Event) => {
-                // Prevent duplicates
-                if (receivedEventIds.has(event.id)) {
-                    return;
-                }
-                receivedEventIds.add(event.id);
-                console.log('[nostr] received event:', event.id?.slice(0, 8));
-                onMessage(event);
-            },
+            onevent: handleEvent,
             oneose: () => {
                 console.log('[nostr] subscription eose');
             }
         }
     );
     
-    // Fetch existing messages immediately
+    // Fetch existing messages
+    let eoseCalled = false;
+    const callEose = () => {
+        if (!eoseCalled) {
+            eoseCalled = true;
+            onEose?.();
+        }
+    };
+    
     p.querySync(RELAYS, filter).then(events => {
         console.log('[nostr] fetched', events.length, 'existing messages');
         // Sort by created_at ascending (oldest first)
         events.sort((a, b) => a.created_at - b.created_at);
-        events.forEach(event => {
-            if (!receivedEventIds.has(event.id)) {
-                receivedEventIds.add(event.id);
-                onMessage(event);
-            }
-        });
-        onEose?.();
+        events.forEach(event => handleEvent(event));
+        callEose();
     }).catch(err => {
         console.error('[nostr] querySync failed:', err);
-        onEose?.();
+        callEose();
     });
     
+    // Return cleanup function
     return () => {
-        currentSub?.close();
-        currentSub = null;
+        console.log('[nostr] closing subscription');
+        sub.close();
+        seenEvents.clear();
+        activeSubscriptionCount--;
+        
+        // Only close pool when all subscriptions are gone
+        if (activeSubscriptionCount <= 0 && pool) {
+            pool.close(RELAYS);
+            pool = null;
+            activeSubscriptionCount = 0;
+        }
     };
 }
 
@@ -156,16 +154,12 @@ export async function sendMessage(
     const p = initPool();
     const { sk } = getKeypairFromUsername(username);
     
-    // Build tags - root reference to channel
-    const tags: string[][] = [
-        ['e', CHANNEL_ID, '', 'root']
-    ];
+    const tags: string[][] = [['e', CHANNEL_ID, '', 'root']];
     
     if (replyToId) {
         tags.push(['e', replyToId, '', 'reply']);
     }
     
-    // Create event template
     const eventTemplate = {
         kind: 42,
         created_at: Math.floor(Date.now() / 1000),
@@ -176,11 +170,9 @@ export async function sendMessage(
         })
     };
     
-    // Sign event
     const event = finalizeEvent(eventTemplate, sk);
     console.log('[nostr] sending event:', event.id?.slice(0, 8));
     
-    // Publish to relays
     const promises = RELAYS.map(async (relay) => {
         try {
             await p.publish([relay], event);
@@ -218,7 +210,6 @@ export function parseMessageEvent(event: Event): {
         content = { text: event.content, user: 'unknown' };
     }
     
-    // Find reply reference
     const replyTag = event.tags.find(tag => tag[0] === 'e' && tag[3] === 'reply');
     const replyTo = replyTag ? replyTag[1] : undefined;
     
@@ -229,4 +220,9 @@ export function parseMessageEvent(event: Event): {
         timestamp: new Date(event.created_at * 1000).toISOString(),
         replyTo
     };
+}
+
+// Backward compatibility
+export function closePool() {
+    // Pool is now managed by subscription count
 }
