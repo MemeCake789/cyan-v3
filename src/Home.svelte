@@ -1,22 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, onMount, onDestroy } from "svelte";
-    import {
-        shouldShowNotification,
-        dismissNotification,
-    } from "./notification";
 
     const dispatch = createEventDispatcher();
-
-    let showSulfurNotification = false;
-
-    onMount(() => {
-        showSulfurNotification = shouldShowNotification();
-    });
-
-    function handleDismissNotification() {
-        dismissNotification();
-        showSulfurNotification = false;
-    }
 
     // Apps Data
     // Apps Data
@@ -94,24 +79,6 @@
 
 <div class="home-container">
     <div class="content-width">
-        {#if showSulfurNotification}
-            <div class="notification-banner">
-                <div class="notification-content">
-                    <span class="notification-icon">✓</span>
-                    <span class="notification-text">
-                        <strong>! Sulfur is now fixed !</strong>
-                    </span>
-                </div>
-                <button
-                    class="notification-dismiss"
-                    on:click={handleDismissNotification}
-                    title="dismiss"
-                >
-                    ×
-                </button>
-            </div>
-        {/if}
-
         <section class="apps-grid">
             {#each apps as app}
                 <button

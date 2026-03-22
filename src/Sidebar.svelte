@@ -20,7 +20,7 @@
     let feedbackMessage = "";
 
     onMount(() => {
-        showSulfurBadge = shouldShowNotification();
+        showSulfurBadge = false;
         // Load saved username from localStorage if available
         try {
             const stored = localStorage.getItem("cyanv3_username");

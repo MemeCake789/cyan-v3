@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "writtenAt": 1774189675448,
+  "toolAggregates": {
+    "read": {
+      "tool": "read",
+      "count": 16,
+      "successCount": 16,
+      "failureCount": 0,
+      "totalDuration": 152
+    },
+    "glob": {
+      "tool": "glob",
+      "count": 6,
+      "successCount": 6,
+      "failureCount": 0,
+      "totalDuration": 90
+    },
+    "write": {
+      "tool": "write",
+      "count": 1,
+      "successCount": 1,
+      "failureCount": 0,
+      "totalDuration": 44
+    },
+    "edit": {
+      "tool": "edit",
+      "count": 6,
+      "successCount": 6,
+      "failureCount": 0,
+      "totalDuration": 124
+    },
+    "grep": {
+      "tool": "grep",
+      "count": 1,
+      "successCount": 1,
+      "failureCount": 0,
+      "totalDuration": 21
+    },
+    "bash": {
+      "tool": "bash",
+      "count": 1,
+      "successCount": 1,
+      "failureCount": 0,
+      "totalDuration": 12306
+    }
+  },
+  "activeAgent": {
+    "ses_2ea10965dffe1z37BFeO2v3Cp7": "architect"
+  },
+  "delegationChains": {
+    "ses_2ea10965dffe1z37BFeO2v3Cp7": [
+      {
+        "from": "architect",
+        "to": "build",
+        "timestamp": 1774189618938
+      }
+    ]
+  },
+  "agentSessions": {
+    "ses_2ea10965dffe1z37BFeO2v3Cp7": {
+      "agentName": "architect",
+      "lastToolCallTime": 1774189631815,
+      "lastAgentEventTime": 1774189631815,
+      "delegationActive": false,
+      "activeInvocationId": 2,
+      "lastInvocationIdByAgent": {
+        "build": 2
+      },
+      "windows": {
+        "build:2": {
+          "id": 2,
+          "agentName": "build",
+          "startedAtMs": 1774189618938,
+          "toolCalls": 2,
+          "consecutiveErrors": 0,
+          "hardLimitHit": false,
+          "lastSuccessTimeMs": 1774189625180,
+          "recentToolCalls": [
+            {
+              "tool": "read",
+              "argsHash": 1859987451639970000,
+              "timestamp": 1774189624649
+            },
+            {
+              "tool": "read",
+              "argsHash": 10552535549502482000,
+              "timestamp": 1774189625173
+            }
+          ],
+          "warningIssued": false,
+          "warningReason": ""
+        },
+        "build:1": {
+          "id": 1,
+          "agentName": "build",
+          "startedAtMs": 1774189505010,
+          "toolCalls": 5,
+          "consecutiveErrors": 0,
+          "hardLimitHit": false,
+          "lastSuccessTimeMs": 1774189510797,
+          "recentToolCalls": [
+            {
+              "tool": "read",
+              "argsHash": 4259710399788675600,
+              "timestamp": 1774189509474
+            },
+            {
+              "tool": "glob",
+              "argsHash": 5450215524890741000,
+              "timestamp": 1774189509686
+            },
+            {
+              "tool": "glob",
+              "argsHash": 2452295850917670000,
+              "timestamp": 1774189510013
+            },
+            {
+              "tool": "glob",
+              "argsHash": 12402533587627418000,
+              "timestamp": 1774189510370
+            },
+            {
+              "tool": "glob",
+              "argsHash": 14116275294208725000,
+              "timestamp": 1774189510782
+            }
+          ],
+          "warningIssued": false,
+          "warningReason": ""
+        }
+      },
+      "lastCompactionHint": 0,
+      "architectWriteCount": 7,
+      "lastCoderDelegationTaskId": null,
+      "currentTaskId": null,
+      "turboMode": false,
+      "gateLog": {},
+      "reviewerCallCount": {},
+      "lastGateFailure": null,
+      "partialGateWarningsIssuedForTask": [
+        "ses_2ea10965dffe1z37BFeO2v3Cp7:unknown"
+      ],
+      "selfFixAttempted": false,
+      "selfCodingWarnedAtCount": 7,
+      "catastrophicPhaseWarnings": [],
+      "lastPhaseCompleteTimestamp": 0,
+      "lastPhaseCompletePhase": 0,
+      "phaseAgentsDispatched": [
+        "build"
+      ],
+      "lastCompletedPhaseAgentsDispatched": [],
+      "qaSkipCount": 0,
+      "qaSkipTaskIds": [],
+      "pendingAdvisoryMessages": [],
+      "taskWorkflowStates": {},
+      "scopeViolationDetected": false
+    }
+  }
+}

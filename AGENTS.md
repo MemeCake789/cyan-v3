@@ -1,115 +1,100 @@
 # AGENTS.md
 
-This file provides guidelines for agentic coding agents working in this repository.
+Guidelines for agentic coding agents working in this repository.
 
 ## Project Overview
 
-Cyanv3 is a Svelte 5 + Vite-based web application with a dark TUI aesthetic. It features a multi-tab windowing system with apps like Cyanide (games), Sulfur (chat), Flouride, and Chromium (proxy browser).
+Cyanv3 is a Svelte 5 + Vite web app with a dark TUI aesthetic. Multi-tab windowing system with apps: Cyanide (games), Sulfur (chat), Flouride (AI), and Chromium (proxy browser).
 
-### Important: Single-File Build & about:blank Context
+### Single-File Build & about:blank Context
 
-- The site is compiled to a **single HTML file** (using `vite-plugin-singlefile`) and embedded in an `about:blank` page or restricted environments
-- This means `window.location` has `about:` protocol or `null` origin
-- CORS restrictions apply; external API calls may fail without the proxy patch
-- The proxy in `main.js` patches `fetch` and `XMLHttpRequest` to route through EpoxyTransport for restricted environments
-- Be mindful of: `localStorage` (may not persist), `window.open()`, and certain browser APIs that require secure contexts
+- Compiled to a **single HTML file** via `vite-plugin-singlefile`, embedded in `about:blank` or restricted environments
+- `window.location` has `about:` protocol or `null` origin — CORS applies
+- `main.js` patches `fetch` and `XMLHttpRequest` through EpoxyTransport before mounting the app
+- `localStorage` may not persist; `window.open()` and secure-context APIs may not work
+- App modules (including firebase) are dynamically imported AFTER proxy patches are applied
 
 ## Build Commands
 
 ```bash
-# Development server
-npm run dev
-
-# Production build (outputs to dist/)
-npm run build
-
-# Preview production build locally
-npm run preview
+npm run dev        # dev server
+npm run build      # production build -> dist/
+npm run preview    # preview production build
 ```
 
-## Test Commands
+## Lint / Typecheck
 
-No test framework is currently configured. To add tests:
-- Install vitest: `npm install -D vitest`
-- Run single test: `npx vitest run src/path/to/test.ts`
-- Run all tests: `npx vitest run`
-- Watch mode: `npx vitest`
+No linter or typecheck script is configured. The project uses `jsconfig.json` with `checkJs: true` for type checking in editors but there is no `npm run lint` or `npm run typecheck` command. If you add one, prefer `svelte-check` for Svelte type errors.
 
-## Code Style Guidelines
+## Tests
+
+No test framework is installed. To add tests:
+- `npm install -D vitest`
+- Single test: `npx vitest run src/path/to/test.ts`
+- All tests: `npx vitest run`
+- Watch: `npx vitest`
+
+## Code Style
 
 ### General
 
-- **Language**: TypeScript with Svelte 5 (runes mode)
-- **Modules**: ES modules (`"type": "module"` in package.json)
+- **Language**: JS/TS mix with Svelte 5 (runes mode). `checkJs` is enabled — write JSDoc or use `.ts` files for types.
+- **Modules**: ES modules (`"type": "module"`)
 - **Indentation**: 4 spaces
-- **Quotes**: Single quotes for strings, double quotes for HTML attributes
-- **Semicolons**: Optional but be consistent within a file
+- **Quotes**: Single quotes in JS/TS, double quotes in Svelte HTML attributes
+- **Semicolons**: Used (present in all existing code)
 
 ### Imports
 
 ```typescript
-// Order: external libs -> svelte imports -> internal modules -> styles
+// Order: external libs -> svelte -> internal modules -> styles
 import { writable } from 'svelte/store';
 import { onMount } from 'svelte';
 import { windows } from './windows';
 import './app.css';
 
-// Use explicit .svelte extension for Svelte component imports
+// Use explicit .svelte extension for component imports
 import Home from './Home.svelte';
 ```
 
 ### Naming Conventions
 
-- **Components**: PascalCase (e.g., `GameCard.svelte`, `Sidebar.svelte`)
-- **Stores/Files**: camelCase (e.g., `windows.js`, `stores.ts`)
+- **Components**: PascalCase — `GameCard.svelte`, `Sidebar.svelte`
+- **Stores/Modules**: camelCase — `windows.js`, `stores.ts`, `chatApi.ts`
 - **Variables/Functions**: camelCase
-- **CSS Variables**: kebab-case with `--` prefix (e.g., `--bg-color`)
-- **Types/Interfaces**: PascalCase (e.g., `WindowState`, `ChatConfig`)
+- **CSS Variables**: kebab-case with `--` prefix — `--bg-color`, `--accent-cyan`
+- **Types/Interfaces**: PascalCase — `WindowState`, `ChatConfig`
 
-### Svelte Conventions
+### Svelte 5 Conventions
+
+This codebase uses a mix of Svelte 4 and 5 syntax. Follow the pattern of the file you're editing:
 
 ```svelte
 <script lang="ts">
-    // Use TypeScript in Svelte components
-    import { onMount } from 'svelte';
-    
-    // Props with TypeScript types
+    // Props — both patterns exist in the codebase:
+    // Older style (still in use):
+    export let windowId: number;
+    // Runes style (preferred for new code):
     let { windowId, gameTitleContext }: { windowId: number; gameTitleContext?: string } = $props();
-    
-    // Reactive state
+
     let isActive = $state(false);
-    
-    // Derived values
     let displayName = $derived(formatName(name));
 </script>
 ```
 
-### CSS/Styling
+Events: existing code uses `on:click` and `on:launch` with `createEventDispatcher`. When writing new code, follow the same pattern unless converting a component fully to runes.
 
-- Use CSS variables from `app.css` for consistency
-- Component-scoped styles in `<style>` blocks
-- Global styles only in `app.css` using `:global()`
-- Prefer flexbox/grid for layout
-- Dark theme is the only theme (defined in `app.css`)
+### CSS / Styling
 
-```css
-/* Component styles */
-.container {
-    background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-}
-
-/* Global override */
-:global(body) {
-    background-color: var(--bg-color);
-}
-```
+- CSS variables defined in `src/app.css` — always use them for colors, spacing, fonts
+- Component-scoped `<style>` blocks; global overrides via `:global()` selector
+- Dark theme only. Colors: bg `#000`, surface `#111`, border `#333`, accent `#50e3c2`
+- Font: `DM Mono` monospace throughout
+- Layout: flexbox preferred, no CSS framework
 
 ### Error Handling
 
 ```typescript
-// Use try/catch for async operations
 try {
     const response = await fetch(url);
     const data = await response.json();
@@ -117,75 +102,44 @@ try {
     console.error('[component] operation failed:', error);
     // Provide fallback UI or state
 }
-
-// Log with component/module prefix for debugging
-console.log('[proxy] initializing transport...');
-console.error('[firebase] connection failed:', error);
 ```
 
-### TypeScript Guidelines
+Use `[module]` prefix in log messages for debugging: `console.log('[proxy] initializing...')`
 
-- Enable `checkJs` in jsconfig.json for JS files
-- Use explicit types for function parameters and return values
-- Type reactive state in Svelte 5: `let count: number = $state(0)`
-- Define interfaces for complex objects
+### TypeScript
 
-```typescript
-// Store type definition example
-interface Chat {
-    chatId: string;
-    name: string;
-    type: 'public' | 'private';
-    key?: string;
-}
-
-export const activeChat = writable<Chat | null>({
-    chatId: 'global',
-    name: 'Global',
-    type: 'public'
-});
-```
+- `checkJs: true` and `verbatimModuleSyntax: true` in jsconfig.json
+- Use explicit types on function params and return values
+- Use `import type` for type-only imports (enforced by verbatimModuleSyntax)
+- Define interfaces for complex objects, especially store payloads
 
 ### File Organization
 
 ```
 src/
-├── *.svelte          # Svelte components (PascalCase)
-├── *.ts              # TypeScript modules (camelCase)
-├── *.js              # JavaScript modules (camelCase)
-├── app.css           # Global styles and CSS variables
-├── main.js           # App entry point
-├── stores.ts         # Svelte stores
-└── windows.js        # Window state management
-```
-
-### Event Handling
-
-```svelte
-<!-- Use Svelte 5 event forwarding -->
-<button on:click={handleClick}>
-
-<!-- Custom events with dispatch -->
-<Home on:launch={(e) => handleLaunch(tab.id, e.detail.appId)} />
-
-<!-- Or use callbacks for child-to-parent communication -->
-<Home onLaunch={handleLaunch} />
+├── *.svelte          # Components (PascalCase)
+├── *.ts / *.js       # Modules (camelCase)
+├── app.css           # Global styles + CSS variables
+├── main.js           # Entry point (proxy init -> mount)
+├── stores.ts         # Global Svelte stores
+└── windows.js        # Window/tab state
 ```
 
 ### State Management
 
-- Use Svelte stores for global state (`stores.ts`, `windows.js`)
-- Use component-level state (`$state`) for local UI state
-- Prefer derived state (`$derived`) over computed values
+- Svelte stores (`writable`) for global state: `stores.ts`, `windows.js`
+- Component-local: `$state` / `$derived`
+- Stores are subscribed to with `$store` syntax in templates
 
-### Git Conventions
+### Security
+
+- Firebase config is public (client-side) — this is intentional
+- Proxy patches fetch/XHR for restricted environments
+- Never use `eval()` or `new Function()` with user input
+- Don't commit `.env` or secrets
+
+### Git
 
 - Do not commit unless explicitly asked
-- Never commit `.env` files or secrets
 - Keep commits focused on single concerns
-
-### Security Notes
-
-- Firebase config is public (client-side)
-- Proxy logic patches fetch/XHR for restricted environments
-- Be careful with eval() or dynamic code execution
+- Never commit `.env` files or API keys
