@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import EpoxyTransport from "@mercuryworkshop/epoxy-transport";
+    import { connectWisp } from "./wispEndpoints.js";
 
     export let currentUrl = "";
 
@@ -11,6 +12,7 @@
     let proxyReady = false;
     let transport: EpoxyTransport | null = null;
     let isLoading = false;
+    let connectionError = "";
 
     const dispatch = createEventDispatcher();
 
@@ -34,17 +36,18 @@
 
     async function initProxyEngine() {
         if (proxyReady) return;
-        try {
-            const wispUrl = "wss://fastforwarder.org/wisp/";
-            transport = new EpoxyTransport({ wisp: wispUrl });
-            await transport.init();
-            proxyReady = true;
+        connectionError = "";
 
+        try {
+            const result = await connectWisp(EpoxyTransport);
+            transport = result.transport;
+            proxyReady = true;
             if (hasAcceptedWarning) {
                 initializeChromium();
             }
         } catch (err) {
-            console.error("Error setting up Epoxy proxy:", err);
+            connectionError = "all wisp endpoints failed. the proxy server may be down.";
+            console.error("[proxy] all wisp endpoints exhausted");
         }
     }
 
@@ -103,6 +106,7 @@
     function acceptWarning() {
         hasAcceptedWarning = true;
         if (proxyReady) initializeChromium();
+        else if (connectionError) initProxyEngine();
     }
 
     function initializeChromium() {
@@ -267,8 +271,18 @@
     {#if !hasAcceptedWarning}
         <div class="warning">
             <span class="material-symbols-outlined">warning</span>
-            <h3>Proxy Engine Ready</h3>
+            {#if connectionError}
+                <h3>Proxy Connection Failed</h3>
+            {:else}
+                <h3>Proxy Engine Ready</h3>
+            {/if}
             <p>using epoxy transport for about:blank compatibility.</p>
+            {#if connectionError}
+                <p class="error-text">{connectionError}</p>
+                <button on:click={() => { initProxyEngine(); }}>Retry Connection</button>
+            {:else if !proxyReady}
+                <p>connecting to wisp server...</p>
+            {/if}
             <button on:click={acceptWarning}>Ok, Proceed</button>
         </div>
     {:else}
@@ -314,6 +328,7 @@
     .warning p { margin: 10px 0 20px; font-family: var(--font-mono); }
     .warning button { padding: 10px 20px; border: 1px solid var(--border-color); background: #111; color: white; cursor: pointer; border-radius: 5px; font-family: var(--font-mono); }
     .warning button:hover { background: #222; border-color: var(--accent-cyan); }
+    .warning .error-text { color: #ff6b6b; font-size: 13px; margin: 5px 0; }
     .iframe-wrapper { flex: 1; position: relative; min-height: 0; overflow: hidden; }
     .iframe-wrapper :global(iframe) { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 </style>

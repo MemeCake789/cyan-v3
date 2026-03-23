@@ -2,6 +2,7 @@ import { mount } from 'svelte'
 import 'katex/dist/katex.min.css'; // KaTeX CSS for math rendering
 import './app.css'
 import EpoxyTransport from "@mercuryworkshop/epoxy-transport";
+import { connectWisp } from "./wispEndpoints.js";
 
 // global proxy for testing/about:blank environments
 async function initGlobalProxy() {
@@ -20,8 +21,7 @@ async function initGlobalProxy() {
 
     console.log("[proxy] initializing epoxy for restricted environment...");
     try {
-        const transport = new EpoxyTransport({ wisp: "wss://fastforwarder.org/wisp/" });
-        await transport.init();
+        const { transport } = await connectWisp(EpoxyTransport);
 
         // 1. PATCH FETCH
         const originalFetch = window.fetch;
