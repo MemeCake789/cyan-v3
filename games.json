@@ -1998,6 +1998,16 @@
       "description": "",
       "status": ["Working", "This game has no issues :D"],
       "dateAdded": "2026-01-25"
+    },
+    {
+      "title": "Five Nights At Epstein's",
+      "imageSrc": "https://cdn.jsdelivr.net/gh/sudonym-sudo/cyan-assets/HTML/FNAE/fnae.jpeg",
+      "genre": "Horror",
+      "type": "HTML",
+      "link": "https://cyan-assets.vercel.app/HTML/FNAE/fnae",
+      "description": "",
+      "status": ["Working", "This game has no issues :D"],
+      "dateAdded": ""
     }
   ]
 }
