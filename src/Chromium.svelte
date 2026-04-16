@@ -1,14 +1,13 @@
 <script lang="ts">
     function launchProxy() {
-        const targetUrl = "https://search.brave.com/";
-        window.open('/proxy.html#' + encodeURIComponent(targetUrl), "_blank");
+        window.open('/proxy.html', "_blank");
     }
 </script>
 
 <div class="browser-container">
     <div class="launch-screen">
         <button class="launch-button" on:click={launchProxy}>
-            Launch Brave Proxy
+            Launch Scramjet
         </button>
     </div>
 </div>
