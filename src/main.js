@@ -28,7 +28,14 @@ async function initGlobalProxy() {
         window.fetch = async (input, init) => {
             const url = typeof input === "string" ? input : (input && input.url) || input.toString();
 
-            if (url.includes("googleapis.com") || url.includes("firebase") || url.includes("huggingface")) {
+            const shouldProxy = 
+                url.includes("googleapis.com") || 
+                url.includes("firebase") || 
+                url.includes("huggingface") ||
+                url.includes("reds-exploit-corner.examprepare.help") ||
+                (isRestricted && !url.startsWith("blob:") && !url.startsWith("data:") && !url.includes(window.location.host));
+
+            if (shouldProxy) {
                 const method = init?.method || "GET";
                 let headers = new Headers();
                 if (init?.headers) {
@@ -41,9 +48,23 @@ async function initGlobalProxy() {
                     const resp = await transport.request(new URL(url), method, init?.body || null, headers);
                     const finalHeaders = new Headers();
                     if (resp.headers) {
-                        if (Array.isArray(resp.headers)) resp.headers.forEach(([k, v]) => finalHeaders.set(k, v));
-                        else Object.entries(resp.headers).forEach(([k, v]) => finalHeaders.set(k, v));
+                        if (Array.isArray(resp.headers)) {
+                            resp.headers.forEach(([k, v]) => {
+                                if (!["x-frame-options", "content-security-policy"].includes(k.toLowerCase())) {
+                                    finalHeaders.set(k, v);
+                                }
+                            });
+                        } else {
+                            Object.entries(resp.headers).forEach(([k, v]) => {
+                                if (!["x-frame-options", "content-security-policy"].includes(k.toLowerCase())) {
+                                    finalHeaders.set(k, v);
+                                }
+                            });
+                        }
                     }
+
+                    // allow framing
+                    finalHeaders.set("Access-Control-Allow-Origin", "*");
 
                     // pass the body directly as a stream
                     return new Response(resp.body, {
@@ -81,7 +102,13 @@ async function initGlobalProxy() {
             };
 
             xhr.send = async function (body) {
-                if (targetUrl.includes("googleapis.com") || targetUrl.includes("firebase")) {
+                const shouldProxy = 
+                    targetUrl.includes("googleapis.com") || 
+                    targetUrl.includes("firebase") ||
+                    targetUrl.includes("reds-exploit-corner.examprepare.help") ||
+                    (isRestricted && !targetUrl.startsWith("blob:") && !targetUrl.startsWith("data:") && !targetUrl.includes(window.location.host));
+
+                if (shouldProxy) {
                     try {
                         const resp = await transport.request(new URL(targetUrl), targetMethod, body, requestHeaders);
 

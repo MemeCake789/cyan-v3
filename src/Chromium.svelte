@@ -123,8 +123,44 @@
             return;
         }
 
-        iframeElement.removeAttribute("srcdoc");
-        iframeElement.src = PROXY_URL + finalUrl;
+        const isRestricted =
+            window.location.protocol === "about:" ||
+            window.location.origin === "null" ||
+            window.location.origin === null ||
+            window.location.href === "about:blank" ||
+            window.location.hostname.includes("googleusercontent.com");
+
+        if (isRestricted) {
+            try {
+                // Fetch the proxy page. This will be intercepted by the global proxy in main.js
+                // which strips X-Frame-Options and Content-Security-Policy.
+                const response = await fetch(PROXY_URL + finalUrl);
+                let html = await response.text();
+
+                // Inject <base> tag to fix relative paths for scripts/css
+                const baseTag = '<base href="https://reds-exploit-corner.examprepare.help/">';
+                if (html.includes("<head>")) {
+                    html = html.replace("<head>", `<head>${baseTag}`);
+                } else if (html.includes("<html>")) {
+                    html = html.replace("<html>", `<html><head>${baseTag}</head>`);
+                } else {
+                    html = baseTag + html;
+                }
+
+                // Fix wispurl which usually relies on location.host
+                html = html.replace(/location\.host \+ "\/wisp\/"/g, '"reds-exploit-corner.examprepare.help/wisp/"');
+
+                iframeElement.removeAttribute("src");
+                iframeElement.srcdoc = html;
+            } catch (err) {
+                console.error("[chromium] failed to load via fetch, falling back to src", err);
+                iframeElement.removeAttribute("srcdoc");
+                iframeElement.src = PROXY_URL + finalUrl;
+            }
+        } else {
+            iframeElement.removeAttribute("srcdoc");
+            iframeElement.src = PROXY_URL + finalUrl;
+        }
         
         setTimeout(() => { isLoading = false; }, 1500);
     }
